@@ -65,7 +65,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // passport setup
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(sessionMiddleware)
+// app.use(sessionMiddleware)
 
 
 passport.use('staff', Staff.createStrategy())
