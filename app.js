@@ -32,7 +32,7 @@ const teacherRouter = require('./routes/teacherRoute')
 
 
 // //connect to db
-mongoose.connect('mongodb://localhost/srms', {
+mongoose.connect('mongodb+srv://1mustyz:z08135696959@project1.ynhhl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
