@@ -6,7 +6,7 @@ var logger = require('morgan');
 const mongoose = require('mongoose')
 const passport = require('passport')
 const expressSession = require('express-session')
-// const redis = require('redis')
+const MongoStore = require('connect-mongo')
 
 
 
@@ -15,14 +15,16 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-// const redisStore = require('connect-redis')(expressSession)
-// const redisClient = redis.createClient()
-// const sessionMiddleware = expressSession({
-//   secret: '[credentials.secret]',
-//   store: new redisStore({ host: 'localhost', port: 6379, client: redisClient }),
-//   saveUninitialized: false,
-//   resave: true
-// })
+const sessionMiddleware = expressSession({
+  secret: '[credentials.secret]',
+  store: MongoStore.create({
+    mongoUrl: 'mongodb+srv://1mustyz:z08135696959@project1.ynhhl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    ttl: 14 * 24 * 60 * 60,
+    autoRemove: 'native' 
+  }),
+  saveUninitialized: false,
+  resave: true
+})
 const Staff = require('./models/Staff')
 const Student = require('./models/Student')
 const studentRouter = require('./routes/studentRoute')
@@ -65,7 +67,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // passport setup
 app.use(passport.initialize())
 app.use(passport.session())
-// app.use(sessionMiddleware)
+app.use(sessionMiddleware)
 
 
 passport.use('staff', Staff.createStrategy())
