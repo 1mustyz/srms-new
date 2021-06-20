@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const expressSession = require('express-session')
 const MongoStore = require('connect-mongo')
+const cors = require('cors');
 
 
 
@@ -63,6 +64,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors())
 
 // passport setup
 app.use(passport.initialize())
