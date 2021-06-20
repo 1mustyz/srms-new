@@ -2,16 +2,18 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ScoreSchema = new Schema({
-    status: { type: String, default: 'Active' },
+    isActive: { type: Boolean, default: true },
     studentId: String,
     class: String,
     term: { type: String, default: 1},
+    category: { type: String },
     subject: String,
     ca1: Number,
     ca2: Number,
     ca3: Number,
+    ca4: Number,
     exam: Number,
-    finalSubmitted: { type: Boolean, default: false }
+    isfinalSubmitted: { type: Boolean, default: false }
 })
 
 const Score = mongoose.model('score', ScoreSchema)
