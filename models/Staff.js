@@ -14,7 +14,7 @@ const StaffSchema = new Schema({
     department: { type: String, required: true},
     phone: { type: String, required: true},
     address: { type: String},
-    country: { type: String},
+    country: { type: String, default: 'nigeria'},
     state: { type: String},
     lga: { type: String},
     bankName: { type: String},
