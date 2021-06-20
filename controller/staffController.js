@@ -119,7 +119,7 @@ exports.setRole = async (req,res,next) => {
 
   role == "teacher" || role.includes('teacher')
    ? await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":teach}})
-   : ''
+   : await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":null}})
 
    res.json({success: true, message: 'role has been set successfully'})
 }
