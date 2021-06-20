@@ -14,7 +14,7 @@ const StaffSchema = new Schema({
     department: { type: String, required: true},
     phone: { type: String, required: true},
     address: { type: String},
-    country: { type: String},
+    country: { type: String, default: 'nigeria'},
     state: { type: String},
     lga: { type: String},
     bankName: { type: String},
@@ -22,11 +22,11 @@ const StaffSchema = new Schema({
     accountName: { type: String},
     nextKinName: { type: String},
     nextKinPhone1: { type: String},
-    nextKinPhone2: { type: String},
+    relationship: { type: String},
     nextKinAddress: { type: String},
     image: { type: String, default: '1.jpg' },
     role: { type: Array, default: 'none'},
-    teach: [{ class: String, subject: String }]
+    teach: [{class: {type:String}, subject: {type:Array}}]
 }, { timestamps: true });   
 
 //plugin passport-local-mongoose to enable password hashing and salting and other things

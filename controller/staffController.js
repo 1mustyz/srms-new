@@ -55,7 +55,7 @@ exports.resetPassword = async (req, res, next) => {
 exports.findAllStaff = async (req,res, next) => {
 
   const result = await Staff.find({});
-  result
+  result.length > 0
    ? res.json({success: true, message: result,})
    : res.json({success: false, message: 'no user added yet',})
 }
@@ -112,13 +112,14 @@ exports.setProfilePic = async (req,res, next) => {
 
 exports.setRole = async (req,res,next) => {
   const {role,teach} = req.body;
+  console.log(teach)
 
   // req.session.user._id
   await Staff.findByIdAndUpdate(req.query.id,{$set: {role: role}})
 
   role == "teacher" || role.includes('teacher')
-   ? await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":teach}, upsert: true, multi: false})
-   : ''
+   ? await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":teach}})
+   : await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":null}})
 
    res.json({success: true, message: 'role has been set successfully'})
 }
