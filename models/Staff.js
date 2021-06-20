@@ -5,8 +5,26 @@ const passportLocalMongoose = require('passport-local-mongoose');
 //Schema design
 const StaffSchema = new Schema({
     username: { type: String, required: true, unique: [ true, 'ID Number already exist' ] },
+    firstName: { type: String, required: true},
+    lastName: { type: String, required: true},
+    otherName: { type: String},
+    email: { type: String},
+    gender: { type: String},
+    qualification: { type: String, required: true},
+    department: { type: String, required: true},
+    phone: { type: String, required: true},
+    address: { type: String},
+    country: { type: String},
+    state: { type: String},
+    lga: { type: String},
+    bankName: { type: String},
+    acountNumber: { type: String},
+    accountName: { type: String},
+    nextKinName: { type: String},
+    nextKinPhone1: { type: String},
+    nextKinPhone2: { type: String},
+    nextKinAddress: { type: String},
     image: { type: String, default: '1.jpg' },
-    email: { type: String },
     role: { type: Array, default: 'none'},
     teach: [{ class: String, subject: String }]
 }, { timestamps: true });   
