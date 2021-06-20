@@ -2,20 +2,20 @@ const Staff = require('../models/Staff')
 const Score = require('../models/Score')
 
 exports.fetchTeacherSubjects = async (req, res) => {
-    const teacher = await Staff.findById(id)
-    res.json({ subjects: teacher.teach})
+    const teacher = await Staff.findById(req.query.id)
+    res.json({teacher: teacher.teach[1]})
 }
 
 exports.fetchStudentsInClass = async (req, res) => {
    const students = 
        await Score.find({ 
-       term: 'term', class: 'class',
-       subject: 'subject', status: 'active' })
+       term: req.body.term, class: req.body.class,
+       subject: req.body.subject, status: 'active' })
 
    res.json({ success: true, students })
 }
 
-exports.insertResult = async (req, res) => {
+exports.liveSaveResult = async (req, res) => {
     const field = req.body.key
     const score = await Score.findByIdAndUpdate(req.body.id, {
         [field]: req.body.value
@@ -24,7 +24,7 @@ exports.insertResult = async (req, res) => {
     res.json({ success: true, score })
 }
 
-exports.insertManyResults = async (req, res) => {
+exports.saveAndContinue = async (req, res) => {
     const input = req.body
     let bulkArr = [];
 
@@ -32,7 +32,9 @@ exports.insertManyResults = async (req, res) => {
         bulkArr.push({
             updateOne: {
                 "filter": { "_id": i._id },
-                "update": { ca1: i.ca1, ca2: i.ca2, ca3: i.ca3, exam: i.exam }
+                "update": { 
+                     ca1: i.ca1, ca2: i.ca2,
+                     ca3: i.ca3, exam: i.exam }
             }
         })
     }
@@ -40,5 +42,25 @@ exports.insertManyResults = async (req, res) => {
     const scores = await Score.bulkWrite(bulkArr)
     res.json({ success: true, scores })
 
+}
+
+exports.finalSaveResult = async (req, res) => {
+    const input = req.body
+    let bulkArr = [];
+
+    for (const i of input) {
+        bulkArr.push({
+            updateOne: {
+                "filter": { "_id": i._id },
+                "update": { 
+                    ca1: i.ca1, ca2: i.ca2,
+                    ca3: i.ca3, exam: i.exam, 
+                    finalSubmitted: true }
+            }
+        })
+    }
+
+    const scores = await Score.bulkWrite(bulkArr)
+    res.json({ success: true, scores })
 }
 

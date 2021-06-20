@@ -1,6 +1,8 @@
 const passport = require('passport');
 const Staff = require('../models/Staff');
 const Student = require('../models/Student')
+const Score = require('../models/Score')
+const Curriculum = require('../models/Curriculum')
 const multer = require('multer');
 const {singleUpload} = require('../middlewares/filesMiddleware');
 // const connectEnsureLogin = require('connect-ensure-login')
@@ -11,12 +13,20 @@ exports.registerStudent = async function (req, res, next) {
     user = new Student(req.body)
     const password = req.body.password ? req.body.password : 'password'
     //save the user to the DB
-    Student.register(user, password, function (error, user) {
+    Student.register(user, password, async (error, user) => {
       if (error) return res.json({ success: false, error }) 
       // add subjects to the student
-      const subjects = await Curriculum.find({ class: req.body.currentClass })
-      const studentSubjects = subjects.map(subject => ({...subject, studentId: user._id }))
-      Score.insertMany(studentSubjects)
+      const subjects = await Curriculum.find(
+       { 'class.number': user.currentClass },
+       { 'class.subject': 1, _id: 0})
+
+      const studentSubjects = subjects[0].class.subject.map(subject => ({
+        subject, 
+        studentId: user._id,
+        class: user.currentClass
+       }))
+
+      Score.collection.insertMany(studentSubjects)
 
       res.json({ success: true, user })
     })
