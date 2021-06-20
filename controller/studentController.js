@@ -7,17 +7,17 @@ const {singleUpload} = require('../middlewares/filesMiddleware');
 
 exports.registerStudent = async function (req, res, next) {
   try {
-    //query subjects table based on student section, category, current class and term
-    //add 
-    // req.body.class.number = req.body.classNumber or currentClass
-    // req.body.class.term.number = req.body.term.number
-    // req.body.class.term.subject = subjects array you queried
     //create the user instance
     user = new Student(req.body)
     const password = req.body.password ? req.body.password : 'password'
     //save the user to the DB
     Student.register(user, password, function (error, user) {
       if (error) return res.json({ success: false, error }) 
+      // add subjects to the student
+      const subjects = await Curriculum.find({ class: req.body.currentClass })
+      const studentSubjects = subjects.map(subject => ({...subject, studentId: user._id }))
+      Score.insertMany(studentSubjects)
+
       res.json({ success: true, user })
     })
   } catch (error) {
