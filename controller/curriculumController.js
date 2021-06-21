@@ -2,11 +2,14 @@ const Curriculum = require('../models/Curriculum');
 
 
 exports.create = async (req,res,next) => {
-    const {section} = req.body
+    const {section,name} = req.body
+
+    await Curriculum.findOneAndDelete({name: name})
+
     section !== 'SSS'
      ? req.body.category = "none"
      : ''
-     
+
     await Curriculum.insertMany(req.body);
     res.json({success: true, message: `curriculum added successfully`});
 }

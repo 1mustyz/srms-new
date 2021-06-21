@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const CurriculumSchema = new Schema({
     
         
-            name: String,
+            name: {type: String},
             category: {type: String, default: "none"},
             section: {type: String, default: "none"},
             subject: Array
