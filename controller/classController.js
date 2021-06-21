@@ -23,7 +23,9 @@ exports.delete = async (req,res,next) => {
 }
 
 exports.getAllClasses = async (req,res,next) => {
-    const result = await Class.find()
+    const {section} = req.query
+
+    const result = await Class.find({section: section})
 
     result.length > 0
      ? res.json({success: true, message: result})

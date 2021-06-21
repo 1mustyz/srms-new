@@ -3,7 +3,7 @@ const {Schema, model} = mongoose;
 
 
 const ClassSchema = new Schema({
-    class: String,
+    className: String,
     section: String
 })
 
