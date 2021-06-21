@@ -19,7 +19,6 @@ const StudentSchema = new Schema({
     country: {type: String, default: "Nigeria"},
     state: {type: String},
     lga: {type: String},
-    class: {type: String},
     image: { type: String, default: '1.jpg' },
     currentClass: { type: String },
     section: { type: String }, // specifies type of student primary, junior or senior
