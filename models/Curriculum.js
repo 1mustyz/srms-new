@@ -7,7 +7,6 @@ const CurriculumSchema = new Schema({
             name: String,
             category: {type: String, default: "none"},
             section: {type: String, default: "none"},
-            section: String,
             subject: Array
         }
     
