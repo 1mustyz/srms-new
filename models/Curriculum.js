@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const CurriculumSchema = new Schema({
     
-        class:{
+        
             name: String,
             category: {type: String, default: "none"},
             section: {type: String, default: "none"},
             subject: Array
-        }
+        
     
 })
 
