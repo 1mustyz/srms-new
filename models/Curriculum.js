@@ -6,6 +6,7 @@ const CurriculumSchema = new Schema({
         class:{
             name: String,
             category: {type: String, default: "none"},
+            section: {type: String, default: "none"},
             section: String,
             subject: Array
         }

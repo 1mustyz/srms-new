@@ -3,9 +3,8 @@ const Schema = mongoose.Schema;
 
 const PaymentSchema = new Schema({
     
-    paymentTypes: {
-        String
-    }
+    paymentTypes: String
+    
 
 
 })

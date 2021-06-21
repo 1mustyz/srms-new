@@ -11,7 +11,7 @@ exports.registerStudent = async function (req, res, next) {
   try {
     //create the user instance
     user = new Student(req.body)
-    const password = req.body.password ? req.body.password : 'password'
+    const password = req.body.password ? req.body.password : 'password';
     //save the user to the DB
     Student.register(user, password, async (error, user) => {
       if (error) return res.json({ success: false, error }) 
