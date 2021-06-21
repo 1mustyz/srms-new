@@ -5,6 +5,21 @@ const passportLocalMongoose = require('passport-local-mongoose');
 //Schema design
 const StudentSchema = new Schema({
     username: { type: String, required: true, unique: [ true, 'ID Number already exist' ] },
+    firstName: {type: String, require: true},
+    lastName: {type: String, require: true},
+    otherName: {type: String},
+    studentId: {type: String},
+    address: {type: String},
+    kinName: {type: String},
+    kinNumber: {type: String},
+    kinRelation: {type: String},
+    kinAddress: {type: String},
+    dob: {type: Date},
+    gender: {type: String},
+    term: {type: String},
+    state: {type: String},
+    lga: {type: String},
+    class: {type: String},
     image: { type: String, default: '1.jpg' },
     currentClass: { type: String },
     section: { type: String }, // specifies type of student primary, junior or senior
