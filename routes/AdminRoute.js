@@ -37,6 +37,7 @@ router.get('/get-all-curriculum', curriculumController.getAllCurriculum)
 router.get('/get-single-curriculum', curriculumController.getSingleCurriculum)
 router.get('/dashboard', staffController.statistics)
 router.get('/get-payment-type', paymentController.getPayment);
+router.get('/get-all-paid-student', paymentController.getAllPaidStudent);
 router.get('/get-all-teachers', staffController.findAllTeachers);
 router.get('/get-all-principal', staffController.findAllPrincipal);
 router.get('/get-all-staff', staffController.findAllStaff);

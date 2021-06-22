@@ -104,10 +104,9 @@ exports.findAllStudentAccordinToSection = async (req,res,next) => {
   const {section} = req.query
 
   const students = await Student.find({section: section})
-
-  students.length > 0
-   ? res.json({ success: true, students:students })
-   : res.json({ success: true, message:'No student added yet' })
+  
+  res.json({ success: true, students:students })
+  
 }
 
 

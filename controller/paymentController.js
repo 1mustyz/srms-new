@@ -20,6 +20,14 @@ exports.verifyPayment = async (req,res,next) => {
 
 }
 
+exports.getAllPaidStudent = async (req,res,next) => {
+    const result = await Payment.find()
+
+    result.length > 0
+     ? res.json({success: true, message: result})
+     : res.json({success: true, message: 'No paid student'})
+}
+
 exports.getPayment = async (req,res,next) => {
     const result = await PaymentType.find()
     result.length > 0
