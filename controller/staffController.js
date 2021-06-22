@@ -146,11 +146,11 @@ exports.statistics = async (req, res) => {
   // count each class paid and unpaid
   // count each class number of students
   
-  res.json({ 
-    allStudents, dayCare,
-    playClass, kindergartens, 
-    grades, secondary, junior, 
-    senior, staffs })
+  res.json([
+    {allStudents}, {dayCare},
+    {playClass}, {kindergartens}, 
+    {grades}, {secondary}, {junior}, 
+    {senior}, {staffs} ])
 
   // number of grades, secondary, junior, senior, day care, play class school students
   // 
