@@ -44,6 +44,7 @@ router.get('/get-all-staff', staffController.findAllStaff);
 router.get('/get-all-student', studentController.findAllStudent);
 router.get('/get-all-student-according-to-section',
  studentController.findAllStudentAccordinToSection);
+router.get('/get-paid-student-statistics',paymentController.getPaidAndUnPaidStudent) 
 
 router.get('/get-single-student', studentController.findOneStudent);
 router.get('/get-all-subject', subjectController.getAllSubject)
