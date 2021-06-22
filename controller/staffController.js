@@ -115,7 +115,7 @@ exports.setRole = async (req,res,next) => {
   console.log(teach)
 
   // req.session.user._id
-  await Staff.findByIdAndUpdate(req.query.id,{$set: {role: role}})
+  await Staff.findOneAndUpdate({username: req.query.id},{$set: {role: role}})
 
   role == "teacher" || role.includes('teacher')
    ? await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":teach}})
