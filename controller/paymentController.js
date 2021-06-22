@@ -22,7 +22,7 @@ exports.verifyPayment = async (req,res,next) => {
 
 exports.getPayment = async (req,res,next) => {
     const result = await PaymentType.find()
-    result
+    result.length > 0
      ? res.json({success: true, message: result})
      : res.json({success: false, message: 'no payment type added'})
     

@@ -4,11 +4,14 @@ const Schema = mongoose.Schema;
 const PaySchema = new Schema({
 
     studentId: {type: String, default: 'my id'},
+    studentName: String,
+    term : String,
+    teller: String,
+    className: String,
+    purposeOfPayment: Array,
+    paymentYear: {type: Date, default: Date.now()}
 
-    payment: {
-        name:{
-            paid:Boolean
-        }},
+
 })
 
 const Payment = mongoose.model('pay', PaySchema);
