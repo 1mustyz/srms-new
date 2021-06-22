@@ -17,10 +17,10 @@ exports.registerStudent = async function (req, res, next) {
       if (error) return res.json({ success: false, error }) 
       // add subjects to the student
       const subjects = await Curriculum.find(
-       { 'class.name': user.currentClass },
-       { 'class.subject': 1, _id: 0})
+       { 'name': user.currentClass, 'category': user.category},
+       { 'subject': 1, _id: 0})
 
-      const studentSubjects = subjects[0].class.subject.map(subject => ({
+      const studentSubjects = subjects[0].subject.map(subject => ({
         subject, 
         studentId: user._id,
         class: user.currentClass,
