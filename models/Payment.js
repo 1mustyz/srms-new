@@ -9,10 +9,9 @@ const PaySchema = new Schema({
     teller: String,
     className: String,
     purposeOfPayment: Array,
-    paymentYear: {type: Date, default: Date.now()}
 
 
-})
+},{timestamps: true})
 
 const Payment = mongoose.model('pay', PaySchema);
 
