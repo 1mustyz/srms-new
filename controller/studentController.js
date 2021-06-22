@@ -100,6 +100,17 @@ exports.findAllStudent = async (req,res,next) => {
    : res.json({ success: true, message:'No student added yet' })
 }
 
+exports.findAllStudentAccordinToSection = async (req,res,next) => {
+  const {section} = req.query
+
+  const students = await Student.find({section: section})
+
+  students
+   ? res.json({ success: true, students:students })
+   : res.json({ success: true, message:'No student added yet' })
+}
+
+
 exports.updateSingleStudent = async (req,res,next) => {
   const {id} = req.query;
   const {
