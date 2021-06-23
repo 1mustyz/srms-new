@@ -126,7 +126,7 @@ exports.setRole = async (req,res,next) => {
 
 exports.removeStaff = async (req,res,next) => {
   const {id} = req.query;
-  await Student.findOneAndDelete({_id: id})
+  await Staff.findOneAndDelete({_id: id})
   res.json({success: true, message: `staff with the id ${id} has been removed`})
 }
 
