@@ -57,7 +57,7 @@ exports.findAllStaff = async (req,res, next) => {
   const result = await Staff.find({});
   result.length > 0
    ? res.json({success: true, message: result,})
-   : res.json({success: false, message: 'no user added yet',})
+   : res.json({success: false, message: result,})
 }
 
 
@@ -66,7 +66,7 @@ exports.findAllTeachers = async (req,res, next) => {
   const result = await Staff.find({role: 'teacher'});
   result.length > 0
    ? res.json({success: true, message: result,})
-   : res.json({success: false, message: 'no teachers added yet',})
+   : res.json({success: false, message: SpeechRecognitionResult,})
 }
 
 exports.findAllPrincipal = async (req,res, next) => {
@@ -74,7 +74,7 @@ exports.findAllPrincipal = async (req,res, next) => {
   const result = await Staff.find({role: 'principal'});
   result.length > 0
    ? res.json({success: true, message: result,})
-   : res.json({success: false, message: 'no principal added yet',})
+   : res.json({success: false, message: result,})
 }
 
 // exports.findAllStudents = async (req,res, next) => {

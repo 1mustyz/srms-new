@@ -97,7 +97,7 @@ exports.findAllStudent = async (req,res,next) => {
 
   students
    ? res.json({ success: true, students:students })
-   : res.json({ success: true, message:'No student added yet' })
+   : res.json({ success: true, message:students })
 }
 
 exports.findAllStudentAccordinToSection = async (req,res,next) => {
@@ -139,7 +139,7 @@ exports.findOneStudent = async (req,res,next) => {
 
   student
    ? res.json({success: true, student: student})
-   : res.json({success: true, message: 'No register student yet'})
+   : res.json({success: true, message: student})
   
 }
 
