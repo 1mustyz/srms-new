@@ -55,5 +55,6 @@ router.delete('/delete-single-curriculum', curriculumController.deleteSingleCurr
 router.delete('/delete-all-curriculum', curriculumController.deleteAllCurriculum)
 router.delete('/delete-single-subject', subjectController.delete)
 router.delete('/delete-class', classController.delete)
+router.delete('/remove-staff', staffController.removeStaff)
 
 module.exports = router;

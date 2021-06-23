@@ -130,6 +130,8 @@ exports.removeStaff = async (req,res,next) => {
   res.json({success: true, message: `staff with the id ${id} has been removed`})
 }
 
+
+
 exports.statistics = async (req, res) => {
   // fetch 
   // number of all students
