@@ -26,7 +26,7 @@ const StaffSchema = new Schema({
     nextKinAddress: { type: String},
     image: { type: String, default: '1.jpg' },
     role: { type: Array, default: 'none'},
-    teach: [{class: {type:String}, subject: {type:Array}}]
+    teach: [{class: {type:String}, subject: {type:Array}, category: {type:String, default: 'none'}}]
 }, { timestamps: true });   
 
 //plugin passport-local-mongoose to enable password hashing and salting and other things
