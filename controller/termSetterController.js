@@ -15,5 +15,5 @@ exports.setNewTerm = async (req,res,next) => {
 
 exports.getCurrentTerm = async (req,res,next) => {
     const result = await TermSetter.find()
-    res.json({})
+    res.json({success: true, result})
 }

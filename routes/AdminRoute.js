@@ -7,6 +7,7 @@ const studentController = require('../controller/studentController')
 const curriculumController = require('../controller/curriculumController');
 const subjectController = require('../controller/subjectController');
 const classController = require('../controller/classController')
+const termSetterController = require('../controller/termSetterController')
 
 router.post('/register-staff', staffController.registerStaff)
 router.post('/register-student', studentController.registerStudent)
@@ -19,7 +20,7 @@ router.post('/add-curriculum', curriculumController.create)
 router.post('/create-subject', subjectController.create)
 router.post('/create-class', classController.create)
 router.post('/verify-payment', paymentController.verifyPayment);
-
+router.post('/set-new-term',termSetterController.setNewTerm)
 // admin set his profile
 router.put('/set-profile-pic', staffController.setProfilePic);
 
@@ -49,6 +50,7 @@ router.get('/get-paid-student-statistics',paymentController.getPaidAndUnPaidStud
 router.get('/get-single-student', studentController.findOneStudent);
 router.get('/get-all-subject', subjectController.getAllSubject)
 router.get('/get-all-classes', classController.getAllClasses)
+router.get('/get-current-term', termSetterController.getCurrentTerm)
 
 router.delete('/remove-student', studentController.removeStudent)
 router.delete('/delete-single-curriculum', curriculumController.deleteSingleCurriculum)

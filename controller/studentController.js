@@ -139,7 +139,7 @@ exports.findOneStudent = async (req,res,next) => {
 
   student
    ? res.json({success: true, student: student})
-   : res.json({success: true, message: student})
+   : res.json({success: true, student: student})
   
 }
 
