@@ -63,15 +63,15 @@ exports.findAllStaff = async (req,res, next) => {
 
 exports.findAllTeachers = async (req,res, next) => {
 
-  const result = await Staff.find({role: 'teacher'});
+  const result = await Staff.find({role: 'Teacher'});
   result.length > 0
    ? res.json({success: true, message: result,})
-   : res.json({success: false, message: SpeechRecognitionResult,})
+   : res.json({success: false, message: result,})
 }
 
 exports.findAllPrincipal = async (req,res, next) => {
 
-  const result = await Staff.find({role: 'principal'});
+  const result = await Staff.find({role: 'Principal'});
   result.length > 0
    ? res.json({success: true, message: result,})
    : res.json({success: false, message: result,})

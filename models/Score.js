@@ -6,13 +6,14 @@ const ScoreSchema = new Schema({
     studentId: String,
     class: String,
     term: { type: String, default: 1},
-    category: { type: String },
+    category: String,
     subject: String,
     ca1: Number,
     ca2: Number,
     ca3: Number,
     ca4: Number,
     exam: Number,
+    grade: String,
     isfinalSubmitted: { type: Boolean, default: false }
 })
 
