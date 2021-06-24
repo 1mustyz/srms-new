@@ -4,6 +4,9 @@ const Schema = mongoose.Schema
 const ScoreSchema = new Schema({
     isActive: { type: Boolean, default: true },
     studentId: String,
+    username: String,
+    firstName: String,
+    lastName: String,
     class: String,
     term: { type: String, default: 1},
     category: String,

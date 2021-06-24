@@ -24,7 +24,10 @@ exports.registerStudent = async function (req, res, next) {
         subject, 
         studentId: user._id,
         class: user.currentClass,
-        category: user.category
+        category: user.category,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username
        }))
 
       Score.collection.insertMany(studentSubjects)
