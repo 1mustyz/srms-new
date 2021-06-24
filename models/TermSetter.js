@@ -5,4 +5,6 @@ TermSetterSchema = new Schema({
     currentTerm: String
 })
 
-TermSetter = model('termSetter',TermSetterSchema);
+const TermSetter = model('termSetter',TermSetterSchema);
+
+module.exports = TermSetter;

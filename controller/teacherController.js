@@ -11,7 +11,9 @@ exports.fetchStudentsInClass = async (req, res) => {
    const students = 
        await Score.find({ 
         class: req.body.class,
-        subject: req.body.subject })
+        subject: req.body.subject,
+        category: req.body.category
+     })
 
    res.json({ success: true, students })
 }
