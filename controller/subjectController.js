@@ -2,7 +2,7 @@ const Subject = require('../models/Subject');
 
 
 exports.create = async (req,res,next) => {
-    await Subject.collection.insertMany(req.body)
+    await Subject.collection.insertOne(req.body)
     res.json({success: true, message: 'courses inserted successfullty'});
 }
 
