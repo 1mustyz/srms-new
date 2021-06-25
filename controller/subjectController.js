@@ -22,6 +22,6 @@ exports.getAllSubject = async (req,res,next) => {
     const result = await Subject.find()
     result.length > 0
      ? res.json({success: true, message: result})
-     : res.json({success: true, message: 'no subject added yet'})
+     : res.json({success: true, message: result})
     
 }

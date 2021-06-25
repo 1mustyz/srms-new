@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const {Schema, model} = mongoose;
 
 TermSetterSchema = new Schema({
-    currentTerm: String
+    currentTerm: String,
+    session: {
+        year: String
+    }
 })
 
 const TermSetter = model('termSetter',TermSetterSchema);
