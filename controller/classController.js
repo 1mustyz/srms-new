@@ -29,5 +29,15 @@ exports.getAllClasses = async (req,res,next) => {
 
     result.length > 0
      ? res.json({success: true, message: result})
-     : res.json({success: false, message: `No class is added yet`})
+     : res.json({success: false, message: result})
+}
+
+exports.getEveryClass = async (req,res,next) => {
+    const {section} = req.query
+
+    const result = await Class.find()
+
+    result.length > 0
+     ? res.json({success: true, message: result})
+     : res.json({success: false, message: result})
 }
