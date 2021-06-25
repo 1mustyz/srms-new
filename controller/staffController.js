@@ -112,14 +112,33 @@ exports.setProfilePic = async (req,res, next) => {
 
 exports.setRole = async (req,res,next) => {
   const {role,teach} = req.body;
-  console.log(teach)
+  // console.log(teach)
 
   // req.session.user._id
-  await Staff.findOneAndUpdate({username: req.query.id},{$set: {role: role}})
+  // console.log(role)
+  const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1})
+
+  console.log( result[0].teach[0])
+
+  result[0].role.includes(role)
+   ? ''
+   : await Staff.findOneAndUpdate({_id: req.query.id},{$push: {"role": role}})
+
+   console.log(teach.subject.toString())
+  
+  role == "None"
+   ? await Staff.findOneAndUpdate({_id: req.query.id},{$set: {"role": [], "teach": []}})
+   : ''
 
   role == "Teacher" || role.includes('Teacher')
-   ? await Staff.findOneAndUpdate(req.query.id, {$set: {"teach":teach}})
-   : await Staff.findOneAndUpdate(req.query.id, {$set: {"teach":null}})
+   ? result[0].teach.length > 0 
+    ? result[0].teach[0].class == teach.class
+     ? result[0].teach[0].subject.includes(teach.subject.toString())
+      ? '' 
+      : await Staff.findOneAndUpdate(req.query.id, {$push: {"teach.$[].subject":teach.subject.toString()}})
+     : await Staff.findOneAndUpdate(req.query.id, {$push: {"teach":teach}})
+    : await Staff.findOneAndUpdate(req.query.id, {$set: {"teach":teach}}) 
+   : ''
 
    res.json({success: true, message: 'role has been set successfully'})
 }
