@@ -18,7 +18,7 @@ exports.delete = async (req,res,next) => {
     const {id} = req.body;
     
     await Class.findByIdAndDelete(id)
-    res.json({success: true, message: `${className} deleted`})
+    res.json({success: true, message: `deleted`})
 
 }
 
