@@ -6,10 +6,10 @@ exports.setNewTerm = async (req,res,next) => {
     const result = await TermSetter.find().countDocuments()
 
     result > 0
-     ? await TermSetter.delete()
+     ? await TermSetter.remove()
      : ''
 
-    await TermSetter.insertOne({currentTerm: newTerm});
+    await TermSetter.collection.insertOne({currentTerm: newTerm});
     res.json({success: true, message: 'new term has been set successfully'})
 }
 

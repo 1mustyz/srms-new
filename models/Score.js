@@ -11,11 +11,11 @@ const ScoreSchema = new Schema({
     term: { type: String, default: 1},
     category: String,
     subject: String,
-    ca1: Number,
-    ca2: Number,
-    ca3: Number,
-    ca4: Number,
-    exam: Number,
+    ca1: { type: Number, default: 20},
+    ca2: { type: Number, default: 20},
+    ca3: { type: Number, default: 20},
+    ca4: { type: Number, default: 20},
+    exam: { type: Number, default: 20},
     grade: String,
     isfinalSubmitted: { type: Boolean, default: false }
 })
