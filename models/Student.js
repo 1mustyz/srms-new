@@ -4,6 +4,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 
 //Schema design
 const StudentSchema = new Schema({
+    status: { type: String, default: 'Active' },
     username: { type: String, required: true, unique: [ true, 'ID Number already exist' ] },
     firstName: {type: String, require: true},
     lastName: {type: String, require: true},
@@ -22,7 +23,7 @@ const StudentSchema = new Schema({
     image: { type: String, default: '1.jpg' },
     currentClass: { type: String },
     section: { type: String }, // specifies type of student primary, junior or senior
-    category: { type: String, default: 'none' }, // specifies category for senior school students Science, Art or Null for primary & junior pupils
+    category: { type: String, default: 'none' } // specifies category for senior school students Science, Art or Null for primary & junior pupils
 }, { timestamps: true });
 
 //plugin passport-local-mongoose to enable password hashing and salting and simpligy other things
