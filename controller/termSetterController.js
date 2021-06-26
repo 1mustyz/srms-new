@@ -42,4 +42,12 @@ exports.setSession = async (req,res,next) => {
     const result = await TermSetter.findOne({},{session: 1})
     console.log(result)
     await TermSetter.updateOne({session: session})
+    res.json({success: true, message: 'new session has been set successfully'})
+
+}
+
+exports.getSession = async (req,res,next) => {
+    const result = await TermSetter.findOne({},{session: 1})
+    res.json({success: true, result})
+
 }

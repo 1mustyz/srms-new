@@ -58,7 +58,7 @@ router.get('/get-all-student-according-to-section',
 
  router.get('/get-all-student-according-to-class-category',
  studentController.findAllStudentAccordinToClassAndCategory);
- 
+
 router.get('/get-paid-student-statistics',paymentController.getPaidAndUnPaidStudent) 
 
 router.get('/get-single-student', studentController.findOneStudent);
@@ -67,6 +67,7 @@ router.get('/get-all-classes', classController.getAllClasses)
 router.get('/get-every-class', classController.getEveryClass)
 
 router.get('/get-current-term', termSetterController.getCurrentTerm)
+router.get('/get-current-session', termSetterController.getSession)
 router.get('/get-all-cognitive-item', cognitiveController.getAllAddNewCognitive)
 router.get('/get-all-student-cognitive', cognitiveController.getAllStudentCognitive)
 
