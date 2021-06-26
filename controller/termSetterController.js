@@ -1,19 +1,45 @@
 const TermSetter = require('../models/TermSetter');
 
 exports.setNewTerm = async (req,res,next) => {
-    const {newTerm} = req.body;
 
-    const result = await TermSetter.find().countDocuments()
+    const result = await TermSetter.find()
 
-    result > 0
-     ? await TermSetter.remove()
+    console.log(result.length)
+
+    result.length == 0
+     ? await TermSetter.collection.insertOne({currentTerm: 'First Term', termNumber: 1})
      : ''
 
-    await TermSetter.collection.insertOne({currentTerm: newTerm});
+    if (result.length > 0){
+        const result = await TermSetter.findOne()
+
+        switch (result.termNumber) {
+            case 1:
+                await TermSetter.updateOne({currentTerm: 'Second Term', termNumber: 2})
+                break;
+            case 2:
+                await TermSetter.updateOne({currentTerm: 'Third Term', termNumber: 3})
+                break;
+            case 3:
+                await TermSetter.updateOne({currentTerm: 'First Term', termNumber: 1})
+                break;
+            
+            default:
+                await TermSetter.updateOne({currentTerm: 'First Term', termNumber: 1})
+                break;
+        }
+    } 
     res.json({success: true, message: 'new term has been set successfully'})
 }
 
 exports.getCurrentTerm = async (req,res,next) => {
     const result = await TermSetter.find()
     res.json({success: true, result})
+}
+
+exports.setSession = async (req,res,next) => {
+    const {session} = req.body
+    const result = await TermSetter.findOne({},{session: 1})
+    console.log(result)
+    await TermSetter.updateOne({session: session})
 }

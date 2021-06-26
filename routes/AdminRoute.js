@@ -24,6 +24,7 @@ router.post('/create-subject', subjectController.create)
 router.post('/create-class', classController.create)
 router.post('/verify-payment', paymentController.verifyPayment);
 router.post('/set-new-term',termSetterController.setNewTerm)
+router.post('/set-new-session',termSetterController.setSession)
 router.post('/add-new-cognitive-item', cognitiveController.addNewCognitive)
 router.post('/add-student-cognitive', cognitiveController.createStudentCognitive)
 
@@ -51,8 +52,13 @@ router.get('/get-all-teachers', staffController.findAllTeachers);
 router.get('/get-all-principal', staffController.findAllPrincipal);
 router.get('/get-all-staff', staffController.findAllStaff);
 router.get('/get-all-student', studentController.findAllStudent);
+
 router.get('/get-all-student-according-to-section',
  studentController.findAllStudentAccordinToSection);
+
+ router.get('/get-all-student-according-to-class-category',
+ studentController.findAllStudentAccordinToClassAndCategory);
+ 
 router.get('/get-paid-student-statistics',paymentController.getPaidAndUnPaidStudent) 
 
 router.get('/get-single-student', studentController.findOneStudent);

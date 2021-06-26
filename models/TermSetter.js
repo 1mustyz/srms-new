@@ -3,8 +3,9 @@ const {Schema, model} = mongoose;
 
 TermSetterSchema = new Schema({
     currentTerm: String,
+    termNumber: {type: Number, default: 1},
     session: {
-        year: String
+        year: {type: String, default: 1}
     }
 })
 

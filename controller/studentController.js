@@ -112,6 +112,15 @@ exports.findAllStudentAccordinToSection = async (req,res,next) => {
   
 }
 
+exports.findAllStudentAccordinToClassAndCategory = async (req,res,next) => {
+  const {currentClass,category} = req.query
+
+  const students = await Student.find({currentClass: currentClass, category: category})
+  
+  res.json({ success: true, students:students })
+  
+}
+
 
 exports.updateSingleStudent = async (req,res,next) => {
   const {id} = req.query;

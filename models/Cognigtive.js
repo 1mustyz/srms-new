@@ -7,7 +7,11 @@ const CognitiveSchema = new Schema({
     studentId: String,
     firstName: String,
     lastName: String,
-    cognitive: Object
+    cognitive: Object,
+    remarks: String,
+    term: String,
+    session: String
+
 })
 
 const Cognitive = model('cognitive', CognitiveSchema)
