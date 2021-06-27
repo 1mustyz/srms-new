@@ -41,10 +41,10 @@ exports.registerStudent = async function (req, res, next) {
        const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
        const noOfCourse = await Curriculum.find(
          {'name': user.currentClass, 'category': user.category},
-         { 'subject': 1, _id: 0}
+         { 'subject': 1}
        )
 
-       console.log(termAndSession)
+       console.log('-----------------',termAndSession)
        const cognitiveData = {
          username: user.username,
          studentId: user._id,
@@ -60,7 +60,7 @@ exports.registerStudent = async function (req, res, next) {
         studentId: user._id,
         username: user.username,
         class: user.currentClass,
-        noOfCourse: noOfCourse[0].subject.length + 1,
+        noOfCourse: noOfCourse[0].subject.length,
         term: termAndSession[0].termNumber,
         session: termAndSession[0].session.year,
       })
