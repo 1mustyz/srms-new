@@ -26,6 +26,8 @@ exports.registerStudent = async function (req, res, next) {
        { 'name': user.currentClass, 'category': user.category},
        { 'subject': 1, _id: 0})
 
+        console.log(subjects)
+
       const studentSubjects = subjects[0].subject.map(subject => ({
         subject, 
         studentId: user._id,
@@ -57,7 +59,7 @@ exports.registerStudent = async function (req, res, next) {
       await TermResult.collection.insertOne({
         studentId: user._id,
         username: user.username,
-        class: user.className,
+        class: user.currentClass,
         noOfCourse: noOfCourse[0].subject.length + 1,
         term: termAndSession[0].termNumber,
         session: termAndSession[0].session.year,

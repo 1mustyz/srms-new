@@ -40,7 +40,17 @@ exports.verifyPayment = async (req,res,next) => {
 exports.getAllPaidStudent = async (req,res,next) => {
     const {studentId} = req.query;
 
-    const result = await Payment.find()
+    const result = await Payment.find({paid: true})
+
+    result.length > 0
+     ? res.json({success: true, message: result})
+     : res.json({success: true, message: result})
+}
+
+exports.getAllUnPaidStudent = async (req,res,next) => {
+    const {studentId} = req.query;
+
+    const result = await Payment.find({paid: false})
 
     result.length > 0
      ? res.json({success: true, message: result})

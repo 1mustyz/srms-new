@@ -30,7 +30,6 @@ exports.getAllAddNewCognitive = async (req,res,next) => {
 }
 
 exports.createStudentCognitive = async (req,res,next) => {
-    await Cognitive.collection.insertOne(req.body)
     
     const field = req.body.key
     await Cognitive.findByIdAndUpdate(req.body.id, {
