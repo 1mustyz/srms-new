@@ -6,6 +6,9 @@ const Curriculum = require('../models/Curriculum')
 const multer = require('multer');
 const {singleUpload} = require('../middlewares/filesMiddleware');
 const TermSetter = require('../models/TermSetter');
+const Cognitive = require('../models/Cognigtive');
+const TermResult = require('../models/TermResult');
+const Payment = require('../models/Payment');
 // const connectEnsureLogin = require('connect-ensure-login')
 
 exports.registerStudent = async function (req, res, next) {
@@ -33,7 +36,26 @@ exports.registerStudent = async function (req, res, next) {
         username: user.username
        }))
 
-      Score.collection.insertMany(studentSubjects)
+       const termAndSession = await TermSetter.find({termNumber: 1, session: 1})
+       const noOfCourse = await Curriculum.find(
+         {'name': user.currentClass, 'category': user.category},
+         { 'subject': 1, _id: 0}
+       )
+
+       const cognitiveData = {
+         username: user.username,
+         studentId: user._id,
+         firstName: user.firstName,
+         lastName: user.lastName,
+         term: termAndSession.termNumber,
+         session: termAndSession.session.year,
+         noOfCourse: noOfCourse.length + 1
+       }
+
+      await Score.collection.insertMany(studentSubjects)
+      await Cognitive.collection.insertOne(cognitiveData)
+      await TermResult.collection.insertOne(cognitiveData)
+      await Payment.collection.insertOne(cognitiveData)
 
       res.json({ success: true, user })
     })

@@ -1,5 +1,6 @@
 const Staff = require('../models/Staff')
 const Score = require('../models/Score')
+const TermResult = require('../models/TermResult')
 const { updateMany } = require('../models/Staff')
 
 exports.fetchTeacherSubjects = async (req, res) => {
@@ -20,11 +21,26 @@ exports.fetchStudentsInClass = async (req, res) => {
 
 exports.liveSaveResult = async (req, res) => {
     const field = req.body.key
+
+    // i added this to update total
+    const result = await Score.findById(req.body.id,{total: 1})
+    // const termResult = await TermResult
+
     const score = await Score.findByIdAndUpdate(req.body.id, {
-        [field]: req.body.value
+        // i added the update total field
+        [field]: req.body.value, total: result.total + field
     }, {new: true, useFindAndModify: false})
 
+    await TermResult.findByIdAndUpdate(req.body.studentId, {total: result.total + field})
+
+    const termResult = await TermResult.findById(
+        req.body.studentId,{average: 1, noOfCourse: 1, total: 1})
+    
+        await TermResult.findByIdAndUpdate(req.body.studentId, {average: termResult.total / termResult.noOfCourse})    
     res.json({ success: true, score })
+
+
+    
 }
 
 // exports.saveAndContinue = async (req, res) => {

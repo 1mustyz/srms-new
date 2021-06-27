@@ -14,14 +14,25 @@ exports.updatePaymentTypes = async (req,res,next) => {
 }
 
 exports.verifyPayment = async (req,res,next) => {
-    
-    await Payment.collection.insertOne(req.body)
+    const {purposeOfPayment,teller} = req.body;
+    const {studentId} = req.query;
+    let paid = false
+
+    const result = await Payment.findOne({studentId:studentId},{paid: 1})
+
+    // if (result.paid )
+
+    if(purposeOfPayment.includes('tuition fee')) paid = true
+
+    await Payment.findOneAndUpdate({studentId:studentId},{teller: teller, paid: paid})
+    await Payment.findOneAndUpdate({studentId:studentId},
+        {$push:{purposeOfPayment: purposeOfPayment.toString()}})
     res.json({success: true, message: 'payment made'})
 
 }
 
 exports.getAllPaidStudent = async (req,res,next) => {
-    const result = await Payment.find({purposeOfPayment: 'tuition fee'})
+    const result = await Payment.find()
 
     result.length > 0
      ? res.json({success: true, message: result})

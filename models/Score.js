@@ -17,6 +17,7 @@ const ScoreSchema = new Schema({
     ca4: { type: Number, default: 20},
     exam: { type: Number, default: 20},
     grade: String,
+    total: { type: Number, default: 0},
     isfinalSubmitted: { type: Boolean, default: false }
 })
 
