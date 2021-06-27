@@ -1,6 +1,7 @@
 const Staff = require('../models/Staff')
 const Score = require('../models/Score')
 const TermResult = require('../models/TermResult')
+const TermSetter = require('../models/TermSetter')
 const { updateMany } = require('../models/Staff')
 
 exports.fetchTeacherSubjects = async (req, res) => {
@@ -22,24 +23,63 @@ exports.fetchStudentsInClass = async (req, res) => {
 exports.liveSaveResult = async (req, res) => {
     const field = req.body.key
     const value = req.body.value
-
-
-    // i added this to update total
-    const result = await Score.findById(req.body.id,{total: 1})
-    // const termResult = await TermResult
-
+    const username = req.body.username
+    const currentClass = req.body.currentClass
+    const termAndSession = await TermSetter.find()
+    
+    
     const score = await Score.findByIdAndUpdate(req.body.id, {
-        // i added the update total field
-        [field]: req.body.value, total: result.total + value
+        [field]: req.body.value
     }, {new: true, useFindAndModify: false})
+    
+    const result = await Score.findById(req.body.id)
+    let ca1 = result.ca1;
+    let ca2 = result.ca2;
+    let ca3 = result.ca3;
+    let ca4 = result.ca4;
+    let exam = result.exam;
 
+    let total = ca1 + ca2 + ca3 + ca4 + exam;
+    await Score.findByIdAndUpdate(req.body.id, {total: total})
+    const upScore = await Score.findById(req.body.id)
+    
+    
+    const allStudentTotal = await Score.find({username: username},{total: 1})
+
+    let sumTotal = allStudentTotal.reduce((a,b)=>(a.total+b.total))
+    let noOfCourses = allStudentTotal.length;
+    let average = sumTotal/noOfCourses
+    console.log(average,sumTotal,noOfCourses)
+    
     await TermResult.findOneAndUpdate({
-        username: req.body.username}, {total: result.total + value})
+        username: req.body.username
+    },{
+        total: sumTotal, average: average
+    })
+        
+    const allStudentInAclass = await TermResult.find({
+        class: currentClass
+    },{
+        average: 1
+    })
 
-    const termResult = await TermResult.find({
-        username: req.body.username},{average: 1, noOfCourse: 1, total: 1})
-        // await TermResult.findByIdAndUpdate(req.body.studentId, {average: termResult.total / termResult.noOfCourse})    
-    res.json({ success: true, score })
+    allStudentInAclass.sort((a,b) => {
+        return b.average - a.average 
+    })
+    
+ const currentPosition = allStudentInAclass.map((students,ind)=>{
+        return studentIdentity={
+           average:students.average,
+           id:students.id,
+           position:ind+1
+        }
+        
+    })
+    const finalResult = currentPosition.map( async (students,ind)=>{
+        await TermResult.findByIdAndUpdate(students.id, {position: students.position})
+    })
+            // console.log(finalResult)
+            res.json({ success: true, upScore})
 
 
     
