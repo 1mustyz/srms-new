@@ -52,10 +52,10 @@ exports.registerStudent = async function (req, res, next) {
          noOfCourse: noOfCourse.length + 1
        }
 
-      await Score.collection.insertMany(studentSubjects)
-      await Cognitive.collection.insertOne(cognitiveData)
-      await TermResult.collection.insertOne(cognitiveData)
-      await Payment.collection.insertOne(cognitiveData)
+       Score.collection.insertMany(studentSubjects)
+       Cognitive.collection.insertOne(cognitiveData)
+       TermResult.collection.insertOne(cognitiveData)
+       Payment.collection.insertOne(cognitiveData)
 
       res.json({ success: true, user })
     })
