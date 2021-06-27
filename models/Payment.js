@@ -8,12 +8,10 @@ const PaySchema = new Schema({
     firstName: {type:String},
     lastName: {type:String},
     term : {type:Number},
-    teller: {type:Array},
     session: {type:String},
-    paid: {type:Boolean},
+    paid: {type:Boolean, default: false},
     className: {type:String},
-    purposeOfPayment: {type:Array},
-
+    pays: {type:Array}
 
 },{timestamps: true})
 

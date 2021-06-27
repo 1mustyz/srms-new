@@ -36,26 +36,41 @@ exports.registerStudent = async function (req, res, next) {
         username: user.username
        }))
 
-       const termAndSession = await TermSetter.find({termNumber: 1, session: 1})
+       const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
        const noOfCourse = await Curriculum.find(
          {'name': user.currentClass, 'category': user.category},
          { 'subject': 1, _id: 0}
        )
 
+       console.log(termAndSession)
        const cognitiveData = {
          username: user.username,
          studentId: user._id,
          firstName: user.firstName,
          lastName: user.lastName,
-         term: termAndSession.termNumber,
-         session: termAndSession.session.year,
-         noOfCourse: noOfCourse.length + 1
+         term: termAndSession[0].termNumber,
+         session: termAndSession[0].session.year,
        }
 
-       Score.collection.insertMany(studentSubjects)
-       Cognitive.collection.insertOne(cognitiveData)
-       TermResult.collection.insertOne(cognitiveData)
-       Payment.collection.insertOne(cognitiveData)
+      await Score.collection.insertMany(studentSubjects)
+      await Cognitive.collection.insertOne(cognitiveData)
+      await TermResult.collection.insertOne({
+        studentId: user._id,
+        username: user.username,
+        class: user.className,
+        noOfCourse: noOfCourse[0].subject.length + 1,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year,
+      })
+      await Payment.collection.insertOne({
+        studentId: user._id,
+        username: user.username,
+        firstname: user.firstName,
+        lastName: user.lastName,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year,
+        className: user.currentClass
+      })
 
       res.json({ success: true, user })
     })

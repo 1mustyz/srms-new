@@ -14,24 +14,32 @@ exports.updatePaymentTypes = async (req,res,next) => {
 }
 
 exports.verifyPayment = async (req,res,next) => {
-    const {purposeOfPayment,teller} = req.body;
-    const {studentId} = req.query;
+    const {purposeOfPayment,teller} = req.body.pays;
+    const {username} = req.query;
     let paid = false
 
-    const result = await Payment.findOne({studentId:studentId},{paid: 1})
+    const result = await Payment.findOne({"username": username})
 
-    // if (result.paid )
+    if (result.paid && (purposeOfPayment.includes('tuition fee') || purposeOfPayment.includes('all'))){
+    res.json({success: true, message: 'you have paid for tuition fee'})
 
-    if(purposeOfPayment.includes('tuition fee')) paid = true
+    }else{
+        console.log(result)
+    if(purposeOfPayment.includes('tuition fee') || purposeOfPayment.includes('all')) paid = true
 
-    await Payment.findOneAndUpdate({studentId:studentId},{teller: teller, paid: paid})
-    await Payment.findOneAndUpdate({studentId:studentId},
-        {$push:{purposeOfPayment: purposeOfPayment.toString()}})
+    await Payment.findOneAndUpdate({"username": username},{"pays": req.body.pays})
+    await Payment.findOneAndUpdate({"username": username},{"paid": paid})
+
+    
     res.json({success: true, message: 'payment made'})
+    }
+    
 
 }
 
 exports.getAllPaidStudent = async (req,res,next) => {
+    const {studentId} = req.query;
+
     const result = await Payment.find()
 
     result.length > 0

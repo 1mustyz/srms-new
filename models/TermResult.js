@@ -8,7 +8,7 @@ const TermResultSchema = new Schema({
     average: { type: Number, default: 0},
     total: { type: Number, default: 0},
     noOfCourse: { type: Number, default: 0},
-    position: { type:String},
+    position: { type:String, default: 0},
     term: { type:String},
     session: { type:String}
 })
