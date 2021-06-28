@@ -30,6 +30,7 @@ exports.registerStudent = async function (req, res, next) {
 
       const studentSubjects = subjects[0].subject.map(subject => ({
         subject, 
+        username: user.username,
         studentId: user._id,
         class: user.currentClass,
         category: user.category,

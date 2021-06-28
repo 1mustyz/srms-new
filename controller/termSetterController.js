@@ -46,6 +46,7 @@ exports.setNewTerm = async (req,res,next) => {
         // create score document for each student's subject
         const scoreDocuments = studentSubjects[0].subject.map(subject => ({
             subject,
+            username: student.username,
             studentId: student._id,
             class: student.currentClass,
             category: student.category,
