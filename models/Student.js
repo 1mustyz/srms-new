@@ -14,7 +14,7 @@ const StudentSchema = new Schema({
     kinNumber: {type: String},
     kinRelation: {type: String},
     kinAddress: {type: String},
-    dob: {type: Date},
+    dob: {type: String},
     gender: {type: String},
     term: {type: String},
     country: {type: String, default: "Nigeria"},

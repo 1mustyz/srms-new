@@ -20,7 +20,7 @@ exports.registerStudent = async function (req, res, next) {
     const password = req.body.password ? req.body.password : 'password';
     //save the user to the DB
     Student.register(user, password, async (error, user) => {
-      if (error) return res.json({ success: false, error }) 
+      if (error) return res.json({ success: 'false 1', error }) 
       // add subjects to the student
       const subjects = await Curriculum.find(
        { 'name': user.currentClass, 'category': user.category},
@@ -39,13 +39,16 @@ exports.registerStudent = async function (req, res, next) {
         username: user.username
        }))
 
+       console.log(studentSubjects)
+
+
        const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
        const noOfCourse = await Curriculum.find(
          {'name': user.currentClass, 'category': user.category},
-         { 'subject': 1, _id: 0}
+         { 'subject': 1}
        )
 
-       console.log(termAndSession)
+       console.log('-----------------',termAndSession)
        const cognitiveData = {
          username: user.username,
          studentId: user._id,
@@ -61,7 +64,7 @@ exports.registerStudent = async function (req, res, next) {
         studentId: user._id,
         username: user.username,
         class: user.currentClass,
-        noOfCourse: noOfCourse[0].subject.length + 1,
+        noOfCourse: noOfCourse[0].subject.length,
         term: termAndSession[0].termNumber,
         session: termAndSession[0].session.year,
       })
@@ -70,6 +73,7 @@ exports.registerStudent = async function (req, res, next) {
         username: user.username,
         firstname: user.firstName,
         lastName: user.lastName,
+        paid: false,
         term: termAndSession[0].termNumber,
         session: termAndSession[0].session.year,
         className: user.currentClass
@@ -78,7 +82,7 @@ exports.registerStudent = async function (req, res, next) {
       res.json({ success: true, user })
     })
   } catch (error) {
-    res.json({ success: false, error })
+    res.json({ success: 'false 2', error })
   }
 }
 

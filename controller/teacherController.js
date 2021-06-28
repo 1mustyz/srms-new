@@ -32,8 +32,6 @@ exports.liveSaveResult = async (req, res) => {
         [field]: value
     }, {new: true, useFindAndModify: false})
     
-
-    // Souley's own starts here
     // // get total by adding all ca and exam value if they exist
     const ca1 = score.ca1 === undefined ? 0 : score.ca1
     const ca2 = score.ca2 === undefined ? 0 : score.ca2
@@ -82,7 +80,7 @@ exports.liveSaveResult = async (req, res) => {
     })
         
     const allStudentInAclass = await TermResult.find({
-        class: currentClass
+        class: currentClass  // TODO set term to current term
     },{
         average: 1
     })
