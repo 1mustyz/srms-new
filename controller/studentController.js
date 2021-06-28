@@ -15,7 +15,7 @@ exports.registerStudent = async function (req, res, next) {
   try {
     //create the user instance
     const term = await TermSetter.find({ })
-    req.body.term = term[0].termNumber
+    // req.body.term = term[0].termNumber
     user = new Student(req.body)
     const password = req.body.password ? req.body.password : 'password';
     //save the user to the DB
@@ -39,7 +39,7 @@ exports.registerStudent = async function (req, res, next) {
         username: user.username
        }))
 
-       console.log(studentSubjects)
+       console.log(user.currentClass, user.category)
 
 
        const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})

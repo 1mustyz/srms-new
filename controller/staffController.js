@@ -126,7 +126,7 @@ exports.setRole = async (req,res,next) => {
 
    console.log(teach.subject.toString())
   
-  role == "None"
+  role == "none"
    ? await Staff.findOneAndUpdate({_id: req.query.id},{$set: {"role": [], "teach": []}})
    : ''
 
