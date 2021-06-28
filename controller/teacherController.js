@@ -29,16 +29,11 @@ exports.liveSaveResult = async (req, res) => {
     
     
     const score = await Score.findByIdAndUpdate(req.body.id, {
-        [field]: req.body.value
+        [field]: value
     }, {new: true, useFindAndModify: false})
     
-    const result = await Score.findById(req.body.id)
-    let ca1 = result.ca1;
-    let ca2 = result.ca2;
-    let ca3 = result.ca3;
-    let ca4 = result.ca4;
-    let exam = result.exam;
 
+    // Souley's own starts here
     // // get total by adding all ca and exam value if they exist
     const ca1 = score.ca1 === undefined ? 0 : score.ca1
     const ca2 = score.ca2 === undefined ? 0 : score.ca2
@@ -68,14 +63,12 @@ exports.liveSaveResult = async (req, res) => {
         total,
         grade
     }, {new: true, useFindAndModify: false})
+    // Souley's own end here 
 
-    res.json({ success: true, result })
-    let total = ca1 + ca2 + ca3 + ca4 + exam;
-    await Score.findByIdAndUpdate(req.body.id, {total: total})
     const upScore = await Score.findById(req.body.id)
     
     
-    const allStudentTotal = await Score.find({username: username},{total: 1})
+    const allStudentTotal = await Score.find({username: username}, {total: 1})
 
     let sumTotal = allStudentTotal.reduce((a,b)=>(a.total+b.total))
     let noOfCourses = allStudentTotal.length;
@@ -110,10 +103,7 @@ exports.liveSaveResult = async (req, res) => {
         await TermResult.findByIdAndUpdate(students.id, {position: students.position})
     })
             // console.log(finalResult)
-            res.json({ success: true, upScore})
-
-
-    
+            res.json({ success: true, upScore})   
 }
 
 // exports.saveAndContinue = async (req, res) => {
