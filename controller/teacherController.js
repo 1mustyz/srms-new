@@ -24,7 +24,37 @@ exports.liveSaveResult = async (req, res) => {
         [field]: req.body.value
     }, {new: true, useFindAndModify: false})
 
-    res.json({ success: true, score })
+    // // get total by adding all ca and exam value if they exist
+    const ca1 = score.ca1 === undefined ? 0 : score.ca1
+    const ca2 = score.ca2 === undefined ? 0 : score.ca2
+    const ca3 = score.ca3 === undefined ? 0 : score.ca3
+    const ca4 = score.ca4 === undefined ? 0 : score.ca4
+    const exam = score.exam === undefined ? 0 : score.exam
+    const total = ca1 + ca2 + ca3 + ca4 + exam
+
+    // // use if else to find grade based on score value 
+    let grade
+    if(total >= 70) {
+        grade = 'A'
+    } else if(total >= 60) {
+        grade = 'B'
+    } else if(total >= 50) {
+        grade = 'C'
+    } else if(total >= 45) {
+        grade = 'D'
+    } else if(total >= 40) {
+        grade = 'E'
+    } else {
+        grade = 'F'
+    }
+
+    // // update grade and total field
+    const result = await Score.findByIdAndUpdate(score._id, {
+        total,
+        grade
+    }, {new: true, useFindAndModify: false})
+
+    res.json({ success: true, result })
 }
 
 // exports.saveAndContinue = async (req, res) => {
