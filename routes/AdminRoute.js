@@ -9,8 +9,6 @@ const subjectController = require('../controller/subjectController');
 const classController = require('../controller/classController')
 const termSetterController = require('../controller/termSetterController')
 const cognitiveController = require('../controller/cognitiveController');
-const { route } = require('./teacherRoute');
-const { _router } = require('../app');
 
 router.post('/register-staff', staffController.registerStaff)
 router.post('/register-student', studentController.registerStudent)
@@ -47,6 +45,7 @@ router.get('/get-single-curriculum', curriculumController.getSingleCurriculum)
 router.get('/dashboard', staffController.statistics)
 router.get('/get-payment-type', paymentController.getPayment);
 router.get('/get-all-paid-student', paymentController.getAllPaidStudent);
+router.get('/get-all-un-paid-student', paymentController.getAllUnPaidStudent);
 router.get('/get-all-teachers', staffController.findAllTeachers);
 router.get('/get-all-principal', staffController.findAllPrincipal);
 router.get('/get-all-staff', staffController.findAllStaff);

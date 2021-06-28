@@ -32,14 +32,14 @@ exports.liveSaveResult = async (req, res) => {
         [field]: req.body.value
     }, {new: true, useFindAndModify: false})
     
-    const result = await Score.findById(req.body.id)
-    let ca1 = result.ca1;
-    let ca2 = result.ca2;
-    let ca3 = result.ca3;
-    let ca4 = result.ca4;
-    let exam = result.exam;
+    // const result = await Score.findById(req.body.id)
+    // let ca1 = result.ca1;
+    // let ca2 = result.ca2;
+    // let ca3 = result.ca3;
+    // let ca4 = result.ca4;
+    // let exam = result.exam;
 
-    let total = ca1 + ca2 + ca3 + ca4 + exam;
+    // let total = ca1 + ca2 + ca3 + ca4 + exam;
     await Score.findByIdAndUpdate(req.body.id, {total: total})
     const upScore = await Score.findById(req.body.id)
     
