@@ -26,7 +26,6 @@ router.post('/verify-payment', paymentController.verifyPayment);
 router.post('/set-new-term',termSetterController.setNewTerm)
 router.post('/set-new-session',termSetterController.setSession)
 router.post('/add-new-cognitive-item', cognitiveController.addNewCognitive)
-router.post('/add-student-cognitive', cognitiveController.createStudentCognitive)
 
 // admin set his profile
 router.put('/set-profile-pic', staffController.setProfilePic);
@@ -34,6 +33,7 @@ router.put('/set-profile-pic', staffController.setProfilePic);
 // set role for staff
 router.put('/set-role', staffController.setRole);
 
+router.put('/add-student-cognitive', cognitiveController.createStudentCognitive)
 router.put('/update-payment', paymentController.updatePaymentTypes)
 
 router.put('/update-single-student-profile', studentController.updateSingleStudent);
@@ -41,7 +41,6 @@ router.put('/update-single-curriculum', curriculumController.updateSingleCurricu
 router.put('/update-single-subject', subjectController.update)
 router.put('/update-class', classController.update)
 router.put('/update-cognitive-item', cognitiveController.updateAddNewCognitive)
-router.put('/update-student-cognitive', cognitiveController.updateStudentCognitive)
 
 router.get('/get-all-curriculum', curriculumController.getAllCurriculum)
 router.get('/get-single-curriculum', curriculumController.getSingleCurriculum)

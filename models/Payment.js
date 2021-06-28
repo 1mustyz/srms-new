@@ -3,13 +3,15 @@ const Schema = mongoose.Schema;
 
 const PaySchema = new Schema({
 
-    studentId: {type: String, default: 'my id'},
-    studentName: String,
-    term : String,
-    teller: String,
-    className: String,
-    purposeOfPayment: Array,
-
+    studentId: {type:String},
+    username: {type:String},
+    firstName: {type:String},
+    lastName: {type:String},
+    term : {type:Number},
+    session: {type:String},
+    paid: {type:Boolean, default: false},
+    className: {type:String},
+    pays: {type:Array}
 
 },{timestamps: true})
 

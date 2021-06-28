@@ -36,8 +36,7 @@ exports.setNewTerm = async (req,res,next) => {
     // find all students that have not graduate 
     const students = await Student.find({ status: 'Active' })
     let subjects = await Curriculum.find({ })
-    let bulkArr = []
-
+    
     students.forEach( async (student) => {
         // find student class and subjects
         const studentSubjects = subjects.filter( currentELement => {
@@ -47,6 +46,7 @@ exports.setNewTerm = async (req,res,next) => {
         // create score document for each student's subject
         const scoreDocuments = studentSubjects[0].subject.map(subject => ({
             subject,
+            username: student.username,
             studentId: student._id,
             class: student.currentClass,
             category: student.category,

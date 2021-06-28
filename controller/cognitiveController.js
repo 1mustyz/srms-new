@@ -30,16 +30,16 @@ exports.getAllAddNewCognitive = async (req,res,next) => {
 }
 
 exports.createStudentCognitive = async (req,res,next) => {
-    await Cognitive.collection.insertOne(req.body)
+    
+    const field = req.body.key
+    await Cognitive.findByIdAndUpdate(req.body.id, {
+        [field]: req.body.value
+    }, {new: true, useFindAndModify: false})
+    
     res.json({success: true, message: 'you have created a cognitive for a student'})
 }
 
-exports.updateStudentCognitive = async (req,res,next) => {
-    const {id, cognitive} = req.body
-    await Cognitive.findByIdAndUpdate(id, {cognitive: cognitive})
-    res.json({success: true, message: 'you have updated a cognitive for a student'})
 
-}
 
 exports.getAllStudentCognitive = async (req,res,next) => {
     const result = await Cognitive.find()
