@@ -20,7 +20,7 @@ exports.registerStudent = async function (req, res, next) {
     const password = req.body.password ? req.body.password : 'password';
     //save the user to the DB
     Student.register(user, password, async (error, user) => {
-      if (error) return res.json({ success: false, error }) 
+      if (error) return res.json({ success: 'false 1', error }) 
       // add subjects to the student
       const subjects = await Curriculum.find(
        { 'name': user.currentClass, 'category': user.category},
@@ -38,6 +38,9 @@ exports.registerStudent = async function (req, res, next) {
         lastName: user.lastName,
         username: user.username
        }))
+
+       console.log(studentSubjects)
+
 
        const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
        const noOfCourse = await Curriculum.find(
@@ -79,7 +82,7 @@ exports.registerStudent = async function (req, res, next) {
       res.json({ success: true, user })
     })
   } catch (error) {
-    res.json({ success: false, error })
+    res.json({ success: 'false 2', error })
   }
 }
 

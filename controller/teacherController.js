@@ -61,7 +61,7 @@ exports.liveSaveResult = async (req, res) => {
         total,
         grade
     }, {new: true, useFindAndModify: false})
-    
+
     const upScore = await Score.findById(req.body.id)
     
     
@@ -79,7 +79,7 @@ exports.liveSaveResult = async (req, res) => {
     })
         
     const allStudentInAclass = await TermResult.find({
-        class: currentClass
+        class: currentClass  // TODO set term to current term
     },{
         average: 1
     })
