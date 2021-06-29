@@ -70,7 +70,7 @@ exports.liveSaveResult = async (req, res) => {
         {class: currentClass, subject: subject, category: category},
         {total: 1}
         )
-
+console.log('--------------', allStudentScoreInAClass)
         allStudentScoreInAClass.sort((a,b) => {
             return b.total - a.total 
         })    
@@ -89,13 +89,13 @@ exports.liveSaveResult = async (req, res) => {
     console.log(currentSubjectPosition)
     
     const allStudentTotal = await Score.find({username: username},{total: 1})
-
     
+    console.log('+++++++++++++++++',allStudentTotal)
     
-    let sumTotal = allStudentTotal.reduce((a,b)=>(a.total+b.total))
+    let sumTotal = allStudentTotal.reduce((a,b)=> a.total + b.total)
     let noOfCourses = allStudentTotal.length;
     let average = sumTotal/noOfCourses
-    // console.log(average,sumTotal,noOfCourses)
+    console.log(average,sumTotal,noOfCourses)
     
     await TermResult.findOneAndUpdate({
         username: req.body.username
