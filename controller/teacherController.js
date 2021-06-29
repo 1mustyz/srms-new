@@ -76,13 +76,17 @@ exports.liveSaveResult = async (req, res) => {
             return b.total - a.total 
         })    
 
-        const currentSubjectPosition = allStudentScoreInAClass.map((students,ind)=>{
-            return studentIdentity={
-               id:students.id,
-               position:ind+1
-            }
+    const currentSubjectPosition = allStudentScoreInAClass.map((students,ind)=>{
+        return studentIdentity={
+            id:students.id,
+            position:ind+1
+        }
             
-        })    
+    })    
+
+    currentSubjectPosition.map( async (students,ind)=>{
+            await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
+    })    
     console.log(currentSubjectPosition)
     
     const allStudentTotal = await Score.find({username: username},{total: 1})
