@@ -2,7 +2,6 @@ const Staff = require('../models/Staff')
 const Score = require('../models/Score')
 const TermResult = require('../models/TermResult')
 const TermSetter = require('../models/TermSetter')
-const { updateMany } = require('../models/Staff')
 
 exports.fetchTeacherSubjects = async (req, res) => {
     const teacher = await Staff.findById(req.query.id)
@@ -25,9 +24,12 @@ exports.liveSaveResult = async (req, res) => {
     const value = req.body.value
     const username = req.body.username
     const currentClass = req.body.currentClass
+    const subject = req.body.subject
+    const category = req.body.category
     const termAndSession = await TermSetter.find()
     
     
+
     const score = await Score.findByIdAndUpdate(req.body.id, {
         [field]: value
     }, {new: true, useFindAndModify: false})
@@ -64,11 +66,40 @@ exports.liveSaveResult = async (req, res) => {
     // Souley's own end here 
 
     const upScore = await Score.findById(req.body.id)
+
+    //  calculate position for a specific subject
+    const allStudentScoreInAClass = await Score.find(
+        {class: currentClass, subject: subject, category: category},
+        {total: 1}
+        )
+console.log('--------------', allStudentScoreInAClass)
+        allStudentScoreInAClass.sort((a,b) => {
+            return b.total - a.total 
+        })    
+
+    const currentSubjectPosition = allStudentScoreInAClass.map((students,ind)=>{
+        return studentIdentity={
+            id:students.id,
+            position:ind+1
+        }
+            
+    })    
+
+    currentSubjectPosition.map( async (students,ind)=>{
+            await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
+    })    
+    console.log(currentSubjectPosition)
     
+    const allStudentTotal = await Score.find({username: username, term: termAndSession.termNumber},{total: 1})
+    console.log(allStudentTotal)
+    let sumTotal = allStudentTotal.reduce((a,b)=> (+a +  +b.total),0 )
     
     const allStudentTotal = await Score.find({username: username}, {total: 1})
 
     let sumTotal = allStudentTotal.reduce((a,b)=>(a.total+b.total))
+   
+    
+    // console.log('+++++++++++++++++', sumTotal)
     let noOfCourses = allStudentTotal.length;
     let average = sumTotal/noOfCourses
     console.log(average,sumTotal,noOfCourses)

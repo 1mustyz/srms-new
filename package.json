@@ -9,6 +9,7 @@
   "dependencies": {
     "connect-ensure-login": "^0.1.1",
     "connect-mongo": "^4.4.1",
+    "connect-multiparty": "^2.2.0",
     "connect-redis": "^6.0.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",

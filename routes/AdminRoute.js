@@ -9,6 +9,7 @@ const subjectController = require('../controller/subjectController');
 const classController = require('../controller/classController')
 const termSetterController = require('../controller/termSetterController')
 const cognitiveController = require('../controller/cognitiveController');
+const assignmentController = require('../controller/assignmentController')
 
 router.post('/register-staff', staffController.registerStaff)
 router.post('/register-student', studentController.registerStudent)
@@ -58,6 +59,7 @@ router.get('/get-all-student-according-to-section',
  studentController.findAllStudentAccordinToClassAndCategory);
 
 router.get('/get-paid-student-statistics',paymentController.getPaidAndUnPaidStudent) 
+router.get('/get-all-paid-and-un-paid-student', paymentController.getAllPaidAndUnPaidStudent)
 
 router.get('/get-single-student', studentController.findOneStudent);
 router.get('/get-all-subject', subjectController.getAllSubject)
@@ -68,6 +70,7 @@ router.get('/get-current-term', termSetterController.getCurrentTerm)
 router.get('/get-current-session', termSetterController.getSession)
 router.get('/get-all-cognitive-item', cognitiveController.getAllAddNewCognitive)
 router.get('/get-all-student-cognitive', cognitiveController.getAllStudentCognitive)
+router.get('/get-all-teachers-assignment', assignmentController.getAllAssignmentAdmin)
 
 router.delete('/remove-student', studentController.removeStudent)
 router.delete('/delete-single-curriculum', curriculumController.deleteSingleCurriculum)

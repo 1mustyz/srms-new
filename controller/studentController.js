@@ -9,6 +9,7 @@ const TermSetter = require('../models/TermSetter');
 const Cognitive = require('../models/Cognigtive');
 const TermResult = require('../models/TermResult');
 const Payment = require('../models/Payment');
+const Assignment = require('../models/Assignment');
 // const connectEnsureLogin = require('connect-ensure-login')
 
 exports.registerStudent = async function (req, res, next) {
@@ -18,11 +19,12 @@ exports.registerStudent = async function (req, res, next) {
     const classNumber = req.body.currentClass.split('')
     req.body.classNumber = classNumber[classNumber.length -1]
     req.body.term = term[0].termNumber
+    // req.body.term = term[0].termNumber
     user = new Student(req.body)
     const password = req.body.password ? req.body.password : 'password';
     //save the user to the DB
     Student.register(user, password, async (error, user) => {
-      if (error) return res.json({ success: 'false 1', error }) 
+      if (error) return res.json({ success: false, error }) 
       // add subjects to the student
       const subjects = await Curriculum.find(
        { 'name': user.currentClass, 'category': user.category},
@@ -41,7 +43,7 @@ exports.registerStudent = async function (req, res, next) {
         username: user.username
        }))
 
-       console.log(studentSubjects)
+       console.log(user.currentClass, user.category)
 
 
        const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
@@ -84,7 +86,7 @@ exports.registerStudent = async function (req, res, next) {
       res.json({ success: true, user })
     })
   } catch (error) {
-    res.json({ success: 'false 2', error })
+    res.json({ success: false, error })
   }
 }
 
@@ -208,4 +210,11 @@ exports.removeStudent = async (req,res,next) => {
   const {id} = req.query;
   await Student.findOneAndDelete({_id: id})
   res.json({success: true, message: `student with the id ${id} has been removed`})
+}
+
+exports.getStudentAssignment = async (req,res,next) => {
+  const {className,category} = req.query
+
+  const result = await Assignment.find({class: className, category: category})
+  res.json({success: true, message: result})
 }

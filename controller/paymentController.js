@@ -65,6 +65,14 @@ exports.getPayment = async (req,res,next) => {
 
 }
 
+exports.getAllPaidAndUnPaidStudent = async (req,res,next) => {
+    const unPaid = await Payment.find({paid: false})
+    const paid = await Payment.find({paid: true})
+
+    unPaid.length > 0 && paid.length > 0
+     ? res.json({success: true, message: [...unPaid,...paid]})
+     : res.json({success: false, message: [...unPaid,...paid]})
+}
 exports.getPaidAndUnPaidStudent = async (req,res,next) => {
 
     const allDaycarePaidStudent = await Payment.find({className: 'Daycare', paid: true}).countDocuments();
