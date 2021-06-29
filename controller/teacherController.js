@@ -29,6 +29,7 @@ exports.liveSaveResult = async (req, res) => {
     const termAndSession = await TermSetter.find()
     
     
+
     const score = await Score.findByIdAndUpdate(req.body.id, {
         [field]: req.body.value
     }, {new: true, useFindAndModify: false})
@@ -88,11 +89,18 @@ console.log('--------------', allStudentScoreInAClass)
     })    
     console.log(currentSubjectPosition)
     
-    const allStudentTotal = await Score.find({username: username},{total: 1})
+    const allStudentTotal = await Score.find({username: username, term: termAndSession.termNumber},{total: 1})
+    console.log(allStudentTotal)
+    let sumTotal = allStudentTotal.reduce((a,b)=> (+a +  +b.total),0 )
+    // allStudentTotal.map((student,ind)=>{
+    //     const total=student[ind].total
+    //     sample.push(total)
+    //     console.log(sample)
+    //     return total
+    // })
+   
     
-    console.log('+++++++++++++++++',allStudentTotal)
-    
-    let sumTotal = allStudentTotal.reduce((a,b)=> a.total + b.total)
+    console.log('+++++++++++++++++', sumTotal)
     let noOfCourses = allStudentTotal.length;
     let average = sumTotal/noOfCourses
     console.log(average,sumTotal,noOfCourses)
