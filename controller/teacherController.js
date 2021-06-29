@@ -2,7 +2,6 @@ const Staff = require('../models/Staff')
 const Score = require('../models/Score')
 const TermResult = require('../models/TermResult')
 const TermSetter = require('../models/TermSetter')
-const { updateMany } = require('../models/Staff')
 
 exports.fetchTeacherSubjects = async (req, res) => {
     const teacher = await Staff.findById(req.query.id)

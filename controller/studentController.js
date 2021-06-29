@@ -21,7 +21,7 @@ exports.registerStudent = async function (req, res, next) {
     const password = req.body.password ? req.body.password : 'password';
     //save the user to the DB
     Student.register(user, password, async (error, user) => {
-      if (error) return res.json({ success: 'false 1', error }) 
+      if (error) return res.json({ success: false, error }) 
       // add subjects to the student
       const subjects = await Curriculum.find(
        { 'name': user.currentClass, 'category': user.category},
@@ -83,7 +83,7 @@ exports.registerStudent = async function (req, res, next) {
       res.json({ success: true, user })
     })
   } catch (error) {
-    res.json({ success: 'false 2', error })
+    res.json({ success: false, error })
   }
 }
 
