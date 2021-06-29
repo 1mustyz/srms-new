@@ -25,6 +25,8 @@ exports.liveSaveResult = async (req, res) => {
     const value = req.body.value
     const username = req.body.username
     const currentClass = req.body.currentClass
+    const subject = req.body.subject
+    const category = req.body.category
     const termAndSession = await TermSetter.find()
     
     
@@ -63,14 +65,34 @@ exports.liveSaveResult = async (req, res) => {
     }, {new: true, useFindAndModify: false})
 
     const upScore = await Score.findById(req.body.id)
-    
+
+    //  calculate position for a specific subject
+    const allStudentScoreInAClass = await Score.find(
+        {class: currentClass, subject: subject, category: category},
+        {total: 1}
+        )
+
+        allStudentScoreInAClass.sort((a,b) => {
+            return b.total - a.total 
+        })    
+
+        const currentSubjectPosition = allStudentScoreInAClass.map((students,ind)=>{
+            return studentIdentity={
+               id:students.id,
+               position:ind+1
+            }
+            
+        })    
+    console.log(currentSubjectPosition)
     
     const allStudentTotal = await Score.find({username: username},{total: 1})
 
+    
+    
     let sumTotal = allStudentTotal.reduce((a,b)=>(a.total+b.total))
     let noOfCourses = allStudentTotal.length;
     let average = sumTotal/noOfCourses
-    console.log(average,sumTotal,noOfCourses)
+    // console.log(average,sumTotal,noOfCourses)
     
     await TermResult.findOneAndUpdate({
         username: req.body.username

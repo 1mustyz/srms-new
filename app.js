@@ -8,7 +8,8 @@ const passport = require('passport')
 const expressSession = require('express-session')
 const MongoStore = require('connect-mongo')
 const cors = require('cors');
-
+// const multipart = require('connect-multiparty');
+// global.app = module.exports = express();
 
 
 var indexRouter = require('./routes/index');
@@ -66,6 +67,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
+// app.use(multipart());
+
 
 // passport setup
 app.use(passport.initialize())

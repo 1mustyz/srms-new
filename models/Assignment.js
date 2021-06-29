@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {Shcema, model} = mongoose;
+const {Schema, model} = mongoose;
 
 
 const AssignmentSchema = new Schema({
@@ -9,5 +9,11 @@ const AssignmentSchema = new Schema({
     lastName: {type: String},
     class: {type: String},
     category: {type: String},
+    head: {type: String},
+    text: {type: String},
+    file: {type: String}
     
 })
+
+const Assignment = model('assignment', AssignmentSchema)
+module.exports = Assignment

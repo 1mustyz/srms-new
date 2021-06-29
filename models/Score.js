@@ -20,6 +20,7 @@ const ScoreSchema = new Schema({
     total: Number, 
     grade: String,
     total: { type: Number, default: 0},
+    position: Number,
     isfinalSubmitted: { type: Boolean, default: false }
 })
 

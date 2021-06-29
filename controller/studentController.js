@@ -9,6 +9,7 @@ const TermSetter = require('../models/TermSetter');
 const Cognitive = require('../models/Cognigtive');
 const TermResult = require('../models/TermResult');
 const Payment = require('../models/Payment');
+const Assignment = require('../models/Assignment');
 // const connectEnsureLogin = require('connect-ensure-login')
 
 exports.registerStudent = async function (req, res, next) {
@@ -206,4 +207,11 @@ exports.removeStudent = async (req,res,next) => {
   const {id} = req.query;
   await Student.findOneAndDelete({_id: id})
   res.json({success: true, message: `student with the id ${id} has been removed`})
+}
+
+exports.getStudentAssignment = async (req,res,next) => {
+  const {className,category} = req.query
+
+  const result = await Assignment.find({class: className, category: category})
+  res.json({success: true, message: result})
 }
