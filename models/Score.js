@@ -10,6 +10,7 @@ const ScoreSchema = new Schema({
     lastName: String,
     class: String,
     term: { type: String, default: 1},
+    session: { type: String},
     category: String,
     subject: String,
     ca1: Number, 

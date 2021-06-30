@@ -11,7 +11,8 @@ const AssignmentSchema = new Schema({
     category: {type: String},
     head: {type: String},
     text: {type: String},
-    file: {type: String}
+    file: {type: String},
+    created_at :{ type: String}
     
 })
 

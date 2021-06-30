@@ -5,6 +5,7 @@ const Staff = require('../models/Staff');
 
 exports.createAssignmentText = async (req,res,next) => {
     const {username,staffId,firstName,lastName,className,category,head,text} = req.body
+    const d = new Date
     await Assignment.findByIdAndUpdate(req.body.id, {
         username: username,
         staffId: staffId,
@@ -13,7 +14,8 @@ exports.createAssignmentText = async (req,res,next) => {
         class: className,
         category: category,
         head: head,
-        text: text
+        text: text,
+        created_at: d.getDate()
     })
     res.json({success: true, message: `assignment created for class ${req.body.className}`})
 }
@@ -49,13 +51,29 @@ exports.deleteAssignment = async (req,res,next) => {
 
 exports.getAllAssignmentAdmin = async (req,res,next) => {
     const result = await Assignment.find()
+    let currentDate = new Date()
+    
+    result.forEach(async (ass) => {
+        const expiryDate = new Date()
+        expiryDate.setDate(parseInt(ass.created_at) + 7)
+        expiryDate.getDate() == currentDate.getDate() && await Assignment.findByIdAndDelete(ass._id)
+    })
     res.json({success: true, message: result})
     
 }
 
 exports.getAllAssignmentForTeacher = async (req,res,next) => {
     const {className,category} = req.query
+    
     const result = await Assignment.find({class: className, category: category})
+    let currentDate = new Date()
+    
+    result.forEach(async (ass) => {
+        const expiryDate = new Date()
+        expiryDate.setDate(parseInt(ass.created_at) + 7)
+        expiryDate.getDate() >= currentDate.getDate() && await Assignment.findByIdAndDelete(ass._id)
+    })
     res.json({success: true, message: result})
+    
     
 }

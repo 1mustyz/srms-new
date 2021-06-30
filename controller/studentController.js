@@ -16,7 +16,7 @@ exports.registerStudent = async function (req, res, next) {
   try {
     //create the user instance
     const term = await TermSetter.find({ })
-    // req.body.term = term[0].termNumber
+    req.body.term = term.termNumber
     user = new Student(req.body)
     const password = req.body.password ? req.body.password : 'password';
     //save the user to the DB
@@ -209,9 +209,42 @@ exports.removeStudent = async (req,res,next) => {
   res.json({success: true, message: `student with the id ${id} has been removed`})
 }
 
-exports.getStudentAssignment = async (req,res,next) => {
-  const {className,category} = req.query
 
-  const result = await Assignment.find({class: className, category: category})
+exports.getAclassResult = async (req,res,next) => {
+  const {term,session,className,category} = req.body
+  const eachSubjectResult = await Score.find({
+    class: className, 
+    category,
+    term,
+    session
+  })
+
+  const cognitiveResult = await Cognitive.find({
+    class: className, 
+    category,
+    term,
+    session
+  })
+
+  const generalResult = cognitiveResult.map((student) => {
+    const singleResult = [{
+      // student.username,
+
+    }]
+  })
   res.json({success: true, message: result})
+}
+
+exports.getAsingleStudentResult = async (req,res,next) => {
+  const {term,session,className,category,username} = req.body
+
+  const result = await Score.findOne({
+    class: className, 
+    category,
+    term,
+    session,
+    username
+  })
+  res.json({success: true, message: result})
+
 }
