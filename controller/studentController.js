@@ -225,32 +225,40 @@ exports.removeStudent = async (req,res,next) => {
 exports.getAclassResult = async (req,res,next) => {
   const {term,session,className,category} = req.query
 
+// TODO add category to each of the criteria
+
   const eachSubjectResult = await Score.find({
     class: className, 
-    category,
     term,
     session
   })
 
-  console.log('-------------------',eachSubjectResult)
+  // console.log('-------------------',eachSubjectResult)
 
   const cognitiveResult = await Cognitive.find({
     class: className, 
-    category,
     term,
     session
   })
 
-  console.log('++++++++++++++++++++++',cognitiveResult)
+  const termResult = await TermResult.find({
+    class: className, 
+    term,
+    session
+  })
 
-  // const generalResult = cognitiveResult.map((student) => {
-  //   const singleResult = [{
-  //     // student.username,
+  const generalResult = termResult.map((student) => {
+  const studentCourses = eachSubjectResult.filter(std => std.username == student.username)
+  const  cognitive = cognitiveResult.filter(std => std.username == student.username)
+   return [
+      student,
+      studentCourses,
+      cognitive
+   ]
 
-  //   }]
-  //   console.log(eachSubjectResult,student)
-  // })
-  // res.json({success: true, message: result})
+})
+
+  res.json({success: true, message: generalResult})
 }
 
 
@@ -260,7 +268,6 @@ exports.getAsingleStudentResult = async (req,res,next) => {
 
   const subjectResult = await Score.findOne({
     class: className, 
-    category,
     term,
     session,
     username
@@ -268,11 +275,22 @@ exports.getAsingleStudentResult = async (req,res,next) => {
 
   const studentCognitive = await Cognitive.findOne({
     class: className, 
-    category,
     term,
     session,
     username
   })
-  res.json({success: true, message: result})
+  
+  const termResult = await TermResult.find({
+    class: className, 
+    term,
+    session,
+    username
+  })
+  const generalSingleResult = [
+    ...termResult,
+    subjectResult,
+    studentCognitive
+  ]
+  res.json({success: true, message: generalSingleResult})
 
 }
