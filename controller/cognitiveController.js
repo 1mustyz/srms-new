@@ -30,9 +30,9 @@ exports.getAllAddNewCognitive = async (req,res,next) => {
 }
 
 exports.createStudentCognitive = async (req,res,next) => {
-    
+    const {username} = req.body
     const field = req.body.key
-    await Cognitive.findByIdAndUpdate(req.body.id, {
+    await Cognitive.findOneAndUpdate({username: username}, {
         [field]: req.body.value
     }, {new: true, useFindAndModify: false})
     
