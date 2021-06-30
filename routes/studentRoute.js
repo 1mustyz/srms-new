@@ -11,7 +11,7 @@ const { isLoggedIn } = require('../middlewares/auth');
  router.put('/set-profile-pic', studentController.setProfilePic);
 //  router.put('/set-role', authController.setRole);
 
-router.get('/get-student-assignment', studentController.getStudentAssignment)
+// router.get('/get-student-assignment', studentController.getStudentAssignment)
 
 
 module.exports = router

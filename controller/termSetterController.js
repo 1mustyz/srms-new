@@ -81,7 +81,7 @@ exports.setSession = async (req,res,next) => {
     const students = await Student.find({ status: 'Active' })
     const seniors = students.filter( student => 
         student.currentClass === 'JSS3' || 'SS3' || 'Grade6' || 'Kindergarten3')
-    const graduates = seniors.forEach( senior => {
+    const graduates = seniors.forEach( async (senior) => {
         await Student.findOneAndUpdate(
             { username: senior.username }, 
             { status: 'graduated' })
