@@ -15,10 +15,12 @@ const Assignment = require('../models/Assignment');
 exports.registerStudent = async function (req, res, next) {
   try {
     //create the user instance
-    const term = await TermSetter.find({ })
+    const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
+    
     const classNumber = req.body.currentClass.split('')
     req.body.classNumber = classNumber[classNumber.length -1]
-    req.body.term = term[0].termNumber
+    req.body.term = termAndSession[0].termNumber
+    req.body.session = termAndSession[0].session.year
     // req.body.term = term[0].termNumber
     user = new Student(req.body)
     const password = req.body.password ? req.body.password : 'password';
@@ -48,7 +50,6 @@ exports.registerStudent = async function (req, res, next) {
        console.log(user.currentClass, user.category)
 
 
-       const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
        const noOfCourse = await Curriculum.find(
          {'name': user.currentClass, 'category': user.category},
          { 'subject': 1}

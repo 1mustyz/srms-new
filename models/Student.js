@@ -17,6 +17,7 @@ const StudentSchema = new Schema({
     dob: {type: String},
     gender: {type: String},
     term: {type: String},
+    session: {type: String},
     country: {type: String, default: "Nigeria"},
     state: {type: String},
     lga: {type: String},
