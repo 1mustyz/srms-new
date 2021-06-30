@@ -16,7 +16,10 @@ exports.registerStudent = async function (req, res, next) {
   try {
     //create the user instance
     const term = await TermSetter.find({ })
-    req.body.term = term.termNumber
+    const classNumber = req.body.currentClass.split('')
+    req.body.classNumber = classNumber[classNumber.length -1]
+    req.body.term = term[0].termNumber
+    // req.body.term = term[0].termNumber
     user = new Student(req.body)
     const password = req.body.password ? req.body.password : 'password';
     //save the user to the DB
