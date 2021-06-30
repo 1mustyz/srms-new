@@ -3,16 +3,16 @@ const {Schema,model} = mongoose;
 
 
 const CognitiveSchema = new Schema({
-    username: String,
-    studentId: String,
-    firstName: String,
-    lastName: String,
+    username: {type:String},
+    studentId: {type:String},
+    firstName: {type:String},
+    lastName: {type:String},
     neatness: {type:String, default: 'A'},
     punctuality: {type:String, default: 'A'},
     hardWorking: {type:String, default: 'A'},
     remarks: {type:String, default: 'none'},
-    term: Number,
-    session: String
+    term: {type:Number},
+    session: {type:String}
 
 })
 
