@@ -72,6 +72,9 @@ router.get('/get-all-cognitive-item', cognitiveController.getAllAddNewCognitive)
 router.get('/get-all-student-cognitive', cognitiveController.getAllStudentCognitive)
 router.get('/get-all-teachers-assignment', assignmentController.getAllAssignmentAdmin)
 
+router.get('/get-a-class-result', studentController.getAclassResult)
+router.get('/get-single-student-result', studentController.getAsingleStudentResult)
+
 router.delete('/remove-student', studentController.removeStudent)
 router.delete('/delete-single-curriculum', curriculumController.deleteSingleCurriculum)
 router.delete('/delete-all-curriculum', curriculumController.deleteAllCurriculum)

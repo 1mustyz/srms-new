@@ -40,7 +40,9 @@ exports.registerStudent = async function (req, res, next) {
         category: user.category,
         firstName: user.firstName,
         lastName: user.lastName,
-        username: user.username
+        username: user.username,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year
        }))
 
        console.log(user.currentClass, user.category)
@@ -214,7 +216,7 @@ exports.removeStudent = async (req,res,next) => {
 
 
 exports.getAclassResult = async (req,res,next) => {
-  const {term,session,className,category} = req.body
+  const {term,session,className,category} = req.query
   const eachSubjectResult = await Score.find({
     class: className, 
     category,
@@ -239,7 +241,7 @@ exports.getAclassResult = async (req,res,next) => {
 }
 
 exports.getAsingleStudentResult = async (req,res,next) => {
-  const {term,session,className,category,username} = req.body
+  const {term,session,className,category,username} = req.query
 
   const result = await Score.findOne({
     class: className, 
