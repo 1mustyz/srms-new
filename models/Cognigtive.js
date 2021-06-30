@@ -7,10 +7,10 @@ const CognitiveSchema = new Schema({
     studentId: String,
     firstName: String,
     lastName: String,
-    neatness: String,
-    punctuality: String,
-    hardWorking: String,
-    remarks: String,
+    neatness: {type:String, default: 'A'},
+    punctuality: {type:String, default: 'A'},
+    hardWorking: {type:String, default: 'A'},
+    remarks: {type:String, default: 'none'},
     term: Number,
     session: String
 
