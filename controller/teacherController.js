@@ -92,9 +92,11 @@ console.log('--------------', allStudentScoreInAClass)
     
     const allStudentTotal = await Score.find({
         username: username,
-         term: termAndSession[0].termNumber,
-         session: termAndSession[0].session.year
+        term: '1'
+        // session: termAndSession[0].session.year
         },{total: 1})
+    
+    console.log(termAndSession[0])    
     console.log(allStudentTotal)
     let sumTotal = allStudentTotal.reduce((a,b)=> (+a +  +b.total),0 )
     

@@ -11,7 +11,7 @@ const CognitiveSchema = new Schema({
     punctuality: String,
     hardWorking: String,
     remarks: String,
-    term: String,
+    term: Number,
     session: String
 
 })

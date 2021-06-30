@@ -9,7 +9,7 @@ const ScoreSchema = new Schema({
     firstName: String,
     lastName: String,
     class: String,
-    term: { type: String, default: 1},
+    term: { type: Number},
     session: { type: String},
     category: String,
     subject: String,

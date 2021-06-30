@@ -16,7 +16,7 @@ const StudentSchema = new Schema({
     kinAddress: {type: String},
     dob: {type: String},
     gender: {type: String},
-    term: {type: String},
+    term: {type: Number},
     session: {type: String},
     country: {type: String, default: "Nigeria"},
     state: {type: String},
