@@ -61,6 +61,10 @@ exports.registerStudent = async function (req, res, next) {
          studentId: user._id,
          firstName: user.firstName,
          lastName: user.lastName,
+         neatness: '',
+         punctuality: '',
+         hardWorking: '',
+         remarks: '',
          term: termAndSession[0].termNumber,
          session: termAndSession[0].session.year,
        }
