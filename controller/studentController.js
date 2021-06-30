@@ -61,6 +61,8 @@ exports.registerStudent = async function (req, res, next) {
          studentId: user._id,
          firstName: user.firstName,
          lastName: user.lastName,
+         class: user.currentClass,
+         category: user.category,
          neatness: '',
          punctuality: '',
          hardWorking: '',
@@ -222,12 +224,15 @@ exports.removeStudent = async (req,res,next) => {
 
 exports.getAclassResult = async (req,res,next) => {
   const {term,session,className,category} = req.query
+
   const eachSubjectResult = await Score.find({
     class: className, 
     category,
     term,
     session
   })
+
+  console.log('-------------------',eachSubjectResult)
 
   const cognitiveResult = await Cognitive.find({
     class: className, 
@@ -236,19 +241,32 @@ exports.getAclassResult = async (req,res,next) => {
     session
   })
 
-  const generalResult = cognitiveResult.map((student) => {
-    const singleResult = [{
-      // student.username,
+  console.log('++++++++++++++++++++++',cognitiveResult)
 
-    }]
-  })
-  res.json({success: true, message: result})
+  // const generalResult = cognitiveResult.map((student) => {
+  //   const singleResult = [{
+  //     // student.username,
+
+  //   }]
+  //   console.log(eachSubjectResult,student)
+  // })
+  // res.json({success: true, message: result})
 }
+
+
 
 exports.getAsingleStudentResult = async (req,res,next) => {
   const {term,session,className,category,username} = req.query
 
-  const result = await Score.findOne({
+  const subjectResult = await Score.findOne({
+    class: className, 
+    category,
+    term,
+    session,
+    username
+  })
+
+  const studentCognitive = await Cognitive.findOne({
     class: className, 
     category,
     term,
