@@ -138,7 +138,7 @@ exports.setRole = async (req,res,next) => {
       : await Staff.findOneAndUpdate(req.query.id, {$push: {"teach.$[].subject":teach.subject.toString()}})
      : await Staff.findOneAndUpdate(req.query.id, {$push: {"teach":teach}})
     : await Staff.findOneAndUpdate(req.query.id, {$set: {"teach":teach}}) 
-   : ''
+   : await Staff.findOneAndUpdate({_id: req.query.id},{$set: {"role": role}})
 
    res.json({success: true, message: 'role has been set successfully'})
 }
