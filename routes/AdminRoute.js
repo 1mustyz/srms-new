@@ -19,7 +19,7 @@ router.post('/change-password/:id', staffController.resetPassword)
 router.post('/logout', logoutController.logout)
 router.post('/add-payment', paymentController.addPaymentTypes)
 router.post('/add-curriculum', curriculumController.create)
-router.post('/create-subject', isLoggedIn(admin), subjectController.create)
+router.post('/create-subject', isLoggedIn('admin'), subjectController.create)
 router.post('/create-class', classController.create)
 router.post('/verify-payment', paymentController.verifyPayment);
 router.post('/set-new-term',termSetterController.setNewTerm)
