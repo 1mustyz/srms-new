@@ -111,35 +111,40 @@ exports.setProfilePic = async (req,res, next) => {
 }
 
 exports.setRole = async (req,res,next) => {
-  const {role,teach} = req.body;
-  // console.log(teach)
-
-  // req.session.user._id
-  // console.log(role)
-  const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1})
+  const {role,teach,formMaster} = req.body;
+  
+  const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1, 'formMaster': 1})
 
   console.log( teach)
 
   result[0].role.includes(role)
    ? ''
-   : await Staff.findOneAndUpdate({_id: req.query.id},{$push: {"role": role}})
+   : await Staff.findByIdAndUpdate(req.query.id,{$push: {"role": role}})
 
-   console.log(teach.subject.toString())
+ 
+if (role == "None"){
+    await Staff.findByIdAndUpdate(req.query.id,{$set: {"role": [], "teach": [], "formMaster": []}})
+  }else if (role == "Teacher" || role.includes('Teacher')){
+
+    if (result[0].teach.length > 0){
+
+      if (result[0].teach[0].class == teach.class){
+        await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach.$[].subject":teach.subject}})
+      }
+
+    }else{
+      console.log('updating teach', teach)
+      await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":teach}}) 
+    }
+  }else if (role == "FormMaster"){
+    result[0].formMaster.includes(formMaster)
+     ? ''
+     : await Staff.findByIdAndUpdate(req.query.id, {$push: {"formMaster": formMaster}})
+    
+  }else {
+    // await Staff.findByIdAndUpdate(req.query.id,{$push: {"role": role}})
+  }
   
-  role == "None"
-   ? await Staff.findOneAndUpdate({_id: req.query.id},{$set: {"role": [], "teach": []}})
-   : ''
-
-  role == "Teacher" || role.includes('Teacher')
-   ? result[0].teach.length > 0 
-    ? result[0].teach[0].class == teach.class
-     ? result[0].teach[0].subject.includes(teach.subject.toString())
-      ? '' 
-      : await Staff.findOneAndUpdate(req.query.id, {$push: {"teach.$[].subject":teach.subject.toString()}})
-     : await Staff.findOneAndUpdate(req.query.id, {$push: {"teach":teach}})
-    : await Staff.findOneAndUpdate(req.query.id, {$set: {"teach":teach}}) 
-   : await Staff.findOneAndUpdate({_id: req.query.id},{$set: {"role": role}})
-
    res.json({success: true, message: 'role has been set successfully'})
 }
 
