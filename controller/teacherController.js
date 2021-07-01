@@ -85,10 +85,10 @@ console.log('--------------', allStudentScoreInAClass)
             
     })    
 
+    console.log('/////////////////////',currentSubjectPosition)
     currentSubjectPosition.map( async (students,ind)=>{
             await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
     })    
-    console.log(currentSubjectPosition)
     
     const allStudentTotal = await Score.find({
         username: username,
@@ -96,7 +96,7 @@ console.log('--------------', allStudentScoreInAClass)
         session: termAndSession[0].session.year
         },{total: 1})
     
-    console.log(termAndSession[0])    
+    // console.log(termAndSession[0])    
     console.log(allStudentTotal)
     let sumTotal = allStudentTotal.reduce((a,b)=> (+a +  +b.total),0 )
     
