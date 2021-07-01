@@ -22,7 +22,8 @@ const sessionMiddleware = expressSession({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://1mustyz:z08135696959@project1.ynhhl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
     ttl: 14 * 24 * 60 * 60,
-    autoRemove: 'native' 
+    autoRemove: 'native',
+    collectionName: 'sessions' 
   }),
   saveUninitialized: false,
   resave: true

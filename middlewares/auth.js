@@ -2,8 +2,9 @@
 exports.isLoggedIn = function (role) {
     return (req, res, next) => {
       if (req.isAuthenticated()) {
-        return res.json({ success: true, message: 'valid user' })
-      }
-      res.json({ success: false, message: 'unauthorized or authenticated user', user: req.session, session: 'hello'})
+        return res.json({ success: true, message: 'valid user', user: req.session })
+      }else{
+      res.json({ success: false, message: 'unauthorized or authenticated user', user: req.session})
     }
+  }
   }
