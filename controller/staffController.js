@@ -136,7 +136,7 @@ if (role == "None"){
       console.log('updating teach', teach)
       await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":teach}}) 
     }
-  }else if (role == "FormMaster"){
+  }else if (role == "formMaster"){
     result[0].formMaster.includes(formMaster)
      ? ''
      : await Staff.findByIdAndUpdate(req.query.id, {$push: {"formMaster": formMaster}})
