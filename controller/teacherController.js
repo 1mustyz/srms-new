@@ -70,7 +70,7 @@ exports.liveSaveResult = async (req, res) => {
     //  calculate position for a specific subject
     const allStudentScoreInAClass = await Score.find(
         {class: currentClass, subject: subject, category: category},
-        {total: 1}
+        {total: 1, username: 1}
         )
 console.log('--------------', allStudentScoreInAClass)
         allStudentScoreInAClass.sort((a,b) => {
@@ -80,7 +80,8 @@ console.log('--------------', allStudentScoreInAClass)
     const currentSubjectPosition = allStudentScoreInAClass.map((students,ind)=>{
         return studentIdentity={
             id:students.id,
-            position:ind+1
+            position:ind+1,
+            username: students.username
         }
             
     })    
@@ -89,7 +90,7 @@ console.log('--------------', allStudentScoreInAClass)
     currentSubjectPosition.map( async (students,ind)=>{
             await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
     })    
-    
+    const upScore3 = await Score.findById(req.body.id)
     const allStudentTotal = await Score.find({
         username: username,
         term: termAndSession[0].termNumber,
@@ -130,10 +131,10 @@ console.log('--------------', allStudentScoreInAClass)
         
     })
     const finalResult = currentPosition.map( async (students,ind)=>{
-        await TermResult.findByIdAndUpdate(students.id, {position: students.position})
+       return  kkk = await TermResult.findByIdAndUpdate(students.id, {position: students.position})
     })
             // console.log(finalResult)
-            res.json({ success: true, upScore})   
+            res.json({ success: true, upScore3})   
 }
 
 // exports.saveAndContinue = async (req, res) => {
