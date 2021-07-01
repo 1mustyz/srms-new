@@ -32,7 +32,7 @@ exports.registerStudent = async function (req, res, next) {
        { 'name': user.currentClass, 'category': user.category},
        { 'subject': 1, _id: 0})
 
-        console.log(subjects)
+        console.log('-------------------',subjects)
 
       const studentSubjects = subjects[0].subject.map(subject => ({
         subject, 

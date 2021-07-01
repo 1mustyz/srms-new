@@ -118,7 +118,7 @@ exports.setRole = async (req,res,next) => {
   // console.log(role)
   const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1})
 
-  console.log( result[0])
+  console.log( teach)
 
   result[0].role.includes(role)
    ? ''
