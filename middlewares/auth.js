@@ -4,6 +4,6 @@ exports.isLoggedIn = function (role) {
       if (req.isAuthenticated() && req.user.role.includes(role)) {
         return res.json({ success: true, message: 'valid user' })
       }
-      res.json({ success: false, message: 'unauthorized or authenticated user'})
+      res.json({ success: false, message: 'unauthorized or authenticated user', req.user})
     }
   }
