@@ -81,8 +81,6 @@ passport.use('staff', Staff.createStrategy())
 passport.use('student', Student.createStrategy())
 
 passport.serializeUser(Staff.serializeUser())
-passport.serializeUser(Student.serializeUser())
-passport.deserializeUser(Staff.deserializeUser())
 passport.deserializeUser(Student.deserializeUser())
 
 app.use('/staff', staffRouter)
