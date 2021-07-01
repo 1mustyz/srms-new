@@ -42,6 +42,8 @@ router.put('/update-class', classController.update)
 router.put('/update-cognitive-item', cognitiveController.updateAddNewCognitive)
 
 router.get('/get-all-curriculum', curriculumController.getAllCurriculum)
+router.get('/get-all-admin-curriculum', curriculumController.getAdminAllCurriculum)
+
 router.get('/get-single-curriculum', curriculumController.getSingleCurriculum)
 router.get('/dashboard', staffController.statistics)
 router.get('/get-payment-type', paymentController.getPayment);
