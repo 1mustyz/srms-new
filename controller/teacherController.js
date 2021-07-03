@@ -8,12 +8,17 @@ exports.fetchTeacherSubjects = async (req, res) => {
     res.json({subjects: teacher.teach})
 }
 
+
 exports.fetchStudentsInClass = async (req, res) => {
+    const termAndSession = await TermSetter.find()
    const students = 
        await Score.find({ 
         class: req.body.class,
         subject: req.body.subject,
-        category: req.body.category
+        category: req.body.category,
+        session: termAndSession[0].session.year,
+        term: termAndSession[0].termNumber
+
      })
 
    res.json({ success: true, students })

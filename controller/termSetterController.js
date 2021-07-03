@@ -45,16 +45,21 @@ exports.setNewTerm = async (req,res,next) => {
            return currentELement.name === student.currentClass &&
             currentELement.category === student.category
         })
+
+        const termAndSession = await TermSetter.find()
         // create score document for each student's subject
+        console.log(studentSubjects[0])
         const scoreDocuments = studentSubjects[0].subject.map(subject => ({
-            subject,
-            username: student.username,
-            studentId: student._id,
-            class: student.currentClass,
-            category: student.category,
-            firstName: student.firstName,
-            lastName: student.lastName,
-            username: student.username
+            subject, 
+            username: user.username,
+            studentId: user._id,
+            class: user.currentClass,
+            category: user.category,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            term: termAndSession[0].termNumber,
+            session: termAndSession[0].session.year
         }))
         await Score.insertMany(scoreDocuments)
     })
