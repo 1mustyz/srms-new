@@ -17,17 +17,17 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-const sessionMiddleware = expressSession({
+app.use(expressSession({
   secret: '[credentials.secret]',
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://1mustyz:z08135696959@project1.ynhhl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
     ttl: 14 * 24 * 60 * 60,
     autoRemove: 'native',
-    collection: 'sessions' 
   }),
   saveUninitialized: false,
   resave: true
-})
+}))
+
 const Staff = require('./models/Staff')
 const Student = require('./models/Student')
 const studentRouter = require('./routes/studentRoute')
@@ -74,7 +74,6 @@ app.use(cors())
 // passport setup
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(sessionMiddleware)
 
 
 passport.use('staff', Staff.createStrategy())

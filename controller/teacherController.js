@@ -20,7 +20,6 @@ exports.fetchStudentsInClass = async (req, res) => {
         term: termAndSession[0].termNumber
 
      })
-
    res.json({ success: true, students })
 }
 

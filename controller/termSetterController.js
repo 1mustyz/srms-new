@@ -151,7 +151,13 @@ exports.setSession = async (req,res,next) => {
 
     // update session here 
     const {session} = req.body
-    await TermSetter.updateOne({session: session})
+    await TermSetter.updateOne({
+        session: session,
+        termNumber: 1,
+        currentTerm: 'First Term'
+
+    
+    })
 
     // create new score sheets for all active students
     let subjects = await Curriculum.find({ })
