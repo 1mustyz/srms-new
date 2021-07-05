@@ -3,6 +3,7 @@ const Staff = require('../models/Staff')
 const Student = require('../models/Student')
 const multer = require('multer');
 const {singleUpload} = require('../middlewares/filesMiddleware');
+const mongoose = require('mongoose')
 // const connectEnsureLogin = require('connect-ensure-login')
 
 
@@ -116,7 +117,7 @@ exports.setRole = async (req,res,next) => {
   
   const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1, 'formMaster': 1})
 
-  console.log( teach)
+  // console.log( teach)
 
   result[0].role.includes(role)
    ? ''
@@ -129,13 +130,25 @@ if (role == "None"){
 
     if (result[0].teach.length > 0){
 
-      if (result[0].teach[0].class == teach.class){
-        await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach.$[].subject":teach.subject}})
+      let isSameClass = result[0].teach.filter(obj => obj.class == teach.class && obj.category == teach.category)
+      // console.log('11111111111111111111',isSameClass[0].ind)
+      if (isSameClass.length > 0){
+
+        const index = await Staff.aggregate([
+          {'$match': { '_id': mongoose.Types.ObjectId(req.query.id)}},
+          {'$project': {'index': {'$indexOfArray': ['$teach.class', teach.class]}}}
+        ])
+        const newSubject = `teach.${index[0].index}.subject`
+                                                                      // TODO
+        await Staff.findByIdAndUpdate(req.query.id, {$push: {[newSubject]: teach.subject.toString()}})
+      }else{
+        console.log('updating teach', teach)
+        await Staff.findByIdAndUpdate(req.query.id, {$push: {"teach":teach}}) 
       }
 
     }else{
       console.log('updating teach', teach)
-      await Staff.findByIdAndUpdate(req.query.id, {$set: {"teach":teach}}) 
+      await Staff.findByIdAndUpdate(req.query.id, {$push: {"teach":teach}}) 
     }
   }else if (role == "formMaster"){
     result[0].formMaster.includes(formMaster)
@@ -152,6 +165,12 @@ if (role == "None"){
 exports.removeStaff = async (req,res,next) => {
   const {id} = req.query;
   await Staff.findOneAndDelete({_id: id})
+  res.json({success: true, message: `staff with the id ${id} has been removed`})
+}
+
+exports.editStaff = async (req,res,next) => {
+  const {id} = req.query;
+  await Staff.collection.findByIdAndUpdate(id, req.body)
   res.json({success: true, message: `staff with the id ${id} has been removed`})
 }
 
