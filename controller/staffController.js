@@ -8,6 +8,7 @@ const {singleUpload} = require('../middlewares/filesMiddleware');
 
 exports.registerStaff = async (req, res, next) => {
     try {
+
       //create the user instance
       user = new Staff(req.body)
       const password = req.body.password ? req.body.password : 'password'

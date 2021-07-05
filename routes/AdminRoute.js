@@ -10,9 +10,10 @@ const classController = require('../controller/classController')
 const termSetterController = require('../controller/termSetterController')
 const cognitiveController = require('../controller/cognitiveController');
 const assignmentController = require('../controller/assignmentController')
+const idGenerator = require('../middlewares/idGenerator')
 
-router.post('/register-staff', staffController.registerStaff)
-router.post('/register-student', studentController.registerStudent)
+router.post('/register-staff', idGenerator.staffIdGenerator, staffController.registerStaff)
+router.post('/register-student', idGenerator.studentIdGenerator, studentController.registerStudent)
 
 router.post('/login', staffController.loginStaff)
 router.post('/change-password/:id', staffController.resetPassword)
