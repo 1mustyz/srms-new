@@ -18,7 +18,7 @@ const StaffSchema = new Schema({
     state: { type: String},
     lga: { type: String},
     bankName: { type: String},
-    acountNumber: { type: String},
+    accountNumber: { type: String},
     accountName: { type: String},
     nextKinName: { type: String},
     nextKinPhone1: { type: String},

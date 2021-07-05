@@ -48,7 +48,7 @@ exports.resetPassword = async (req, res, next) => {
     const user = await Staff.findById(req.params.id)
     await user.changePassword(req.body.oldPassword, req.body.newPassword)
     await user.save()
-    res.json({user})
+    res.json({message: 'password reset successful', user})
   } catch (error) {
       res.json({ message: 'something went wrong', error })
   }
@@ -170,8 +170,8 @@ exports.removeStaff = async (req,res,next) => {
 
 exports.editStaff = async (req,res,next) => {
   const {id} = req.query;
-  await Staff.collection.findByIdAndUpdate(id, req.body)
-  res.json({success: true, message: `staff with the id ${id} has been removed`})
+  await Staff.findByIdAndUpdate(id, req.body)
+  res.json({success: true, message: `staff with the id ${id} has been edited`})
 }
 
 

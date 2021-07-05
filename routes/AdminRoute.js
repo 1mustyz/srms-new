@@ -41,6 +41,7 @@ router.put('/update-single-curriculum', curriculumController.updateSingleCurricu
 router.put('/update-single-subject', subjectController.update)
 router.put('/update-class', classController.update)
 router.put('/update-cognitive-item', cognitiveController.updateAddNewCognitive)
+router.put('/edit-staff', staffController.editStaff)
 
 router.get('/get-all-curriculum', curriculumController.getAllCurriculum)
 router.get('/get-all-admin-curriculum', curriculumController.getAdminAllCurriculum)
