@@ -20,12 +20,12 @@ exports.verifyPayment = async (req,res,next) => {
 
     const result = await Payment.findOne({"username": username})
 
-    if (result.paid && (purposeOfPayment.includes('tuition fee') || purposeOfPayment.includes('all'))){
+    if (result.paid && (purposeOfPayment.includes('Tuition') || purposeOfPayment.includes('all'))){
     res.json({success: true, message: 'you have paid for tuition fee'})
 
     }else{
         console.log(result)
-    if(purposeOfPayment.includes('tuition fee') || purposeOfPayment.includes('all')) paid = true
+    if(purposeOfPayment.includes('Tuition') || purposeOfPayment.includes('all')) paid = true
 
     await Payment.findOneAndUpdate({"username": username},{"pays": req.body.pays})
     await Payment.findOneAndUpdate({"username": username},{"paid": paid})
