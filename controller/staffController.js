@@ -103,7 +103,7 @@ exports.setProfilePic = async (req,res, next) => {
         console.log(req.query.id)
         await Staff.findOneAndUpdate({_id: req.query.id},{$set: {image: req.file.path}})
         return  res.json({success: true,
-        message: 'profile picture updated successfully',
+        message: req.file.path,
                    },
         
     );
