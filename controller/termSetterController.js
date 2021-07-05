@@ -299,12 +299,16 @@ exports.setSession = async (req,res,next) => {
             session: newTermAndSession[0].session.year,
         })  
 
+        const noOfCourse = await Curriculum.find(
+            {'name': student.currentClass, 'category': student.category},
+            { 'subject': 1}
+          )
             // creating a new term result
         await TermResult.collection.insertOne({
             studentId: student._id,
             username: student.username,
             class: student.currentClass,
-            noOfCourse: 0,
+            noOfCourse: noOfCourse[0].subject.length,
             term: newTermAndSession[0].termNumber,
             session: newTermAndSession[0].session.year,
         })
