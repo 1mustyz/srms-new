@@ -294,3 +294,9 @@ exports.getAsingleStudentResult = async (req,res,next) => {
   res.json({success: true, message: generalSingleResult})
 
 }
+
+exports.editStudent = async (req,res,next) => {
+  const {id} = req.query;
+  await Student.findByIdAndUpdate(id, req.body)
+  res.json({success: true, message: `student with the id ${id} has been edited`})
+}
