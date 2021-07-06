@@ -65,7 +65,7 @@ exports.findAllStaff = async (req,res, next) => {
 
 exports.findAllTeachers = async (req,res, next) => {
 
-  const result = await Staff.find({role: 'Teacher'});
+  const result = await Staff.find({role: 'subjectTeacher'});
   result.length > 0
    ? res.json({success: true, message: result,})
    : res.json({success: false, message: result,})
@@ -74,6 +74,14 @@ exports.findAllTeachers = async (req,res, next) => {
 exports.findAllPrincipal = async (req,res, next) => {
 
   const result = await Staff.find({role: 'Principal'});
+  result.length > 0
+   ? res.json({success: true, message: result,})
+   : res.json({success: false, message: result,})
+}
+
+exports.findAllClassTeacher = async (req,res, next) => {
+
+  const result = await Staff.find({role: 'classTeacher'});
   result.length > 0
    ? res.json({success: true, message: result,})
    : res.json({success: false, message: result,})
@@ -115,7 +123,7 @@ exports.setProfilePic = async (req,res, next) => {
 exports.setRole = async (req,res,next) => {
   const {role,teach,formMaster} = req.body;
   
-  const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1, 'formMaster': 1})
+  const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1, 'classTeacher': 1})
 
   // console.log( teach)
 
@@ -125,8 +133,8 @@ exports.setRole = async (req,res,next) => {
 
  
 if (role == "None"){
-    await Staff.findByIdAndUpdate(req.query.id,{$set: {"role": [], "teach": [], "formMaster": []}})
-  }else if (role == "Teacher" || role.includes('Teacher')){
+    await Staff.findByIdAndUpdate(req.query.id,{$set: {"role": [], "teach": [], "classTeacher": []}})
+  }else if (role == "subjectTeacher" || role.includes('subjectTeacher')){
 
     if (result[0].teach.length > 0){
 
@@ -150,10 +158,10 @@ if (role == "None"){
       console.log('updating teach', teach)
       await Staff.findByIdAndUpdate(req.query.id, {$push: {"teach":teach}}) 
     }
-  }else if (role == "formMaster"){
-    result[0].formMaster.includes(formMaster)
+  }else if (role == "classTeacher"){
+    result[0].formMaster.includes(classTeacher)
      ? ''
-     : await Staff.findByIdAndUpdate(req.query.id, {$push: {"formMaster": formMaster}})
+     : await Staff.findByIdAndUpdate(req.query.id, {$push: {"classTeacher": classTeacher}})
     
   }else {
     // await Staff.findByIdAndUpdate(req.query.id,{$push: {"role": role}})

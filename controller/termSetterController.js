@@ -6,6 +6,7 @@ const TermResult = require('../models/TermResult');
 const SessionResult = require('../models/SessionResult')
 const Payment = require('../models/Payment');
 const Cognitive = require('../models/Cognigtive');
+const AddSession = require('../models/AddSession')
 
 exports.setNewTerm = async (req,res,next) => {
 
@@ -132,8 +133,12 @@ exports.getCurrentTerm = async (req,res,next) => {
 
 exports.setSession = async (req,res,next) => {
 
-    // souley's code starts here
     const termAndSession = await TermSetter.find()
+
+    // adding a session value for the front end
+    await AddSession.insertOne({session: termAndSession[0].session.year})
+
+    // souley's code starts here
     // // graduate some students
     const students = await Student.find({ status: 'Active' })
     const seniors = students.filter( student => 
@@ -326,6 +331,12 @@ exports.setSession = async (req,res,next) => {
 
 exports.getSession = async (req,res,next) => {
     const result = await TermSetter.findOne({},{session: 1})
+    res.json({success: true, result})
+
+}
+
+exports.getAddSession = async (req,res,next) => {
+    const result = await AddSession.find()
     res.json({success: true, result})
 
 }
