@@ -141,7 +141,7 @@ exports.setSession = async (req,res,next) => {
     const termAndSession = await TermSetter.find()
 
     // adding a session value for the front end
-    await AddSession.insertOne({session: termAndSession[0].session.year})
+    await AddSession.collection.insertOne({session: termAndSession[0].session.year})
 
     // souley's code starts here
     // // graduate some students
@@ -202,7 +202,7 @@ exports.setSession = async (req,res,next) => {
     const promotedStudents = await SessionResult.find({
          status: 'Promoted', session: termAndSession[0].session.year 
         })
-
+console.log(promotedStudents)
     promotedStudents.forEach(async (student) => {
         await Student.updateOne({ 
             username: student.username }, 
@@ -210,33 +210,39 @@ exports.setSession = async (req,res,next) => {
             { new: true }) 
         
         const singleStudent = await Student.find({username: student.username })
-        console.log(singleStudent)
+        console.log(singleStudent[0].classNumber)
 
         
         switch (singleStudent[0].section) {
             case 'Grade':
                 className = `Grade${singleStudent[0].classNumber}`
+                await Student.updateOne({ username: singleStudent[0].username }, 
+                    { $set: {currentClass: className } }, { new: true })  
                 break;
         
             case 'JSS':
                 className = `JSS${singleStudent[0].classNumber}`
+                await Student.updateOne({ username: singleStudent[0].username }, 
+                    { $set: {currentClass: className } }, { new: true })  
                 break;
         
             case 'SSS':    
                 className = `SSS${singleStudent[0].classNumber}`
+                await Student.updateOne({ username: singleStudent[0].username }, 
+                    { $set: {currentClass: className } }, { new: true })  
                 break;
                        
             case 'Kindergarten':    
                 className = `Kindergarten${singleStudent[0].classNumber}`
+                await Student.updateOne({ username: singleStudent[0].username }, 
+                    { $set: {currentClass: className } }, { new: true })  
                 break;    
                       
         
             default:
                 break;
         }
-        console.log(className)
-        await Student.updateOne({ username: singleStudent[0].username }, 
-                  { $set: {currentClass: className } }, { new: true })  
+       
             
     })
 

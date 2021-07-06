@@ -121,7 +121,7 @@ exports.setProfilePic = async (req,res, next) => {
 }
 
 exports.setRole = async (req,res,next) => {
-  const {role,teach,formMaster} = req.body;
+  const {role,teach,classTeacher} = req.body;
   
   const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1, 'classTeacher': 1})
 
