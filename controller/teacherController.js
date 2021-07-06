@@ -141,6 +141,17 @@ console.log('--------------', allStudentScoreInAClass)
             res.json({ success: true, upScore3})   
 }
 
+exports.finalSubmision = async (req,res,next) => {
+    const {submitButton, value, id} = req.body
+
+    await Staff.findByIdAndUpdate(id, {
+        [submitButton]: value
+    }, {new: true, useFindAndModify: false})
+    
+    res.json({success: true, message: `you have submitted ${submitButton}`})
+
+} 
+
 // exports.saveAndContinue = async (req, res) => {
 //     const input = req.body
 //     let bulkArr = [];

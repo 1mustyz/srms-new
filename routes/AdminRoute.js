@@ -11,6 +11,8 @@ const termSetterController = require('../controller/termSetterController')
 const cognitiveController = require('../controller/cognitiveController');
 const assignmentController = require('../controller/assignmentController')
 const idGenerator = require('../middlewares/idGenerator')
+const teacherController = require('../controller/teacherController')
+const examOfficerController = require('../controller/examOfficeController')
 
 router.post('/register-staff', idGenerator.staffIdGenerator, staffController.registerStaff)
 router.post('/register-student', idGenerator.studentIdGenerator, studentController.registerStudent)
@@ -43,6 +45,8 @@ router.put('/update-class', classController.update)
 router.put('/update-cognitive-item', cognitiveController.updateAddNewCognitive)
 router.put('/edit-staff', staffController.editStaff)
 router.put('/edit-student', studentController.editStudent)
+router.put('/final-submission', teacherController.finalSubmision)
+router.put('/allow-submission-priviledge', examOfficerController.allowPriviledge)
 
 
 router.get('/get-all-curriculum', curriculumController.getAllCurriculum)
@@ -81,6 +85,7 @@ router.get('/get-add-session', termSetterController.getAddSession);
 
 router.get('/get-a-class-result', studentController.getAclassResult)
 router.get('/get-single-student-result', studentController.getAsingleStudentResult)
+router.get('/get-all-teachers-priviledge', examOfficerController.getTeachersPriviledge)
 
 router.delete('/remove-student', studentController.removeStudent)
 router.delete('/delete-single-curriculum', curriculumController.deleteSingleCurriculum)
