@@ -73,7 +73,13 @@ exports.liveSaveResult = async (req, res) => {
 
     //  calculate position for a specific subject
     const allStudentScoreInAClass = await Score.find(
-        {class: currentClass, subject: subject, category: category},
+        {
+            class: currentClass, 
+            subject: subject, 
+            category: category, 
+            term: termAndSession[0].termNumber,
+            session: termAndSession[0].session.year
+        },
         {total: 1, username: 1}
         )
 console.log('--------------', allStudentScoreInAClass)
@@ -90,10 +96,11 @@ console.log('--------------', allStudentScoreInAClass)
             
     })    
 
-    console.log('/////////////////////',currentSubjectPosition)
     currentSubjectPosition.map( async (students,ind)=>{
-            await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
+        await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
     })    
+    console.log('/////////////////////',currentSubjectPosition)
+
     const upScore3 = await Score.findById(req.body.id)
     const allStudentTotal = await Score.find({
         username: username,
@@ -111,13 +118,20 @@ console.log('--------------', allStudentScoreInAClass)
     console.log(average,sumTotal,noOfCourses)
     
     await TermResult.findOneAndUpdate({
-        username: req.body.username
+        username: req.body.username,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year
+
     },{
         total: sumTotal, average: average
     })
         
     const allStudentInAclass = await TermResult.find({
-        class: currentClass  // TODO set term to current term
+        class: currentClass,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year
+
+          // TODO set term to current term
     },{
         average: 1
     })
