@@ -44,35 +44,40 @@ exports.setNewTerm = async (req,res,next) => {
     
     students.forEach( async (student) => {
         // find student class and subjects
-        const studentSubjects = subjects.filter( currentELement => {
-           return currentELement.name === student.currentClass &&
-            currentELement.category === student.category
-        })
+        // const studentSubjects = subjects.filter( currentELement => {
+        //    return currentELement.name === student.currentClass &&
+        //     currentELement.category === student.category
+        // })
+
+        const studentSubjects = await Curriculum.find(
+            { 'name': student.currentClass, 'category': student.category},
+            { 'subject': 1, _id: 0})
+     
 
         const termAndSession = await TermSetter.find()
         // create score document for each student's subject
-        // console.log('1111111111111111111',studentSubjects)
+        console.log('1111111111111111111',studentSubjects,student.username)
         // console.log('----------------',students)
 
-        const scoreDocuments = studentSubjects[0].subject.map(subject => {
-           students.map(async (std) => {
-            //    console.log('///////////////',subject)
+        const scoreDocuments = studentSubjects[0].subject.map(async (subject) => {
+           
                await Score.collection.insertOne({
                 subject, 
-                username: std.username,
-                studentId: std._id,
-                class: std.currentClass,
-                category: std.category,
-                firstName: std.firstName,
-                lastName: std.lastName,
-                username: std.username,
+                username: student.username,
+                studentId: student._id,
+                class: student.currentClass,
+                category: student.category,
+                firstName: student.firstName,
+                lastName: student.lastName,
+                username: student.username,
                 term: termAndSession[0].termNumber,
                 session: termAndSession[0].session.year
             })
-
-            })
            
         })
+
+        // console.log('----------------',scoreDocuments)
+
 
           // creating a new school payment
           await Payment.collection.insertOne({
