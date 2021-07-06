@@ -159,7 +159,7 @@ if (role == "None"){
       await Staff.findByIdAndUpdate(req.query.id, {$push: {"teach":teach}}) 
     }
   }else if (role == "classTeacher"){
-    result[0].formMaster.includes(classTeacher)
+    result[0].classTeacher.includes(classTeacher)
      ? ''
      : await Staff.findByIdAndUpdate(req.query.id, {$push: {"classTeacher": classTeacher}})
     
