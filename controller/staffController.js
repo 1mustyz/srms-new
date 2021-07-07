@@ -90,7 +90,7 @@ exports.findAllClassTeacher = async (req,res, next) => {
 exports.singleStaff = async (req,res, next) => {
   const {username} = req.query
 
-  const result = await Staff.find({username: username});
+  const result = await Staff.findOne({username: username});
   result.length > 0
    ? res.json({success: true, message: result,})
    : res.json({success: false, message: result,})
