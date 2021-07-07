@@ -200,59 +200,61 @@ exports.setSession = async (req,res,next) => {
         
     })
 
-   await waait(2000) (async function(){
-        const promotedStudents = await SessionResult.find({
-            status: 'Promoted', session: termAndSession[0].session.year
-           })
-        console.log('///////////',promotedStudents)
-       promotedStudents.forEach(async (student) => {
-           await Student.updateOne({ 
-               username: student.username }, 
-               { $inc: { classNumber: 1 }}, 
-               { new: true }) 
-           
-           const singleStudent = await Student.find({username: student.username })
-           console.log(singleStudent[0].section)
-    
-           
-           switch (singleStudent[0].section) {
-               case 'Grade':
-                   className = `Grade${singleStudent[0].classNumber}`
-                   await Student.updateOne({ username: singleStudent[0].username }, 
-                       { $set: {currentClass: className } }, { new: true })  
-                   break;
-           
-               case 'JSS':
-                   className = `JSS${singleStudent[0].classNumber}`
-                   await Student.updateOne({ username: singleStudent[0].username }, 
-                       { $set: {currentClass: className } }, { new: true })  
-                   break;
-           
-               case 'SSS':    
-                   className = `SSS${singleStudent[0].classNumber}`
-                   await Student.updateOne({ username: singleStudent[0].username }, 
-                       { $set: {currentClass: className } }, { new: true })  
-                   break;
-                          
-               case 'Kindergarten':    
-                   className = `Kindergarten${singleStudent[0].classNumber}`
-                   await Student.updateOne({ username: singleStudent[0].username }, 
-                       { $set: {currentClass: className } }, { new: true })  
-                   break;    
-                         
-           
-               default:
-                   break;
-           }
-          
+    setTimeout(() => {
+        (async function(){
+            const promotedStudents = await SessionResult.find({
+                status: 'Promoted', session: termAndSession[0].session.year
+               })
+            console.log('///////////',promotedStudents)
+           promotedStudents.forEach(async (student) => {
+               await Student.updateOne({ 
+                   username: student.username }, 
+                   { $inc: { classNumber: 1 }}, 
+                   { new: true }) 
                
-       })
-    
-    })()
+               const singleStudent = await Student.find({username: student.username })
+               console.log(singleStudent[0].section)
+        
+               
+               switch (singleStudent[0].section) {
+                   case 'Grade':
+                       className = `Grade${singleStudent[0].classNumber}`
+                       await Student.updateOne({ username: singleStudent[0].username }, 
+                           { $set: {currentClass: className } }, { new: true })  
+                       break;
+               
+                   case 'JSS':
+                       className = `JSS${singleStudent[0].classNumber}`
+                       await Student.updateOne({ username: singleStudent[0].username }, 
+                           { $set: {currentClass: className } }, { new: true })  
+                       break;
+               
+                   case 'SSS':    
+                       className = `SSS${singleStudent[0].classNumber}`
+                       await Student.updateOne({ username: singleStudent[0].username }, 
+                           { $set: {currentClass: className } }, { new: true })  
+                       break;
+                              
+                   case 'Kindergarten':    
+                       className = `Kindergarten${singleStudent[0].classNumber}`
+                       await Student.updateOne({ username: singleStudent[0].username }, 
+                           { $set: {currentClass: className } }, { new: true })  
+                       break;    
+                             
+               
+                   default:
+                       break;
+               }
+              
+                   
+           })
+        
+        })()
+    }, 2000);
 
-
-
-    // // update student model, to reflect new class for promoted students
+   
+    setTimeout(async () => {
+        // // update student model, to reflect new class for promoted students
 
     
 
@@ -347,6 +349,10 @@ exports.setSession = async (req,res,next) => {
     res.json({ success: true, message: 'session set successfully' })
     // Souley's code ends here
 
+    }, 4000);
+
+
+    
 }
 
 exports.getSession = async (req,res,next) => {
