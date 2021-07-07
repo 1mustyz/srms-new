@@ -82,6 +82,7 @@ router.get('/get-all-cognitive-item', cognitiveController.getAllAddNewCognitive)
 router.get('/get-all-student-cognitive', cognitiveController.getAllStudentCognitive)
 router.get('/get-all-teachers-assignment', assignmentController.getAllAssignmentAdmin)
 router.get('/get-add-session', termSetterController.getAddSession);
+router.get('get-single-staff', staffController.singleStaff)
 
 router.get('/get-a-class-result', studentController.getAclassResult)
 router.get('/get-single-student-result', studentController.getAsingleStudentResult)

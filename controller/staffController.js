@@ -87,6 +87,15 @@ exports.findAllClassTeacher = async (req,res, next) => {
    : res.json({success: false, message: result,})
 }
 
+exports.singleStaff = async (req,res, next) => {
+  const {username} = req.query
+
+  const result = await Staff.find({username: username});
+  result.length > 0
+   ? res.json({success: true, message: result,})
+   : res.json({success: false, message: result,})
+}
+
 // exports.findAllStudents = async (req,res, next) => {
 
 //   const result = await Student.find({role: 'student'});

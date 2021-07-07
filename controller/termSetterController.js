@@ -169,7 +169,7 @@ exports.setSession = async (req,res,next) => {
 
     // console.log(juniors)    
 
-    juniors.forEach( async (junior) => {
+   await juniors.forEach( async (junior) => {
         const termAverages = await TermResult.find({
               username: junior.username,
               session: termAndSession[0].session.year 
@@ -186,149 +186,153 @@ exports.setSession = async (req,res,next) => {
             const position = (position1 + position2 + position3)/3
             // console.log(position)
             
-        const status = average >= 40 ? 'Promoted' : 'Demoted'
-        await SessionResult.collection.insertOne({
+        const status = average >= 15 ? 'Promoted' : 'Demoted'
+    await SessionResult.collection.insertOne({
             average,
             status,
             username: junior.username,
             session: termAndSession[0].session.year,
             class: junior.currentClass,
             position 
-        })     
+        }) 
+        
+        
     })
+
+//     const promotedStudents = await SessionResult.find({
+//         status: 'Promoted', session: termAndSession[0].session.year
+//        })
+//     console.log('///////////',promotedStudents)
+//    promotedStudents.forEach(async (student) => {
+//        await Student.updateOne({ 
+//            username: student.username }, 
+//            { $inc: { classNumber: 1 }}, 
+//            { new: true }) 
+       
+//        const singleStudent = await Student.find({username: student.username })
+//        console.log(singleStudent[0].section)
+
+       
+//        switch (singleStudent[0].section) {
+//            case 'Grade':
+//                className = `Grade${singleStudent[0].classNumber}`
+//                await Student.updateOne({ username: singleStudent[0].username }, 
+//                    { $set: {currentClass: className } }, { new: true })  
+//                break;
+       
+//            case 'JSS':
+//                className = `JSS${singleStudent[0].classNumber}`
+//                await Student.updateOne({ username: singleStudent[0].username }, 
+//                    { $set: {currentClass: className } }, { new: true })  
+//                break;
+       
+//            case 'SSS':    
+//                className = `SSS${singleStudent[0].classNumber}`
+//                await Student.updateOne({ username: singleStudent[0].username }, 
+//                    { $set: {currentClass: className } }, { new: true })  
+//                break;
+                      
+//            case 'Kindergarten':    
+//                className = `Kindergarten${singleStudent[0].classNumber}`
+//                await Student.updateOne({ username: singleStudent[0].username }, 
+//                    { $set: {currentClass: className } }, { new: true })  
+//                break;    
+                     
+       
+//            default:
+//                break;
+//        }
+      
+           
+//    })
+
 
     // // update student model, to reflect new class for promoted students
 
-    const promotedStudents = await SessionResult.find({
-         status: 'Promoted', session: termAndSession[0].session.year 
-        })
-console.log(promotedStudents)
-    promotedStudents.forEach(async (student) => {
-        await Student.updateOne({ 
-            username: student.username }, 
-            { $inc: { classNumber: 1 }}, 
-            { new: true }) 
-        
-        const singleStudent = await Student.find({username: student.username })
-        console.log(singleStudent[0].classNumber)
-
-        
-        switch (singleStudent[0].section) {
-            case 'Grade':
-                className = `Grade${singleStudent[0].classNumber}`
-                await Student.updateOne({ username: singleStudent[0].username }, 
-                    { $set: {currentClass: className } }, { new: true })  
-                break;
-        
-            case 'JSS':
-                className = `JSS${singleStudent[0].classNumber}`
-                await Student.updateOne({ username: singleStudent[0].username }, 
-                    { $set: {currentClass: className } }, { new: true })  
-                break;
-        
-            case 'SSS':    
-                className = `SSS${singleStudent[0].classNumber}`
-                await Student.updateOne({ username: singleStudent[0].username }, 
-                    { $set: {currentClass: className } }, { new: true })  
-                break;
-                       
-            case 'Kindergarten':    
-                className = `Kindergarten${singleStudent[0].classNumber}`
-                await Student.updateOne({ username: singleStudent[0].username }, 
-                    { $set: {currentClass: className } }, { new: true })  
-                break;    
-                      
-        
-            default:
-                break;
-        }
-       
-            
-    })
-
+    
 
     
     // // update session here 
     const {session} = req.body
-    await TermSetter.updateOne({
-        session: session,
-        termNumber: 1,
-        currentTerm: 'First Term'
+    // await TermSetter.updateOne({
+    //     session: session,
+    //     termNumber: 1,
+    //     currentTerm: 'First Term'
 
     
-    })
+    // })
 
     const newTermAndSession = await TermSetter.find()
     console.log(newTermAndSession)
 
     // create new score sheets for all active students
-    let subjects = await Curriculum.find({ })
-    const newStudents1 = await Student.find({ status: 'Active' })
+    // let subjects = await Curriculum.find({ })
+    // const newStudents1 = await Student.find({ status: 'Active' })
 
-    newStudents1.forEach( async (student) => {
-        // find student class and subjects
-        const studentSubjects = subjects.filter( currentELement => {
-           return currentELement.name === student.currentClass &&
-            currentELement.category === student.category
-        })
+    // newStudents1.forEach( async (student) => {
+    //     // find student class and subjects
+    //     const studentSubjects = subjects.filter( currentELement => {
+    //        return currentELement.name === student.currentClass &&
+    //         currentELement.category === student.category
+    //     })
 
-        // create score document for each student's subject
-        const scoreDocuments = studentSubjects[0].subject.map(subject => ({
-            subject,
-            username: student.username,
-            studentId: student._id,
-            class: student.currentClass,
-            category: student.category,
-            firstName: student.firstName,
-            lastName: student.lastName,
-            username: student.username,
-            term: newTermAndSession[0].termNumber,
-            session: newTermAndSession[0].session.year
-        }))
-        await Score.insertMany(scoreDocuments)
+    //     // create score document for each student's subject
+    //     const scoreDocuments = studentSubjects[0].subject.map(subject => ({
+    //         subject,
+    //         username: student.username,
+    //         studentId: student._id,
+    //         class: student.currentClass,
+    //         category: student.category,
+    //         firstName: student.firstName,
+    //         lastName: student.lastName,
+    //         username: student.username,
+    //         term: newTermAndSession[0].termNumber,
+    //         session: newTermAndSession[0].session.year
+    //     }))
+    //     await Score.insertMany(scoreDocuments)
 
-        // creating a new school payment
-        await Payment.collection.insertOne({
-            studentId: student._id,
-            username: student.username,
-            firstname: student.firstName,
-            lastName: student.lastName,
-            paid: false,
-            term: newTermAndSession[0].termNumber,
-            session: newTermAndSession[0].session.year,
-            className: student.currentClass
-          })
+    //     // creating a new school payment
+    //     await Payment.collection.insertOne({
+    //         studentId: student._id,
+    //         username: student.username,
+    //         firstname: student.firstName,
+    //         lastName: student.lastName,
+    //         paid: false,
+    //         term: newTermAndSession[0].termNumber,
+    //         session: newTermAndSession[0].session.year,
+    //         className: student.currentClass
+    //       })
 
-        // creating a new cognitive data
-        await Cognitive.collection.insertOne({
-            username: student.username,
-            studentId: student._id,
-            firstName: student.firstName,
-            lastName: student.lastName,
-            class: student.currentClass,
-            category: student.category,
-            neatness: '',
-            punctuality: '',
-            hardWorking: '',
-            remarks: '',
-            term: newTermAndSession[0].termNumber,
-            session: newTermAndSession[0].session.year,
-        })  
+    //     // creating a new cognitive data
+    //     await Cognitive.collection.insertOne({
+    //         username: student.username,
+    //         studentId: student._id,
+    //         firstName: student.firstName,
+    //         lastName: student.lastName,
+    //         class: student.currentClass,
+    //         category: student.category,
+    //         neatness: '',
+    //         punctuality: '',
+    //         hardWorking: '',
+    //         remarks: '',
+    //         term: newTermAndSession[0].termNumber,
+    //         session: newTermAndSession[0].session.year,
+    //     })  
 
-        const noOfCourse = await Curriculum.find(
-            {'name': student.currentClass, 'category': student.category},
-            { 'subject': 1}
-          )
-            // creating a new term result
-        await TermResult.collection.insertOne({
-            studentId: student._id,
-            username: student.username,
-            class: student.currentClass,
-            noOfCourse: noOfCourse[0].subject.length,
-            term: newTermAndSession[0].termNumber,
-            session: newTermAndSession[0].session.year,
-        })
-    })
+    //     const noOfCourse = await Curriculum.find(
+    //         {'name': student.currentClass, 'category': student.category},
+    //         { 'subject': 1}
+    //       )
+    //         // creating a new term result
+    //     await TermResult.collection.insertOne({
+    //         studentId: student._id,
+    //         username: student.username,
+    //         class: student.currentClass,
+    //         noOfCourse: noOfCourse[0].subject.length,
+    //         term: newTermAndSession[0].termNumber,
+    //         session: newTermAndSession[0].session.year,
+    //     })
+    // })
 
     
 

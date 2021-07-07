@@ -97,11 +97,11 @@ console.log('--------------', allStudentScoreInAClass)
     })    
 
     currentSubjectPosition.map( async (students,ind)=>{
+        console.log('hhhhhhhhhh',students.id, students.position)
         await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
     })    
     console.log('/////////////////////',currentSubjectPosition)
 
-    const upScore3 = await Score.findById(req.body.id)
     const allStudentTotal = await Score.find({
         username: username,
         term: termAndSession[0].termNumber,
@@ -152,6 +152,8 @@ console.log('--------------', allStudentScoreInAClass)
        return  kkk = await TermResult.findByIdAndUpdate(students.id, {position: students.position})
     })
             // console.log(finalResult)
+    const upScore3 = await Score.findById(req.body.id)
+
             res.json({ success: true, upScore3})   
 }
 
