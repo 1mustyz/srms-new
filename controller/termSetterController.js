@@ -7,6 +7,7 @@ const SessionResult = require('../models/SessionResult')
 const Payment = require('../models/Payment');
 const Cognitive = require('../models/Cognigtive');
 const AddSession = require('../models/AddSession')
+const waait = require('waait')
 
 exports.setNewTerm = async (req,res,next) => {
 
@@ -199,52 +200,56 @@ exports.setSession = async (req,res,next) => {
         
     })
 
-//     const promotedStudents = await SessionResult.find({
-//         status: 'Promoted', session: termAndSession[0].session.year
-//        })
-//     console.log('///////////',promotedStudents)
-//    promotedStudents.forEach(async (student) => {
-//        await Student.updateOne({ 
-//            username: student.username }, 
-//            { $inc: { classNumber: 1 }}, 
-//            { new: true }) 
-       
-//        const singleStudent = await Student.find({username: student.username })
-//        console.log(singleStudent[0].section)
-
-       
-//        switch (singleStudent[0].section) {
-//            case 'Grade':
-//                className = `Grade${singleStudent[0].classNumber}`
-//                await Student.updateOne({ username: singleStudent[0].username }, 
-//                    { $set: {currentClass: className } }, { new: true })  
-//                break;
-       
-//            case 'JSS':
-//                className = `JSS${singleStudent[0].classNumber}`
-//                await Student.updateOne({ username: singleStudent[0].username }, 
-//                    { $set: {currentClass: className } }, { new: true })  
-//                break;
-       
-//            case 'SSS':    
-//                className = `SSS${singleStudent[0].classNumber}`
-//                await Student.updateOne({ username: singleStudent[0].username }, 
-//                    { $set: {currentClass: className } }, { new: true })  
-//                break;
-                      
-//            case 'Kindergarten':    
-//                className = `Kindergarten${singleStudent[0].classNumber}`
-//                await Student.updateOne({ username: singleStudent[0].username }, 
-//                    { $set: {currentClass: className } }, { new: true })  
-//                break;    
-                     
-       
-//            default:
-//                break;
-//        }
-      
+   await waait(2000) (async function(){
+        const promotedStudents = await SessionResult.find({
+            status: 'Promoted', session: termAndSession[0].session.year
+           })
+        console.log('///////////',promotedStudents)
+       promotedStudents.forEach(async (student) => {
+           await Student.updateOne({ 
+               username: student.username }, 
+               { $inc: { classNumber: 1 }}, 
+               { new: true }) 
            
-//    })
+           const singleStudent = await Student.find({username: student.username })
+           console.log(singleStudent[0].section)
+    
+           
+           switch (singleStudent[0].section) {
+               case 'Grade':
+                   className = `Grade${singleStudent[0].classNumber}`
+                   await Student.updateOne({ username: singleStudent[0].username }, 
+                       { $set: {currentClass: className } }, { new: true })  
+                   break;
+           
+               case 'JSS':
+                   className = `JSS${singleStudent[0].classNumber}`
+                   await Student.updateOne({ username: singleStudent[0].username }, 
+                       { $set: {currentClass: className } }, { new: true })  
+                   break;
+           
+               case 'SSS':    
+                   className = `SSS${singleStudent[0].classNumber}`
+                   await Student.updateOne({ username: singleStudent[0].username }, 
+                       { $set: {currentClass: className } }, { new: true })  
+                   break;
+                          
+               case 'Kindergarten':    
+                   className = `Kindergarten${singleStudent[0].classNumber}`
+                   await Student.updateOne({ username: singleStudent[0].username }, 
+                       { $set: {currentClass: className } }, { new: true })  
+                   break;    
+                         
+           
+               default:
+                   break;
+           }
+          
+               
+       })
+    
+    })()
+
 
 
     // // update student model, to reflect new class for promoted students
