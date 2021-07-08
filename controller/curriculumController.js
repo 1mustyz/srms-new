@@ -19,9 +19,16 @@ exports.getAllCurriculum = async (req,res,next) => {
 
     result
      ? res.json({success: true, message: result})
-     : res.json({success: false, message: `No curriculum added yet`})
+     : res.json({success: false, message: result})
 }
 
+exports.getAdminAllCurriculum = async (req,res,next) => {
+    const result = await Curriculum.find()
+
+    result
+     ? res.json({success: true, subjects: result})
+     : res.json({success: false, subjects: result})
+}
 exports.getSingleCurriculum = async (req,res,next) => {
     const {number,section,category} = req.body;
     const result = await Curriculum.findOne({number: number, section: section, category: category});

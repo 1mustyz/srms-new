@@ -8,14 +8,18 @@ exports.fetchTeacherSubjects = async (req, res) => {
     res.json({subjects: teacher.teach})
 }
 
+
 exports.fetchStudentsInClass = async (req, res) => {
+    const termAndSession = await TermSetter.find()
    const students = 
        await Score.find({ 
         class: req.body.class,
         subject: req.body.subject,
-        category: req.body.category
-     })
+        category: req.body.category,
+        session: termAndSession[0].session.year,
+        term: termAndSession[0].termNumber
 
+     })
    res.json({ success: true, students })
 }
 
@@ -69,8 +73,14 @@ exports.liveSaveResult = async (req, res) => {
 
     //  calculate position for a specific subject
     const allStudentScoreInAClass = await Score.find(
-        {class: currentClass, subject: subject, category: category},
-        {total: 1}
+        {
+            class: currentClass, 
+            subject: subject, 
+            category: category, 
+            term: termAndSession[0].termNumber,
+            session: termAndSession[0].session.year
+        },
+        {total: 1, username: 1}
         )
 console.log('--------------', allStudentScoreInAClass)
         allStudentScoreInAClass.sort((a,b) => {
@@ -80,16 +90,18 @@ console.log('--------------', allStudentScoreInAClass)
     const currentSubjectPosition = allStudentScoreInAClass.map((students,ind)=>{
         return studentIdentity={
             id:students.id,
-            position:ind+1
+            position:ind+1,
+            username: students.username
         }
             
     })    
 
-    console.log('/////////////////////',currentSubjectPosition)
     currentSubjectPosition.map( async (students,ind)=>{
-            await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
+        console.log('hhhhhhhhhh',students.id, students.position)
+        await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
     })    
-    
+    console.log('/////////////////////',currentSubjectPosition)
+
     const allStudentTotal = await Score.find({
         username: username,
         term: termAndSession[0].termNumber,
@@ -106,13 +118,20 @@ console.log('--------------', allStudentScoreInAClass)
     console.log(average,sumTotal,noOfCourses)
     
     await TermResult.findOneAndUpdate({
-        username: req.body.username
+        username: req.body.username,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year
+
     },{
         total: sumTotal, average: average
     })
         
     const allStudentInAclass = await TermResult.find({
-        class: currentClass  // TODO set term to current term
+        class: currentClass,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year
+
+          // TODO set term to current term
     },{
         average: 1
     })
@@ -130,11 +149,24 @@ console.log('--------------', allStudentScoreInAClass)
         
     })
     const finalResult = currentPosition.map( async (students,ind)=>{
-        await TermResult.findByIdAndUpdate(students.id, {position: students.position})
+       return  kkk = await TermResult.findByIdAndUpdate(students.id, {position: students.position})
     })
             // console.log(finalResult)
-            res.json({ success: true, upScore})   
+    const upScore3 = await Score.findById(req.body.id)
+
+            res.json({ success: true, upScore3})   
 }
+
+exports.finalSubmision = async (req,res,next) => {
+    const {submitButton, value, id} = req.body
+
+    await Staff.findByIdAndUpdate(id, {
+        [submitButton]: value
+    }, {new: true, useFindAndModify: false})
+    
+    res.json({success: true, message: `you have submitted ${submitButton}`})
+
+} 
 
 // exports.saveAndContinue = async (req, res) => {
 //     const input = req.body

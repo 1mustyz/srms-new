@@ -22,7 +22,7 @@ app.use(expressSession({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://1mustyz:z08135696959@project1.ynhhl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
     ttl: 14 * 24 * 60 * 60,
-    autoRemove: 'native' 
+    autoRemove: 'native',
   }),
   saveUninitialized: false,
   resave: true
@@ -80,7 +80,7 @@ passport.use('staff', Staff.createStrategy())
 passport.use('student', Student.createStrategy())
 
 passport.serializeUser(Staff.serializeUser())
-passport.deserializeUser(Staff.deserializeUser())
+passport.deserializeUser(Student.deserializeUser())
 
 app.use('/staff', staffRouter)
 app.use('/student', studentRouter)

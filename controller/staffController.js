@@ -3,11 +3,13 @@ const Staff = require('../models/Staff')
 const Student = require('../models/Student')
 const multer = require('multer');
 const {singleUpload} = require('../middlewares/filesMiddleware');
+const mongoose = require('mongoose')
 // const connectEnsureLogin = require('connect-ensure-login')
 
 
 exports.registerStaff = async (req, res, next) => {
     try {
+
       //create the user instance
       user = new Staff(req.body)
       const password = req.body.password ? req.body.password : 'password'
@@ -48,7 +50,7 @@ exports.resetPassword = async (req, res, next) => {
     const user = await Staff.findById(req.params.id)
     await user.changePassword(req.body.oldPassword, req.body.newPassword)
     await user.save()
-    res.json({user})
+    res.json({message: 'password reset successful', user})
   } catch (error) {
       res.json({ message: 'something went wrong', error })
   }
@@ -65,7 +67,7 @@ exports.findAllStaff = async (req,res, next) => {
 
 exports.findAllTeachers = async (req,res, next) => {
 
-  const result = await Staff.find({role: 'Teacher'});
+  const result = await Staff.find({role: 'subjectTeacher'});
   result.length > 0
    ? res.json({success: true, message: result,})
    : res.json({success: false, message: result,})
@@ -74,6 +76,23 @@ exports.findAllTeachers = async (req,res, next) => {
 exports.findAllPrincipal = async (req,res, next) => {
 
   const result = await Staff.find({role: 'Principal'});
+  result.length > 0
+   ? res.json({success: true, message: result,})
+   : res.json({success: false, message: result,})
+}
+
+exports.findAllClassTeacher = async (req,res, next) => {
+
+  const result = await Staff.find({role: 'classTeacher'});
+  result.length > 0
+   ? res.json({success: true, message: result,})
+   : res.json({success: false, message: result,})
+}
+
+exports.singleStaff = async (req,res, next) => {
+  const {username} = req.query
+
+  const result = await Staff.findOne({username: username});
   result.length > 0
    ? res.json({success: true, message: result,})
    : res.json({success: false, message: result,})
@@ -103,7 +122,7 @@ exports.setProfilePic = async (req,res, next) => {
         console.log(req.query.id)
         await Staff.findOneAndUpdate({_id: req.query.id},{$set: {image: req.file.path}})
         return  res.json({success: true,
-        message: 'profile picture updated successfully',
+        message: req.file.path,
                    },
         
     );
@@ -113,35 +132,52 @@ exports.setProfilePic = async (req,res, next) => {
 }
 
 exports.setRole = async (req,res,next) => {
-  const {role,teach} = req.body;
-  // console.log(teach)
+  const {role,teach,classTeacher} = req.body;
+  
+  const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1, 'classTeacher': 1})
 
-  // req.session.user._id
-  // console.log(role)
-  const result = await Staff.find({_id: req.query.id}, {'role': 1, 'teach': 1})
-
-  console.log( teach)
+  // console.log( teach)
 
   result[0].role.includes(role)
    ? ''
-   : await Staff.findOneAndUpdate({_id: req.query.id},{$push: {"role": role}})
+   : await Staff.findByIdAndUpdate(req.query.id,{$push: {"role": role}})
 
-   console.log(teach.subject.toString())
+ 
+if (role == "None"){
+    await Staff.findByIdAndUpdate(req.query.id,{$set: {"role": [], "teach": [], "classTeacher": []}})
+  }else if (role == "subjectTeacher" || role.includes('subjectTeacher')){
+
+    if (result[0].teach.length > 0){
+
+      let isSameClass = result[0].teach.filter(obj => obj.class == teach.class && obj.category == teach.category)
+      // console.log('11111111111111111111',isSameClass[0].ind)
+      if (isSameClass.length > 0){
+
+        const index = await Staff.aggregate([
+          {'$match': { '_id': mongoose.Types.ObjectId(req.query.id)}},
+          {'$project': {'index': {'$indexOfArray': ['$teach.class', teach.class]}}}
+        ])
+        const newSubject = `teach.${index[0].index}.subject`
+                                                                      // TODO
+        await Staff.findByIdAndUpdate(req.query.id, {$push: {[newSubject]: teach.subject.toString()}})
+      }else{
+        console.log('updating teach', teach)
+        await Staff.findByIdAndUpdate(req.query.id, {$push: {"teach":teach}}) 
+      }
+
+    }else{
+      console.log('updating teach', teach)
+      await Staff.findByIdAndUpdate(req.query.id, {$push: {"teach":teach}}) 
+    }
+  }else if (role == "classTeacher"){
+    result[0].classTeacher.includes(classTeacher)
+     ? ''
+     : await Staff.findByIdAndUpdate(req.query.id, {$push: {"classTeacher": classTeacher}})
+    
+  }else {
+    // await Staff.findByIdAndUpdate(req.query.id,{$push: {"role": role}})
+  }
   
-  role == "None"
-   ? await Staff.findOneAndUpdate({_id: req.query.id},{$set: {"role": [], "teach": []}})
-   : ''
-
-  role == "Teacher" || role.includes('Teacher')
-   ? result[0].teach.length > 0 
-    ? result[0].teach[0].class == teach.class
-     ? result[0].teach[0].subject.includes(teach.subject.toString())
-      ? '' 
-      : await Staff.findOneAndUpdate(req.query.id, {$push: {"teach.$[].subject":teach.subject.toString()}})
-     : await Staff.findOneAndUpdate(req.query.id, {$push: {"teach":teach}})
-    : await Staff.findOneAndUpdate(req.query.id, {$set: {"teach":teach}}) 
-   : ''
-
    res.json({success: true, message: 'role has been set successfully'})
 }
 
@@ -149,6 +185,12 @@ exports.removeStaff = async (req,res,next) => {
   const {id} = req.query;
   await Staff.findOneAndDelete({_id: id})
   res.json({success: true, message: `staff with the id ${id} has been removed`})
+}
+
+exports.editStaff = async (req,res,next) => {
+  const {id} = req.query;
+  await Staff.findByIdAndUpdate(id, req.body)
+  res.json({success: true, message: `staff with the id ${id} has been edited`})
 }
 
 

@@ -1,5 +1,6 @@
 const Cognitive = require('../models/Cognigtive');
 const AddNewCognitive = require('../models/AddNewCognitive');
+const TermSetter = require('../models/TermSetter')
 
 
 exports.addNewCognitive = async (req,res,next) => {
@@ -30,9 +31,14 @@ exports.getAllAddNewCognitive = async (req,res,next) => {
 }
 
 exports.createStudentCognitive = async (req,res,next) => {
+    const termAndSession = await TermSetter.find()
     const {username} = req.body
     const field = req.body.key
-    await Cognitive.findOneAndUpdate({username: username}, {
+    await Cognitive.findOneAndUpdate({
+        username: username, 
+        term: termAndSession[0].termNumber, 
+        session: termAndSession[0].session.year
+    }, {
         [field]: req.body.value
     }, {new: true, useFindAndModify: false})
     

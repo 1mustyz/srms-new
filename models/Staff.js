@@ -18,7 +18,7 @@ const StaffSchema = new Schema({
     state: { type: String},
     lga: { type: String},
     bankName: { type: String},
-    acountNumber: { type: String},
+    accountNumber: { type: String},
     accountName: { type: String},
     nextKinName: { type: String},
     nextKinPhone1: { type: String},
@@ -26,7 +26,12 @@ const StaffSchema = new Schema({
     nextKinAddress: { type: String},
     image: { type: String, default: '1.jpg' },
     role: { type: Array},
-    formMaster: Array,
+    classTeacher: Array,
+    ca1Button: {type: Boolean, default: true},
+    ca2Button: {type: Boolean, default: true},
+    ca3Button: {type: Boolean, default: true},
+    ca4Button: {type: Boolean, default: true},
+    examButton: {type: Boolean, default: true},
     teach: [{class: {type:String}, subject: {type:Array}, category: {type:String, default: 'none'}}]
 }, { timestamps: true });   
 
