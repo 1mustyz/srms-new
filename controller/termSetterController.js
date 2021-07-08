@@ -187,7 +187,7 @@ exports.setSession = async (req,res,next) => {
             const position = (position1 + position2 + position3)/3
             // console.log(position)
             
-        const status = average >= 15 ? 'Promoted' : 'Demoted'
+        const status = average >= 40 ? 'Promoted' : 'Demoted'
     await SessionResult.collection.insertOne({
             average,
             status,
@@ -200,6 +200,28 @@ exports.setSession = async (req,res,next) => {
         
     })
 
+const sessionRecords = await SessionResult.find(
+    {session: termAndSession[0].session.year},
+    {average: 1, username: 1})
+// console.log(sessionRecords)
+    
+sessionRecords.sort((a,b) => {
+    return b.total - a.total 
+})  
+const currentSessionPosition = sessionRecords.map((students,ind)=>{
+    return studentIdentity={
+        id:students.id,
+        position:ind+1,
+        username: students.username
+    }
+        
+}) 
+
+currentSessionPosition.map( async (students,ind)=>{
+    await SessionResult.findByIdAndUpdate(students.id, {position: students.position})
+})   
+
+console.log(currentSessionPosition)
     setTimeout(() => {
         (async function(){
             const promotedStudents = await SessionResult.find({
