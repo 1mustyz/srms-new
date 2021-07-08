@@ -9,7 +9,6 @@ const { isLoggedIn } = require('../middlewares/auth');
  router.post('/logout', logoutController.logout)
 
  router.put('/set-profile-pic', studentController.setProfilePic);
-//  router.put('/set-role', authController.setRole);
 
 // router.get('/get-student-assignment', studentController.getStudentAssignment)
 

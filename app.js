@@ -17,7 +17,7 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-const sessionMiddleware = expressSession({
+app.use(expressSession({
   secret: '[credentials.secret]',
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://1mustyz:z08135696959@project1.ynhhl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -26,7 +26,8 @@ const sessionMiddleware = expressSession({
   }),
   saveUninitialized: false,
   resave: true
-})
+}))
+
 const Staff = require('./models/Staff')
 const Student = require('./models/Student')
 const studentRouter = require('./routes/studentRoute')
@@ -73,16 +74,13 @@ app.use(cors())
 // passport setup
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(sessionMiddleware)
 
 
 passport.use('staff', Staff.createStrategy())
 passport.use('student', Student.createStrategy())
 
 passport.serializeUser(Staff.serializeUser())
-passport.serializeUser(Student.serializeUser())
 passport.deserializeUser(Staff.deserializeUser())
-passport.deserializeUser(Student.deserializeUser())
 
 app.use('/staff', staffRouter)
 app.use('/student', studentRouter)

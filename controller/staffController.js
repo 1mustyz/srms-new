@@ -33,10 +33,12 @@ exports.loginStaff = (req, res, next) => {
         })
       //login the user  
       req.login(user, (error) => {
-        if (error)
+        if (error){
           res.json({ success: false, message: 'something went wrong pls try again' })
-        req.session.user = user
-        res.json({ success: true, message: 'staff login successful', user })
+        }else {
+          req.session.user = user
+          res.json({ success: true, message: 'staff login successful', session: req.session })
+        }
       })
     })(req, res, next)
   }
