@@ -38,6 +38,7 @@ exports.studentIdGenerator = async (req,res,next) => {
         
         req.body.username = `NIA/STUDENT/${d.getFullYear()}/${zeros = id[3] < 10  && parseInt(id[3]) + 1 < 10 ? '00': id[3] >= 99 ? '':'0'}${parseInt(id[3]) + 1 }`
     }
+    
     console.log(req.body.username)  
 
     // 4. then insert the new id

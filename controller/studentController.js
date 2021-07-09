@@ -16,9 +16,12 @@ exports.registerStudent = async function (req, res, next) {
   try {
     //create the user instance
     const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
+    if (req.body.currentClass !== 'Daycare' && req.body.currentClass !== 'Playclass'){
+
+      const classNumber = req.body.currentClass.split('')
+      req.body.classNumber = classNumber[classNumber.length -1]
+    }
     
-    const classNumber = req.body.currentClass.split('')
-    req.body.classNumber = classNumber[classNumber.length -1]
     req.body.term = termAndSession[0].termNumber
     req.body.session = termAndSession[0].session.year
     // req.body.term = term[0].termNumber
