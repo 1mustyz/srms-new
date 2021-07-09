@@ -151,7 +151,9 @@ exports.setSession = async (req,res,next) => {
            student.currentClass === 'JSS3' 
         || student.currentClass === 'SSS3' 
         || student.currentClass ==='Grade5' 
-        || student.currentClass ==='Kindergarten3')
+        || student.currentClass ==='Kindergarten3'
+        || student.currentClass ==='Playclass')
+        || student.currentClass ==='Daycare'
 
         
     seniors.forEach( async (senior) => {
@@ -166,7 +168,9 @@ exports.setSession = async (req,res,next) => {
         student.currentClass !== 'JSS3' 
         || student.currentClass !== 'SSS3' 
         || student.currentClass !=='Grade5' 
-        || student.currentClass !=='Kindergarten3')
+        || student.currentClass !=='Kindergarten3'
+        || student.currentClass !=='Playclass'
+        || student.currentClass !=='Daycare')
 
     // console.log(juniors)    
 
