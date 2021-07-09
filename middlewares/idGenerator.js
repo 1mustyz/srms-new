@@ -41,5 +41,5 @@ exports.studentIdGenerator = async (req,res,next) => {
     console.log(req.body.username)  
 
     // 4. then insert the new id
-    // next()
+    next()
 }
