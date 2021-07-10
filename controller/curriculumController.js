@@ -2,9 +2,12 @@ const Curriculum = require('../models/Curriculum');
 
 
 exports.create = async (req,res,next) => {
-    const {section,name} = req.body
+    const {section,name,category} = req.body
 
-    await Curriculum.findOneAndDelete({name: name})
+    
+    if(section !== 'SSS') await Curriculum.findOneAndDelete({name: name})
+    else await Curriculum.findOneAndDelete({name: name,category: category})
+    
 
     section !== 'SSS'
      ? req.body.category = "none"
