@@ -127,9 +127,6 @@ exports.getPaidAndUnPaidStudent = async (req,res,next) => {
     const allGrade5PaidStudent = await Payment.find({className: 'Grade5', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
     const allGrade5UnpaidStudent = await Payment.find({className: 'Grade5', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();;
 
-    const allGrade6PaidStudent = await Payment.find({className: 'Grade6', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allGrade6UnpaidStudent = await Payment.find({className: 'Grade6', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-
     const allJSS1PaidStudent = await Payment.find({className: 'JSS1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
     const allJSS1UnpaidStudent = await Payment.find({className: 'JSS1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
 
@@ -165,7 +162,6 @@ exports.getPaidAndUnPaidStudent = async (req,res,next) => {
         {class: 'Grade3', paid: allGrade3PaidStudent, unPaid: allGrade3UnpaidStudent},
         {class: 'Grade4', paid: allGrade4PaidStudent, unPaid: allGrade4UnpaidStudent},
         {class: 'Grade5', paid: allGrade5PaidStudent, unPaid: allGrade5UnpaidStudent},
-        {class: 'Grade6', paid: allGrade6PaidStudent, unPaid: allGrade6UnpaidStudent},
         {class: 'JSS1', paid: allJSS1PaidStudent, unPaid: allJSS1UnpaidStudent},
         {class: 'JSS2', paid: allJSS2PaidStudent, unPaid: allJSS2UnpaidStudent},
         {class: 'JSS3', paid: allJSS3PaidStudent, unPaid: allJSS3UnpaidStudent},
