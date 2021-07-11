@@ -39,7 +39,7 @@ const teacherRouter = require('./routes/teacherRoute')
 // mongodb://localhost:27017/newsrms
 
 // //connect to db
-mongoose.connect('mongodb+srv://1mustyz:z08135696959@project1.ynhhl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://niaportal:nia@2020@cluster0.ehoaz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
