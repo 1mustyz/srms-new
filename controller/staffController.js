@@ -211,7 +211,7 @@ exports.statistics = async (req, res) => {
   
   res.json([
     {detail: 'allStudents', value: allStudents}, {detail: 'dayCare', value: dayCare},
-    {detail: 'playClass', value: playClass}, {detail: 'kindergarten', value: kindergartens}, 
+    {detail: 'playClass', value: playClass}, {detail: 'kindergarten', value: kindergarten}, 
     {detail: 'grades', value: grades}, {detail:'junior', value: junior}, 
     {detail: 'senior', value: senior}, {detail: 'staff', value: staffs} ])
 
