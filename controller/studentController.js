@@ -314,3 +314,9 @@ exports.editStudent = async (req,res,next) => {
   await Student.findByIdAndUpdate(id, req.body)
   res.json({success: true, message: `student with the id ${id} has been edited`})
 }
+
+exports.getAllStudentAssignment = async (req,res,next) => {
+  const {currentClass,category} = req.query
+  const result = await Assignment.find({class: currentClass, category})
+  res.json({success: true, result})
+}
