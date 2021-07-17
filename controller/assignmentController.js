@@ -5,7 +5,7 @@ const {singleFileUpload} = require('../middlewares/filesMiddleware');
 const Staff = require('../models/Staff');
 
 exports.createAssignmentText = async (req,res,next) => {
-    const {username,staffId,firstName,lastName,className,category,head,text} = req.body
+    const {username,staffId,firstName,lastName,className,category,head,text,subject} = req.body
     const termAndSession = await TermSetter.find()
     const d = new Date()
     await Assignment.findByIdAndUpdate(req.body.id, {
@@ -19,6 +19,7 @@ exports.createAssignmentText = async (req,res,next) => {
         session: termAndSession[0].session.year,
         head: head,
         text: text,
+        subject,
         date: d.getFullYear(),
         created_at: d.getDate()
     })

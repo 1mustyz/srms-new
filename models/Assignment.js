@@ -14,6 +14,7 @@ const AssignmentSchema = new Schema({
     head: {type: String},
     text: {type: String},
     file: {type: String},
+    subject: {type: String},
     date: {type: String},
     created_at :{ type: String}
     
