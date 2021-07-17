@@ -1,10 +1,13 @@
 const Assignment = require('../models/Assignment');
+const TermSetter = require('../models/TermSetter')
 const multer = require('multer');
 const {singleFileUpload} = require('../middlewares/filesMiddleware');
 const Staff = require('../models/Staff');
 
 exports.createAssignmentText = async (req,res,next) => {
     const {username,staffId,firstName,lastName,className,category,head,text} = req.body
+    const termAndSession = await TermSetter.find()
+    const
     const d = new Date
     await Assignment.findByIdAndUpdate(req.body.id, {
         username: username,
@@ -13,6 +16,8 @@ exports.createAssignmentText = async (req,res,next) => {
         lastName: lastName,
         class: className,
         category: category,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year,
         head: head,
         text: text,
         created_at: d.getDate()

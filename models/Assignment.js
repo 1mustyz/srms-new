@@ -9,6 +9,8 @@ const AssignmentSchema = new Schema({
     lastName: {type: String},
     class: {type: String},
     category: {type: String},
+    term: {type: Number},
+    session: {type: String},
     head: {type: String},
     text: {type: String},
     file: {type: String},
