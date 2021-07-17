@@ -7,8 +7,7 @@ const Staff = require('../models/Staff');
 exports.createAssignmentText = async (req,res,next) => {
     const {username,staffId,firstName,lastName,className,category,head,text} = req.body
     const termAndSession = await TermSetter.find()
-    const
-    const d = new Date
+    const d = new Date()
     await Assignment.findByIdAndUpdate(req.body.id, {
         username: username,
         staffId: staffId,
