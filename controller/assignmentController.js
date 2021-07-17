@@ -19,6 +19,7 @@ exports.createAssignmentText = async (req,res,next) => {
         session: termAndSession[0].session.year,
         head: head,
         text: text,
+        date: d.getFullYear(),
         created_at: d.getDate()
     })
     res.json({success: true, message: `assignment created for class ${req.body.className}`})
