@@ -27,12 +27,14 @@ exports.verifyPayment = async (req,res,next) => {
         termAndSession[0].session.year
     })
 
-    if (result.paid && (purposeOfPayment.includes('Tuition') || purposeOfPayment.includes('all'))){
+    const found = purposeOfPayment.find(payment => payment.pays == "Tuition fee" || payment.pays == "All");
+
+    if (result.paid && found != undefined){
     res.json({success: true, message: 'you have paid for tuition fee'})
 
     }else{
         console.log(result)
-    if(purposeOfPayment.includes('Tuition') || purposeOfPayment.includes('all')) paid = true
+    if(found != undefined) paid = true
 
     await Payment.findOneAndUpdate({
         "username": username,
