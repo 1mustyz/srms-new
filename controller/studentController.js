@@ -278,26 +278,24 @@ exports.getAclassResult = async (req,res,next) => {
 
 
 exports.getAsingleStudentResult = async (req,res,next) => {
-  const {term,session,className,category,username} = req.query
+  const {term,username} = req.query
+  const termAndSession = await TermSetter.find()
 
   const subjectResult = await Score.findOne({
-    class: className, 
     term,
-    session,
+    session: termAndSession[0].session.year,
     username
   })
 
   const studentCognitive = await Cognitive.findOne({
-    class: className, 
     term,
-    session,
+    session: termAndSession[0].session.year,
     username
   })
   
   const termResult = await TermResult.find({
-    class: className, 
     term,
-    session,
+    session: termAndSession[0].session.year,
     username
   })
   const generalSingleResult = [
