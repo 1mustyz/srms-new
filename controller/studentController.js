@@ -281,7 +281,7 @@ exports.getAsingleStudentResult = async (req,res,next) => {
   const {term,username} = req.query
   const termAndSession = await TermSetter.find()
 
-  const subjectResult = await Score.findOne({
+  const subjectResult = await Score.find({
     term,
     session: termAndSession[0].session.year,
     username
