@@ -91,8 +91,9 @@ router.get('/get-all-teachers-priviledge', examOfficerController.getTeachersPriv
 
 router.get('/downloaddd', function (req, res, next) {
     res.contentType("application/pdf")
-    var filePath = "public/files/file-1626505820160Chapter 1.pdf"; // Or format the path using the `id` rest param
-    var fileName = "file-1626505820160Chapter 1.pdf"; // The default name the browser will use
+    const {filePath,fileName} = req.query;
+     // Or format the path using the `id` rest param
+     // The default name the browser will use
 
     res.download(filePath, fileName);    
 });
@@ -100,7 +101,7 @@ router.get('/downloaddd', function (req, res, next) {
 router.get('/download-pdf', function (req, res, next) {
     res.contentType("application/pdf")
     const {filePath} = req.query; // Or format the path using the `id` rest param
-    const fileName = "Assignment"; // The default name the browser will use
+    const fileName = "Assignment.pdf"; // The default name the browser will use
 
     res.download(filePath, fileName);    
 });
