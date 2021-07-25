@@ -63,7 +63,7 @@ exports.getAllAssignmentAdmin = async (req,res,next) => {
         const expiryDate = new Date()
         expiryDate.setDate(parseInt(ass.created_at) + 7)
         console.log(expiryDate < currentDate)
-        expiryDate.getDate() == currentDate.getDate() || expiryDate < currentDate && await Assignment.findByIdAndDelete(ass._id)
+        expiryDate < currentDate && await Assignment.findByIdAndDelete(ass._id)
     })
     res.json({success: true, message: result})
     
@@ -78,7 +78,7 @@ exports.getAllAssignmentForTeacher = async (req,res,next) => {
     result.forEach(async (ass) => {
         const expiryDate = new Date()
         expiryDate.setDate(parseInt(ass.created_at) + 7)
-        expiryDate.getDate() >= currentDate.getDate() && await Assignment.findByIdAndDelete(ass._id)
+        expiryDate < currentDate && await Assignment.findByIdAndDelete(ass._id)
     })
     res.json({success: true, message: result})
     

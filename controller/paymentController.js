@@ -52,8 +52,20 @@ exports.verifyPayment = async (req,res,next) => {
 }
 
 exports.getSingleStudentPayment = async (req,res,next) => {
-    const {username} = req.query
-    const result = await Payment.findOne({username},{paid: 1, pays: 1, _id: 0})
+    const {username,term} = req.query
+    const termAndSession = await TermSetter.find()
+
+    const result = await Payment.findOne({
+        username,
+        term,
+        session: termAndSession[0].session.year
+    },{
+        paid: 1,
+        pays: 1,
+        term: 1,
+        session: 1,
+        _id: 0
+    })
 
     res.json({success: true, result})
 }
