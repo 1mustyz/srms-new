@@ -68,10 +68,10 @@ exports.deleteAllCurriculum = async (req,res,next) => {
 }
 
 exports.getClassCurriculum = async (req,res,next) => {
-    const {currentClass,category} = req.body;
-    const result = await Curriculum.findOne({class: currentClass, category: category});
+    const {currentClass,category} = req.query;
+    const result = await Curriculum.findOne({name: currentClass, category: category});
 
     result
-     ? res.json({success: true, message: result})
-     : res.json({success: false, message: result})
+     ? res.json({success: true, result})
+     : res.json({success: false, result})
 }
