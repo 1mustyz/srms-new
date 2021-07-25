@@ -83,3 +83,12 @@ exports.getAllAssignmentForTeacher = async (req,res,next) => {
     
     
 }
+
+exports.downloadAssignment =  (req, res, next) => {
+    res.contentType("application/pdf")
+    const {filePath,fileName} = req.query;
+     // Or format the path using the `id` rest param
+     // The default name the browser will use
+
+    res.download(filePath, fileName);    
+}

@@ -89,21 +89,15 @@ router.get('/get-a-class-result', studentController.getAclassResult)
 router.get('/get-single-student-result', studentController.getAsingleStudentResult)
 router.get('/get-all-teachers-priviledge', examOfficerController.getTeachersPriviledge)
 
-router.get('/downloaddd', function (req, res, next) {
-    res.contentType("application/pdf")
-    const {filePath,fileName} = req.query;
-     // Or format the path using the `id` rest param
-     // The default name the browser will use
-
-    res.download(filePath, fileName);    
-});
+router.get('/downloaddd', assignmentController.downloadAssignment);
 
 router.get('/download-pdf', function (req, res, next) {
     res.contentType("application/pdf")
     const {filePath} = req.query; // Or format the path using the `id` rest param
     const fileName = "Assignment.pdf"; // The default name the browser will use
 
-    res.download(filePath, fileName);    
+    const myfile=res.download(filePath, fileName);  
+    res.json(myfile)  
 });
 router.delete('/remove-student', studentController.removeStudent)
 router.delete('/delete-single-curriculum', curriculumController.deleteSingleCurriculum)
