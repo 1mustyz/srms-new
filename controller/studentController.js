@@ -278,8 +278,10 @@ exports.getAclassResult = async (req,res,next) => {
 
 
 exports.getAsingleStudentResult = async (req,res,next) => {
-  const {term,username} = req.query
+  const {term,username,currentClass,category} = req.query
   const termAndSession = await TermSetter.find()
+
+  const totalNoOfStudent = await Student.find({currentClass, category}).countDocuments()
 
   const subjectResult = await Score.find({
     term,
@@ -301,7 +303,8 @@ exports.getAsingleStudentResult = async (req,res,next) => {
   const generalSingleResult = [
     ...termResult,
     subjectResult,
-    studentCognitive
+    studentCognitive,
+    totalNoOfStudent
   ]
   res.json({success: true, message: generalSingleResult})
 
