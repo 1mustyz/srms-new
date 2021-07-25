@@ -317,11 +317,10 @@ exports.editStudent = async (req,res,next) => {
 
 exports.getAllStudentAssignment = async (req,res,next) => {
   const termAndSession = await TermSetter.find()
-  const {currentClass,category,staffId} = req.query
+  const {currentClass,category} = req.query
   const result = await Assignment.find({
-    // class: currentClass,
-    // category,
-    staffId: staffId,
+    class: currentClass,
+    category,
     term: termAndSession[0].termNumber,
     session: termAndSession[0].session.year
     })
