@@ -25,7 +25,8 @@ const StudentSchema = new Schema({
     currentClass: { type: String },
     classNumber: { type: Number},
     section: { type: String }, // specifies type of student primary, junior or senior
-    category: { type: String, default: 'none' } // specifies category for senior school students Science, Art or Null for primary & junior pupils
+    category: { type: String, default: 'none' }, // specifies category for senior school students Science, Art or Null for primary & junior pupils
+    suspend: { type: Boolean, default: 'false' } 
 }, { timestamps: true });
 
 //plugin passport-local-mongoose to enable password hashing and salting and simpligy other things

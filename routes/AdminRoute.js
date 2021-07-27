@@ -47,6 +47,7 @@ router.put('/edit-staff', staffController.editStaff)
 router.put('/edit-student', studentController.editStudent)
 router.put('/final-submission', teacherController.finalSubmision)
 router.put('/allow-submission-priviledge', examOfficerController.allowPriviledge)
+router.put('/suspend-a-student', studentController.suspendAstudent);
 
 
 router.get('/get-all-curriculum', curriculumController.getAllCurriculum)

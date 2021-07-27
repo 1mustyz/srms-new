@@ -327,3 +327,10 @@ exports.getAllStudentAssignment = async (req,res,next) => {
     })
   res.json({success: true, result})
 }
+
+exports.suspendAstudent = async (req,res,next) => {
+  const {username, suspend} = req.query
+
+  await Student.findOneAndUpdate({username},{$set:{suspend}})
+  res.json({success: true, suspend})
+}
