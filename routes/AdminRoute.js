@@ -19,6 +19,8 @@ router.post('/register-student', idGenerator.studentIdGenerator, studentControll
 
 router.post('/login', staffController.loginStaff)
 router.post('/change-password/:id', staffController.resetPassword)
+router.post('/reset-student-password/:id', studentController.adminResetStudentPassword)
+router.post('/reset-staff-password/:id', staffController.adminResetStaffPassword)
 router.post('/logout', logoutController.logout)
 router.post('/add-payment', paymentController.addPaymentTypes)
 router.post('/add-curriculum', curriculumController.create)
