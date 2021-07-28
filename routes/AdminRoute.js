@@ -19,10 +19,12 @@ router.post('/register-student', idGenerator.studentIdGenerator, studentControll
 
 router.post('/login', staffController.loginStaff)
 router.post('/change-password/:id', staffController.resetPassword)
+router.post('/reset-student-password/:id', studentController.adminResetStudentPassword)
+router.post('/reset-staff-password/:id', staffController.adminResetStaffPassword)
 router.post('/logout', logoutController.logout)
 router.post('/add-payment', paymentController.addPaymentTypes)
 router.post('/add-curriculum', curriculumController.create)
-router.post('/create-subject', subjectController.create)
+router.post('/create-subject', isLoggedIn('Admin'), subjectController.create)
 router.post('/create-class', classController.create)
 router.post('/verify-payment', paymentController.verifyPayment);
 router.post('/set-new-term',termSetterController.setNewTerm)
