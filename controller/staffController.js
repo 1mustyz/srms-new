@@ -201,7 +201,7 @@ exports.statistics = async (req, res) => {
   const allStudents = await Student.find({ }).countDocuments()
   const dayCare = await Student.find({ section: 'Daycare' }).countDocuments()
   const playClass = await Student.find({ section: 'Playclass' }).countDocuments()
-  const kindergartens = await Student.find({ section: 'kindergartens' }).countDocuments()
+  const kindergarten = await Student.find({ section: 'Kindergartens' }).countDocuments()
   const grades = await Student.find({ section: 'Grade' }).countDocuments()
   const secondary = await Student.find({ $or: [ { section: 'JSS'}, { section: 'SSS'} ]}).countDocuments()
   const junior = await Student.find({ section: 'JSS' }).countDocuments()
@@ -213,7 +213,7 @@ exports.statistics = async (req, res) => {
   
   res.json([
     {detail: 'allStudents', value: allStudents}, {detail: 'dayCare', value: dayCare},
-    {detail: 'playClass', value: playClass}, {detail: 'kindergartens', value: kindergartens}, 
+    {detail: 'playClass', value: playClass}, {detail: 'kindergarten', value: kindergarten}, 
     {detail: 'grades', value: grades}, {detail:'junior', value: junior}, 
     {detail: 'senior', value: senior}, {detail: 'staff', value: staffs} ])
 

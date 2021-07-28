@@ -1,11 +1,13 @@
 const Assignment = require('../models/Assignment');
+const TermSetter = require('../models/TermSetter')
 const multer = require('multer');
 const {singleFileUpload} = require('../middlewares/filesMiddleware');
 const Staff = require('../models/Staff');
 
 exports.createAssignmentText = async (req,res,next) => {
-    const {username,staffId,firstName,lastName,className,category,head,text} = req.body
-    const d = new Date
+    const {username,staffId,firstName,lastName,className,category,head,text,subject} = req.body
+    const termAndSession = await TermSetter.find()
+    const d = new Date()
     await Assignment.findByIdAndUpdate(req.body.id, {
         username: username,
         staffId: staffId,
@@ -13,8 +15,12 @@ exports.createAssignmentText = async (req,res,next) => {
         lastName: lastName,
         class: className,
         category: category,
+        term: termAndSession[0].termNumber,
+        session: termAndSession[0].session.year,
         head: head,
         text: text,
+        subject,
+        date: d.getFullYear(),
         created_at: d.getDate()
     })
     res.json({success: true, message: `assignment created for class ${req.body.className}`})
@@ -56,7 +62,8 @@ exports.getAllAssignmentAdmin = async (req,res,next) => {
     result.forEach(async (ass) => {
         const expiryDate = new Date()
         expiryDate.setDate(parseInt(ass.created_at) + 7)
-        expiryDate.getDate() == currentDate.getDate() && await Assignment.findByIdAndDelete(ass._id)
+        console.log(expiryDate < currentDate)
+        expiryDate < currentDate && await Assignment.findByIdAndDelete(ass._id)
     })
     res.json({success: true, message: result})
     
@@ -71,9 +78,18 @@ exports.getAllAssignmentForTeacher = async (req,res,next) => {
     result.forEach(async (ass) => {
         const expiryDate = new Date()
         expiryDate.setDate(parseInt(ass.created_at) + 7)
-        expiryDate.getDate() >= currentDate.getDate() && await Assignment.findByIdAndDelete(ass._id)
+        expiryDate < currentDate && await Assignment.findByIdAndDelete(ass._id)
     })
     res.json({success: true, message: result})
     
     
+}
+
+exports.downloadAssignment =  (req, res, next) => {
+    res.contentType("application/pdf")
+    const {filePath,fileName} = req.query;
+     // Or format the path using the `id` rest param
+     // The default name the browser will use
+
+    res.download(filePath, fileName);    
 }

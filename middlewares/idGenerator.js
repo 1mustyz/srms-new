@@ -9,12 +9,12 @@ exports.staffIdGenerator = async (req,res,next) => {
     if (getStaff.length < 1)  req.body.username = 'NIA/ADMIN/001'
     else{
         // 3. if there are staffs get the last id and icrement by one
-        const lastStaff = await Staff.find().sort({username: -1}).limit(1)
+        const lastStaff = await Staff.find().sort({createdAt: -1}).limit(1)
         // console.log(lastStaff)
 
         let zeros
         const id = lastStaff[0].username.split('/')
-        req.body.username = `NIA/STAFF/${zeros = id[2] < 10 ? '00' : '0'}${parseInt(id[2]) + 1 }`
+        req.body.username = `NIA/STAFF/${zeros = id[2] < 10  && parseInt(id[2]) + 1 < 10 ? '00': id[2] >= 99 ? '':'0'}${parseInt(id[2]) + 1 }`
     }
     // console.log(id,req.body.username)
 
@@ -30,14 +30,16 @@ exports.studentIdGenerator = async (req,res,next) => {
     if (getStudent.length < 1) req.body.username = `NIA/STUDENT/${d.getFullYear()}/001`
     else{
         // 3. if there are staffs get the last id and icrement by one
-        const lastStudent = await Student.find().sort({username: -1}).limit(1)
-        // console.log(lastStaff)
-
+        const lastStudent = await Student.find().sort({createdAt: -1}).limit(1)
+        
         let zeros
         const id = lastStudent[0].username.split('/')
-        req.body.username = `NIA/STUDENT/${d.getFullYear()}/${zeros = id[3] < 10 ? '00' : '0'}${parseInt(id[3]) + 1 }`
+        // console.log(id[3],zeros)
+        
+        req.body.username = `NIA/STUDENT/${d.getFullYear()}/${zeros = id[3] < 10  && parseInt(id[3]) + 1 < 10 ? '00': id[3] >= 99 ? '':'0'}${parseInt(id[3]) + 1 }`
     }
-    // console.log(id,req.body.username)
+    
+    console.log(req.body.username)  
 
     // 4. then insert the new id
     next()

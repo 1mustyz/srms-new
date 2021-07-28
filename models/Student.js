@@ -23,7 +23,7 @@ const StudentSchema = new Schema({
     lga: {type: String},
     image: { type: String, default: '1.jpg' },
     currentClass: { type: String },
-    classNumber: { type: Number },
+    classNumber: { type: Number},
     section: { type: String }, // specifies type of student primary, junior or senior
     category: { type: String, default: 'none' } // specifies category for senior school students Science, Art or Null for primary & junior pupils
 }, { timestamps: true });

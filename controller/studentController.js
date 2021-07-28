@@ -16,9 +16,12 @@ exports.registerStudent = async function (req, res, next) {
   try {
     //create the user instance
     const termAndSession = await TermSetter.find({},{termNumber: 1, session: 1})
+    if (req.body.currentClass !== 'Daycare' && req.body.currentClass !== 'Playclass'){
+
+      const classNumber = req.body.currentClass.split('')
+      req.body.classNumber = classNumber[classNumber.length -1]
+    }
     
-    const classNumber = req.body.currentClass.split('')
-    req.body.classNumber = classNumber[classNumber.length -1]
     req.body.term = termAndSession[0].termNumber
     req.body.session = termAndSession[0].session.year
     // req.body.term = term[0].termNumber
@@ -63,9 +66,20 @@ exports.registerStudent = async function (req, res, next) {
          lastName: user.lastName,
          class: user.currentClass,
          category: user.category,
-         neatness: '',
-         punctuality: '',
-         hardWorking: '',
+         Neatness:'',
+         Punctuality:'',
+         Attentiveness:'',
+         Attitude:'',
+         Emotion:'',
+         Initiative:'',
+         TeamWork:'',
+         Perseverance:'',
+         Speaking:'',
+         Leadership:'',
+         Acceptance:'',
+         Honesty:'',
+         Follows:'',
+         Participation:'',
          remarks: '',
          term: termAndSession[0].termNumber,
          session: termAndSession[0].session.year,
@@ -264,32 +278,33 @@ exports.getAclassResult = async (req,res,next) => {
 
 
 exports.getAsingleStudentResult = async (req,res,next) => {
-  const {term,session,className,category,username} = req.query
+  const {term,username,currentClass,category} = req.query
+  const termAndSession = await TermSetter.find()
 
-  const subjectResult = await Score.findOne({
-    class: className, 
+  const totalNoOfStudent = await Student.find({currentClass, category}).countDocuments()
+
+  const subjectResult = await Score.find({
     term,
-    session,
+    session: termAndSession[0].session.year,
     username
   })
 
   const studentCognitive = await Cognitive.findOne({
-    class: className, 
     term,
-    session,
+    session: termAndSession[0].session.year,
     username
   })
   
   const termResult = await TermResult.find({
-    class: className, 
     term,
-    session,
+    session: termAndSession[0].session.year,
     username
   })
   const generalSingleResult = [
     ...termResult,
     subjectResult,
-    studentCognitive
+    studentCognitive,
+    totalNoOfStudent
   ]
   res.json({success: true, message: generalSingleResult})
 
@@ -299,4 +314,16 @@ exports.editStudent = async (req,res,next) => {
   const {id} = req.query;
   await Student.findByIdAndUpdate(id, req.body)
   res.json({success: true, message: `student with the id ${id} has been edited`})
+}
+
+exports.getAllStudentAssignment = async (req,res,next) => {
+  const termAndSession = await TermSetter.find()
+  const {currentClass,category} = req.query
+  const result = await Assignment.find({
+    class: currentClass,
+    category,
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year
+    })
+  res.json({success: true, result})
 }

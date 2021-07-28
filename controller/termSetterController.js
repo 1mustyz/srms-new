@@ -151,7 +151,9 @@ exports.setSession = async (req,res,next) => {
            student.currentClass === 'JSS3' 
         || student.currentClass === 'SSS3' 
         || student.currentClass ==='Grade5' 
-        || student.currentClass ==='Kindergarten3')
+        || student.currentClass ==='Kindergarten3'
+        || student.currentClass ==='Playclass')
+        || student.currentClass ==='Daycare'
 
         
     seniors.forEach( async (senior) => {
@@ -166,7 +168,9 @@ exports.setSession = async (req,res,next) => {
         student.currentClass !== 'JSS3' 
         || student.currentClass !== 'SSS3' 
         || student.currentClass !=='Grade5' 
-        || student.currentClass !=='Kindergarten3')
+        || student.currentClass !=='Kindergarten3'
+        || student.currentClass !=='Playclass'
+        || student.currentClass !=='Daycare')
 
     // console.log(juniors)    
 
@@ -187,8 +191,8 @@ exports.setSession = async (req,res,next) => {
             // const position = (position1 + position2 + position3)/3
             // console.log(position)
             
-            const status = average >= 15 ? 'Promoted' : 'Demoted'
-        await SessionResult.collection.insertOne({
+        const status = average >= 40 ? 'Promoted' : 'Demoted'
+    await SessionResult.collection.insertOne({
             average,
             status,
             username: junior.username,
@@ -199,11 +203,28 @@ exports.setSession = async (req,res,next) => {
         
     })
 
-    // set postion for students in session
-
-    const sessionRecords = await SessionResult.find({})
+const sessionRecords = await SessionResult.find(
+    {session: termAndSession[0].session.year},
+    {average: 1, username: 1})
+// console.log(sessionRecords)
     
+sessionRecords.sort((a,b) => {
+    return b.total - a.total 
+})  
+const currentSessionPosition = sessionRecords.map((students,ind)=>{
+    return studentIdentity={
+        id:students.id,
+        position:ind+1,
+        username: students.username
+    }
+        
+}) 
 
+currentSessionPosition.map( async (students,ind)=>{
+    await SessionResult.findByIdAndUpdate(students.id, {position: students.position})
+})   
+
+console.log(currentSessionPosition)
     setTimeout(() => {
         (async function(){
             const promotedStudents = await SessionResult.find({
@@ -322,9 +343,20 @@ exports.setSession = async (req,res,next) => {
             lastName: student.lastName,
             class: student.currentClass,
             category: student.category,
-            neatness: '',
-            punctuality: '',
-            hardWorking: '',
+            Neatness:'',
+            Punctuality:'',
+            Attentiveness:'',
+            Attitude:'',
+            Emotion:'',
+            Initiative:'',
+            TeamWork:'',
+            Perseverance:'',
+            Speaking:'',
+            Leadership:'',
+            Acceptance:'',
+            Honesty:'',
+            Follows:'',
+            Participation:'',
             remarks: '',
             term: newTermAndSession[0].termNumber,
             session: newTermAndSession[0].session.year,

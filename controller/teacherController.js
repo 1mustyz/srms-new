@@ -48,18 +48,25 @@ exports.liveSaveResult = async (req, res) => {
 
     // // use if else to find grade based on score value 
     let grade
-    if(total >= 70) {
-        grade = 'A'
+    if(total >= 91) {
+        grade = 'A1'
+    } else if(total >= 81) {
+        grade = 'B2'
+    } else if(total >= 71) {
+        grade = 'B3'
+    } else if(total >= 65) {
+        grade = 'C4'
     } else if(total >= 60) {
-        grade = 'B'
+        grade = 'C5'
     } else if(total >= 50) {
-        grade = 'C'
+        grade = 'C6'
     } else if(total >= 45) {
-        grade = 'D'
+        grade = 'D7'
     } else if(total >= 40) {
-        grade = 'E'
-    } else {
-        grade = 'F'
+        grade = 'E8'
+    } 
+    else {
+        grade = 'F9'
     }
 
     // // update grade and total field
