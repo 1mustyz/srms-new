@@ -50,13 +50,18 @@ exports.createAssignmentFile = async (req,res,next) => {
             console.log(req.file.path)
             cloudinary.v2.uploader.upload(req.file.path, 
                 { resource_type: "raw" }, 
-  function(error, result) {console.log(result, error); });
-        //   const result =  await Assignment.collection.insertOne({file: req.file.path})
-        //     return  res.json({success: true,
-        //     message: result },
-            
-            
-        // );
+            async function(error, result) {
+                console.log(result, error); 
+
+                const upResult =  await Assignment.collection.insertOne({file: result.url})
+                return  res.json({success: true,
+                message: upResult },
+                
+                
+            );
+                });
+  
+         
         }
         }); 
 } 
