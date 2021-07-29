@@ -4,6 +4,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 
 //Schema design
 const StudentSchema = new Schema({
+    userType: { type: String, default: 'student'},
     status: { type: String, default: 'Active' },
     username: { type: String, required: true, unique: [ true, 'ID Number already exist' ] },
     firstName: {type: String, require: true},
