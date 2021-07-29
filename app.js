@@ -7,7 +7,9 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const expressSession = require('express-session')
 const MongoStore = require('connect-mongo')
-const cors = require('cors');
+const cors = require('cors')
+const Staff = require('./models/Staff')
+const Student = require('./models/Student')
 // const multipart = require('connect-multiparty');
 // global.app = module.exports = express();
 
@@ -29,8 +31,6 @@ app.use(expressSession({
   resave: true
 }))
 
-const Staff = require('./models/Staff')
-const Student = require('./models/Student')
 const studentRouter = require('./routes/studentRoute')
 const staffRouter = require('./routes/staffRoute')
 const adminRouter = require('./routes/AdminRoute')
@@ -89,10 +89,14 @@ passport.serializeUser(function(user, done) {
 })
 
 passport.deserializeUser(function(key, done) {
-  var Model = key.type === 'staff' ? 'Staff' : 'Student'; 
-  Model.findById(key.id, function(err, user) {
+  key.type === 'staff' 
+  ? Staff.findById(key.id, function(err, user) {
     done(err, user)
-  })
+  }) 
+  : Student.findById(key.id, function(err, user) {
+    done(err, user)
+  }) 
+
 })
 
 app.use('/staff', staffRouter)
