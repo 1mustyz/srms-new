@@ -80,8 +80,20 @@ app.use(passport.session())
 passport.use('staff', Staff.createStrategy())
 passport.use('student', Student.createStrategy())
 
-passport.serializeUser(Staff.serializeUser())
-passport.deserializeUser(Student.deserializeUser())
+passport.serializeUser(function(user, done) {
+  var key = {
+    id: user.id,
+    type: user.userType
+  }
+  done(null, key);
+})
+
+passport.deserializeUser(function(key, done) {
+  var Model = key.type === 'staff' ? 'Staff' : 'Student'; 
+  Model.findById(key.id, function(err, user) {
+    done(err, user)
+  })
+})
 
 app.use('/staff', staffRouter)
 app.use('/student', studentRouter)
