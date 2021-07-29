@@ -80,7 +80,7 @@ app.use(passport.session())
 passport.use('staff', Staff.createStrategy())
 passport.use('student', Student.createStrategy())
 
-passport.serialzeUser(function(user, done) {
+passport.serializeUser(function(user, done) {
   var key = {
     id: user.id,
     type: user.userType
