@@ -27,7 +27,7 @@ const StaffSchema = new Schema({
     image: { type: String, default: '1.jpg' },
     role: { type: Array},
     userType: { type: String, default: 'staff'},
-    classTeacher: Array,
+    classTeacher: { type: Array},
     ca1Button: {type: Boolean, default: true},
     ca2Button: {type: Boolean, default: true},
     ca3Button: {type: Boolean, default: true},
