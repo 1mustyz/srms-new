@@ -39,7 +39,7 @@ exports.loginStaff = (req, res, next) => {
           res.json({ success: false, message: 'something went wrong pls try again' })
         }else {
           req.session.user = user
-          res.json({ success: true, message: 'staff login successful', session: req.session })
+          res.json({ success: true, message: 'staff login successful', user})
         }
       })
     })(req, res, next)
