@@ -3,15 +3,15 @@ const Score = require('../models/Score')
 const TermResult = require('../models/TermResult')
 const TermSetter = require('../models/TermSetter')
 
+
 exports.fetchTeacherSubjects = async (req, res) => {
     const teacher = await Staff.findById(req.query.id)
     res.json({subjects: teacher.teach})
 }
 
-
 exports.fetchStudentsInClass = async (req, res) => {
     const termAndSession = await TermSetter.find()
-   const students = 
+    const students = 
        await Score.find({ 
         class: req.body.class,
         subject: req.body.subject,
@@ -20,7 +20,7 @@ exports.fetchStudentsInClass = async (req, res) => {
         term: termAndSession[0].termNumber
 
      })
-   res.json({ success: true, students })
+    res.json({ success: true, students })
 }
 
 exports.liveSaveResult = async (req, res) => {
@@ -30,10 +30,9 @@ exports.liveSaveResult = async (req, res) => {
     const currentClass = req.body.currentClass
     const subject = req.body.subject
     const category = req.body.category
-    const termAndSession = await TermSetter.find()
-    
-    
+    const termAndSession = await TermSetter.find() 
 
+    // update the score field sent from front end
     const score = await Score.findByIdAndUpdate(req.body.id, {
         [field]: value
     }, {new: true, useFindAndModify: false})
@@ -174,47 +173,4 @@ exports.finalSubmision = async (req,res,next) => {
     res.json({success: true, message: `you have submitted ${submitButton}`})
 
 } 
-
-// exports.saveAndContinue = async (req, res) => {
-//     const input = req.body
-//     let bulkArr = [];
-
-//     for (const i of input) {
-//         bulkArr.push({
-//             updateOne: {
-//                 "filter": { "_id": i._id },
-//                 "update": { 
-//                      ca1: i.ca1, ca2: i.ca2,
-//                      ca3: i.ca3, exam: i.exam }
-//             }
-//         })
-//     }
-
-//     const scores = await Score.bulkWrite(bulkArr)
-//     res.json({ success: true, scores })
-
-// }
-
-// exports.finalSaveResult = async (req, res) => {
-//     const input = req.body
-//     let bulkArr = [];
-
-//     for (const i of input) {
-//         bulkArr.push({
-//             updateOne: {
-//                 "filter": { "_id": i._id },
-//                 "update": { 
-//                     ca1: i.ca1, ca2: i.ca2,
-//                     ca3: i.ca3, exam: i.exam, 
-//                     finalSubmitted: true }
-//             }
-//         })
-//     }
-
-//     const scores = await Score.bulkWrite(bulkArr)
-//     res.json({ success: true, scores })
-// }
-
-// todo 
-// insertMany({condition}, {isFinalSubmitted: true})
 
