@@ -41,9 +41,9 @@ exports.studentIdGenerator = async (req,res,next) => {
         const fullYear = d.getFullYear().toString().split('')
         const splitYear = `${fullYear[2]}${fullYear[3]}`
         
-        req.body.username = `NIA/${splitYear}/${zeros = id[3] < 10  && parseInt(id[3]) + 1 < 10 ? '00': id[3] >= 99 ? '':'0'}${parseInt(id[3]) + 1 }`
-        // console.log(req.body.username)  
+        req.body.username = `NIA/${splitYear}/${zeros = id[2] < 10  && parseInt(id[2]) + 1 < 10 ? '00': id[2] >= 99 ? '':'0'}${parseInt(id[2]) + 1 }`
     }
+    console.log(req.body.username)  
     
 
     // 4. then insert the new id
