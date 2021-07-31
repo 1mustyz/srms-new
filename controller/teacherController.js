@@ -2,6 +2,7 @@ const Staff = require('../models/Staff')
 const Score = require('../models/Score')
 const TermResult = require('../models/TermResult')
 const TermSetter = require('../models/TermSetter')
+const SessionResult = require('../models/SessionResult')
 
 
 exports.fetchTeacherSubjects = async (req, res) => {
