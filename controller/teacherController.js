@@ -160,7 +160,66 @@ console.log('--------------', allStudentScoreInAClass)
             // console.log(finalResult)
     const upScore3 = await Score.findById(req.body.id)
 
-            res.json({ success: true, upScore3})   
+    
+/* START OF SESSION RESULT CALCULATION */
+
+// check if the term is third term 
+if(termAndSession[0].termNumber === 3) {
+
+    // get student term results
+    const termAverages = await TermResult.find({
+        username,
+        session: termAndSession[0].session.year 
+    })
+    
+    // calculate session average based on term averages
+    const termAverage1 = termAverages[0].average === undefined ? 0 : termAverages[0].average
+    const termAverage2 = termAverages[1].average === undefined ? 0 : termAverages[1].average
+    const termAverage3 = termAverages[2].average === undefined ? 0 : termAverages[2].average
+    const sessionAverage = ((((termAverage1 + termAverage2 + termAverage3)/3) + "e+2") + "e-2")
+
+    // calculate student status based on average
+    const status = sessionAverage >= 40 ? 'Promoted' : 'Demoted'
+
+    // save the result in the DB
+    await SessionResult.collection.update(
+      { username },
+      { average: sessionAverage,
+        status,
+        username,
+        session: termAndSession[0].session.year,
+        class: currentClass },
+        { upsert: true }) 
+
+    // CALCULATE POSITION FOR STUDENTS IN THE CLASS
+    // get the session results for the students in the class
+    const sessionRecords = await SessionResult.find(
+      { session: termAndSession[0].session.year, class: currentClass },
+      { average: 1, username: 1 })
+    
+    // sort the results
+    sessionRecords.sort((a,b) => {
+    return b.total - a.total 
+}) 
+
+    // giving positions to students by adding 1 to index
+    const currentSessionPosition = sessionRecords.map((students,ind)=>{
+    return studentIdentity={
+        id:students.id,
+        position:ind+1,
+        username: students.username
+    }
+})
+    // enter the students result in DB
+    currentSessionPosition.map( async (students,ind)=>{
+    await SessionResult.findByIdAndUpdate(students.id, { position: students.position })
+}) 
+    res.json({ success: true, upScore3}) 
+}
+/* END OF SESSION RESULT CALCULATION */
+
+
+    res.json({ success: true, upScore3})   
 }
 
 exports.finalSubmision = async (req,res,next) => {

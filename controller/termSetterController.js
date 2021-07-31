@@ -182,23 +182,16 @@ exports.setSession = async (req,res,next) => {
             const termAverage1 = termAverages[0].average === undefined ? 0 : termAverages[0].average
             const termAverage2 = termAverages[1].average === undefined ? 0 : termAverages[1].average
             const termAverage3 = termAverages[2].average === undefined ? 0 : termAverages[2].average
-            const average = (termAverage1 + termAverage2 + termAverage3)/3
-            
-            // const position1 = termAverages[0].position === undefined ? 0 : parseInt(termAverages[0].position)
-            // const position2 = termAverages[1].position === undefined ? 0 : parseInt(termAverages[1].position)
-            // const position3 = termAverages[2].position === undefined ? 0 : parseInt(termAverages[2].position)
-
-            // const position = (position1 + position2 + position3)/3
-            // console.log(position)
+            const average = (termAverage1 + termAverage2 + termAverage3)/3            
             
         const status = average >= 40 ? 'Promoted' : 'Demoted'
-    await SessionResult.collection.insertOne({
-            average,
-            status,
-            username: junior.username,
-            session: termAndSession[0].session.year,
-            class: junior.currentClass,
-        }) 
+        await SessionResult.collection.insertOne({
+                average,
+                status,
+                username: junior.username,
+                session: termAndSession[0].session.year,
+                class: junior.currentClass,
+            }) 
         
         
     })
