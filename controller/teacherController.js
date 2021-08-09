@@ -76,9 +76,10 @@ exports.liveSaveResult = async (req, res) => {
     }, {new: true, useFindAndModify: false})
     // Souley's own end here 
 
-    const upScore = await Score.findById(req.body.id)
+
 
     //  calculate position for a specific subject
+
     const allStudentScoreInAClass = await Score.find(
         {
             class: currentClass, 
@@ -109,6 +110,10 @@ console.log('--------------', allStudentScoreInAClass)
     })    
     console.log('/////////////////////',currentSubjectPosition)
 
+    // End of calculating subject position in a class
+
+
+    // calculating student term position in class 
     const allStudentTotal = await Score.find({
         username: username,
         term: termAndSession[0].termNumber,
@@ -131,36 +136,11 @@ console.log('--------------', allStudentScoreInAClass)
 
     },{
         total: sumTotal, average: average
-    })
-        
-    const allStudentInAclass = await TermResult.find({
-        class: currentClass,
-        term: termAndSession[0].termNumber,
-        session: termAndSession[0].session.year
+    })  
 
-          // TODO set term to current term
-    },{
-        average: 1
-    })
+// end of calculating student term result
 
-    allStudentInAclass.sort((a,b) => {
-        return b.average - a.average 
-    })
-    
- const currentPosition = allStudentInAclass.map((students,ind)=>{
-        return studentIdentity={
-           average:students.average,
-           id:students.id,
-           position:ind+1
-        }
-        
-    })
-    const finalResult = currentPosition.map( async (students,ind)=>{
-       return  kkk = await TermResult.findByIdAndUpdate(students.id, {position: students.position})
-    })
-            // console.log(finalResult)
-    const upScore3 = await Score.findById(req.body.id)
-
+const upScore3 = await Score.findById(req.body.id)
     
 /* START OF SESSION RESULT CALCULATION */
 
@@ -200,7 +180,7 @@ if(termAndSession[0].termNumber === 3) {
     
     // sort the results
     sessionRecords.sort((a,b) => {
-    return b.total - a.total 
+    return b.average - a.average 
 }) 
 
     // giving positions to students by adding 1 to index
@@ -223,6 +203,7 @@ if(termAndSession[0].termNumber === 3) {
     res.json({ success: true, upScore3})   
 }
 
+// update teacher priviledge on result
 exports.finalSubmision = async (req,res,next) => {
     const {submitButton, value, id} = req.body
 
