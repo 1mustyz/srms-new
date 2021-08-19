@@ -157,7 +157,7 @@ if(termAndSession[0].termNumber === 3) {
     const termAverage1 = termAverages[0].average === undefined ? 0 : termAverages[0].average
     const termAverage2 = termAverages[1].average === undefined ? 0 : termAverages[1].average
     const termAverage3 = termAverages[2].average === undefined ? 0 : termAverages[2].average
-    const sessionAverage = ((((termAverage1 + termAverage2 + termAverage3)/3) + "e+2") + "e-2")
+    const sessionAverage = (termAverage1 + termAverage2 + termAverage3)/3
 
     // calculate student status based on average
     const status = sessionAverage >= 40 ? 'Promoted' : 'Demoted'
