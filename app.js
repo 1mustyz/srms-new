@@ -35,6 +35,9 @@ app.use(expressSession({
 
 
 const studentRouter = require('./routes/studentRoute')
+
+
+const nammm = "hello"
 const staffRouter = require('./routes/staffRoute')
 const adminRouter = require('./routes/AdminRoute')
 const teacherRouter = require('./routes/teacherRoute')
