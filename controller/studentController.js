@@ -248,7 +248,7 @@ exports.findOneStudent = async (req,res,next) => {
 
 exports.removeStudent = async (req,res,next) => {
   const {id,username} = req.query;
-  await Student.findOneAndDelete({_id: id})
+  await Student.findOneAndDelete({username})
   await Score.deleteMany({username})
   await Cognitive.deleteMany({username})
   await Payment.deleteMany({username})
