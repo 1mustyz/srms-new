@@ -29,7 +29,7 @@ app.use(expressSession({
     autoRemove: 'native',
   }),
   saveUninitialized: false,
-  maxAge: 1 * 60 * 60 * 1000,
+  cookie: { maxAge: 1 * 60 * 60 * 1000 },
   resave: true
 }))
 
