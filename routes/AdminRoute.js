@@ -49,6 +49,7 @@ router.put('/edit-student', studentController.editStudent)
 router.put('/final-submission', teacherController.finalSubmision)
 router.put('/allow-submission-priviledge', examOfficerController.allowPriviledge)
 router.put('/suspend-a-student', studentController.suspendAstudent);
+router.put('/update-std-score-firstName', subjectController.updateStdScoreFirstName)
 
 
 router.get('/get-all-curriculum', curriculumController.getAllCurriculum)

@@ -1,4 +1,5 @@
 const Subject = require('../models/Subject');
+const Score = require('../models/Score')
 
 
 exports.create = async (req,res,next) => {
@@ -23,5 +24,12 @@ exports.getAllSubject = async (req,res,next) => {
     result.length > 0
      ? res.json({success: true, message: result})
      : res.json({success: true, message: result})
+    
+}
+
+exports.updateStdScoreFirstName = async (req,res,next) => {
+    const {username,firstName} = req.body
+    const result = await Score.updateMany({username}, {firstName})
+    res.json({success: true, message: result})
     
 }
