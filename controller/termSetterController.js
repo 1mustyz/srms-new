@@ -201,7 +201,7 @@ exports.setSession = async (req,res,next) => {
                            { $set: {currentClass: className } }, { new: true })  
                        break;
                               
-                   case 'Kindergarten':    
+                   case 'Kindergartens':    
                        className = `Kindergarten${singleStudent[0].classNumber}`
                        await Student.updateOne({ username: singleStudent[0].username }, 
                            { $set: {currentClass: className } }, { new: true })  
