@@ -51,6 +51,7 @@ router.put('/allow-submission-priviledge', examOfficerController.allowPriviledge
 router.put('/suspend-a-student', studentController.suspendAstudent);
 router.put('/update-std-score-firstName', subjectController.updateStdScoreFirstName)
 router.put('/promote-a-class', studentController.promoteOrDemoteAclass)
+router.put('/promote-a-student', studentController.promoteOrDemoteAstudent)
 
 
 router.get('/get-all-curriculum', curriculumController.getAllCurriculum)
