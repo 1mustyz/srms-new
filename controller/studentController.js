@@ -340,23 +340,23 @@ exports.editStudent = async (req,res,next) => {
 
 // The code below is very sensitive make sure you understand it before using it
 
-// exports.promoteOrDemoteAstudent = async (req,res,next) => {
-//   const {username,newClass} = req.body;
-//   await Student.findOneAndUpdate({username},{currentClass:newClass})
-//   res.json({success: true, message: `student with the id ${username} has been promoted`})
-// }
+exports.promoteOrDemoteAstudent = async (req,res,next) => {
+  const {username,newClass} = req.body;
+  await Student.findOneAndUpdate({username},{currentClass:newClass})
+  res.json({success: true, message: `student with the id ${username} has been promoted`})
+}
 
-// exports.promoteOrDemoteAclass = async (req,res,next) => {
-//   const {currentClass,newClass,session} = req.body;
-//   // await Student.updateMany({currentClass},{currentClass:newClass})
-//   await Payment.updateMany({session,className:currentClass},{className:newClass})
-//   await Score.updateMany({session,class:currentClass},{class:newClass})
-//   await Cognitive.updateMany({session,class:currentClass},{class:newClass})
-//   await TermResult.updateMany({session,class:currentClass},{class:newClass})
+exports.promoteOrDemoteAclass = async (req,res,next) => {
+  const {currentClass,newClass,session} = req.body;
+  // await Student.updateMany({currentClass},{currentClass:newClass})
+  await Payment.updateMany({session,className:currentClass},{className:newClass})
+  await Score.updateMany({session,class:currentClass},{class:newClass})
+  await Cognitive.updateMany({session,class:currentClass},{class:newClass})
+  await TermResult.updateMany({session,class:currentClass},{class:newClass})
 
-//   // console.log(rr)
-//   res.json({success: true, message: `a class of this ${currentClass} has been promoted`})
-// }
+  // console.log(rr)
+  res.json({success: true, message: `a class of this ${currentClass} has been promoted`})
+}
 
 exports.getAllStudentAssignment = async (req,res,next) => {
   const termAndSession = await TermSetter.find()
