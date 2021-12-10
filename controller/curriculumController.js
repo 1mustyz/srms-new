@@ -15,25 +15,29 @@ exports.create = async (req,res,next) => {
        curricula = await Curriculum.find({name: name})
     } 
     else{
-       curricula = await Curriculum.find({name: name,category: category})
+       curricula = await Curriculum.find({name: name, category: category})
     } 
     
-    // console.log(req.body,curricula)
     // if curriculum already exists
     if(curricula.length){
         // update the curriculum and end
         await Curriculum.updateOne({name:name, category: category}, {$push:{subject: req.body.subject}})
-        const score = await Score.find({class: name, category: category})
+        const score = await Score.find({
+            class: name, 
+            category: category,
+            term: currentSession[0].session.termNumber,
+            session: currentSession[0].session.year
+        })
         const newCurricula = await Curriculum.find({name: name, category, category})
-        console.log(newCurricula[0].subject)
         const numOfSubjects = newCurricula[0].subject.length
+        console.log(newCurricula[0].subject)
 
         // if score exists update score and term results of students
         if(score.length){
             // fetch the students in the class
             const students = await Student.find({
                 currentClass: name, category: category, 
-                session: currentSession[0].session.year })
+                status: 'Active' })
 
                 console.log(students)
 
