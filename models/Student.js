@@ -30,7 +30,7 @@ const StudentSchema = new Schema({
     suspend: { type: Boolean, default: 'false' } 
 }, { timestamps: true });
 
-//plugin passport-local-mongoose to enable password hashing and salting and simpligy other things
+//plugin passport-local-mongoose to enable password hashing and salting and simplify other things
 StudentSchema.plugin(passportLocalMongoose);
 
 //connect the schema with user table

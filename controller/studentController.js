@@ -294,7 +294,7 @@ exports.getAclassResult = async (req,res,next) => {
 
 })
 
-  res.json({success: true, message: generalResult})
+  res.json({success: true, length: generalResult.length, message: generalResult})
 }
 
 
@@ -328,7 +328,7 @@ exports.getAsingleStudentResult = async (req,res,next) => {
     studentCognitive,
     totalNoOfStudent
   ]
-  res.json({success: true, message: generalSingleResult})
+  res.json({success: true, noOfScore: subjectResult.length, message: generalSingleResult})
 
 }
 

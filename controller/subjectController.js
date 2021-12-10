@@ -1,5 +1,6 @@
 const Subject = require('../models/Subject');
 const Score = require('../models/Score')
+const Curriculum = require('../models/Curriculum')
 
 
 exports.create = async (req,res,next) => {
@@ -9,6 +10,13 @@ exports.create = async (req,res,next) => {
 
 exports.delete = async (req,res,next) => {
     const {id} = req.body;
+    await Subject.deleteOne({_id: id})
+    res.json({success: true, message: `course with the ${id} deleted successfullty`});
+}
+
+exports.delete = async (req,res,next) => {
+    const {id,subject} = req.body;
+    await Curriculum.updateMany({},{$pull: {subject:subject}})
     await Subject.deleteOne({_id: id})
     res.json({success: true, message: `course with the ${id} deleted successfullty`});
 }
