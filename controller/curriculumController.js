@@ -6,9 +6,11 @@ const termResult = require('../models/TermResult')
 
 exports.create = async (req,res,next) => {
     const {section,name,category} = req.body
+    console.log(req.body)
 
     let curricula
     const currentSession = await termAndSession.find({},{session: 1, termNumber: 1})
+    console.log(currentSession)
     
     // fetch curriculum based on SSS or others
     if(section !== 'SSS'){
@@ -25,21 +27,24 @@ exports.create = async (req,res,next) => {
         const score = await Score.find({
             class: name, 
             category: category,
-            term: currentSession[0].session.termNumber,
-            session: currentSession[0].session.year
+            session: currentSession[0].session.year,
+            term: currentSession[0].termNumber
         })
         const newCurricula = await Curriculum.find({name: name, category, category})
         const numOfSubjects = newCurricula[0].subject.length
         console.log(newCurricula[0].subject)
 
         // if score exists update score and term results of students
+        console.log(score.length)
         if(score.length){
+            console.log('////////////////////////////////////')
+
             // fetch the students in the class
             const students = await Student.find({
                 currentClass: name, category: category, 
                 status: 'Active' })
 
-                console.log(students)
+                // console.log(students)
 
             req.body.subject.map(subject=>{
                 // add score sheets to the students
@@ -67,15 +72,6 @@ exports.create = async (req,res,next) => {
             })
         }  
         res.json({success: true, message: `curriculum without score`});
-    }else{
-    // no existing curriculum and score sheetcreate new
-        section !== 'SSS'
-        ? req.body.category = "none"
-        : ''
-
-        // console.log(req.body)
-        await Curriculum.insertMany(req.body);
-        res.json({success: true, message: `curriculum added successfully`});
     }
 }
 
