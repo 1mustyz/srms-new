@@ -3,6 +3,7 @@ const Score = require('../models/Score')
 const Student = require('../models/Student')
 const termAndSession = require('../models/TermSetter')
 const termResult = require('../models/TermResult')
+const SessionResult = require('../models/SessionResult')
 
 exports.create = async (req,res,next) => {
     const {section,name,category} = req.body
@@ -30,11 +31,15 @@ exports.create = async (req,res,next) => {
             session: currentSession[0].session.year,
             term: currentSession[0].termNumber
         })
+
         const newCurricula = await Curriculum.find({name: name, category, category})
         const numOfSubjects = newCurricula[0].subject.length
         console.log(newCurricula[0].subject)
 
-        // if score exists update score and term results of students
+// if score exists update score and term results of students
+        //1. update noOfCourse in term result
+//else
+        //2. create scores and update noOfCourse in term result        
         console.log(score.length)
         if(score.length){
             console.log('////////////////////////////////////')
@@ -60,7 +65,7 @@ exports.create = async (req,res,next) => {
                         term: currentSession[0].termNumber,
                         session: currentSession[0].session.year
                     })
-                    // update number of courses for the student at hand
+                    //1. update number of courses for the student at hand
                     await termResult.updateMany({
                         session: currentSession[0].session.year,
                         term: currentSession[0].termNumber,
@@ -70,9 +75,52 @@ exports.create = async (req,res,next) => {
                         })
                 })
             })
-        }  
+        }else{
+            //2.
+
+             // fetch the students in the class
+             const students = await Student.find({
+                currentClass: name, category: category, 
+                status: 'Active' })
+
+                // console.log(students)
+
+            req.body.subject.map(subject=>{
+                // add score sheets to the students
+                students.map(async std=>{
+                    await Score.collection.insertOne({
+                        subject,
+                        username: std.username,
+                        studentId: std._id,
+                        class: std.currentClass,
+                        category: std.category,
+                        firstName: std.firstName,
+                        lastName: std.lastName,
+                        term: currentSession[0].termNumber,
+                        session: currentSession[0].session.year
+                    })
+                    //1. update number of courses for the student at hand
+                    await termResult.updateMany({
+                        session: currentSession[0].session.year,
+                        term: currentSession[0].termNumber,
+                        username: std.username
+                        }, {
+                        noOfCourse: numOfSubjects
+                        })
+                })
+            })
+        }
         res.json({success: true, message: `curriculum without score`});
-    }
+    }else{
+        // no existing curriculum and score sheetcreate new
+            section !== 'SSS'
+            ? req.body.category = "none"
+            : ''
+        
+            // console.log(req.body)
+            await Curriculum.insertMany(req.body);
+            res.json({success: true, message: `curriculum added successfully`});
+        }
 }
 
 exports.getAllCurriculum = async (req,res,next) => {
@@ -111,16 +159,67 @@ exports.updateSingleCurriculum = async (req,res,next) => {
 }
 
 exports.deleteSingleCurriculum = async (req,res,next) => {
-    const {number,section,category} = req.body;
-    await Curriculum.deleteOne({
-        number: number, section: section, category: category
-    });
+    const {name,section,category} = req.body;
+    const currentSession = await termAndSession.find({},{session: 1, termNumber: 1})
+
+//1. delete curriculum
+//2. delete all corresponding scores
+//3. reset average, total and noOfCourses in term and session result to 0
+
+        //1
+    await Curriculum.updateMany({name,section,category}, {$set:{subject: []}});
+        //2
+    await Score.deleteMany({
+        class:name,
+        category, 
+        session:currentSession[0].session.year, 
+        term:currentSession[0].termNumber
+    })
+
+        //3
+    await termResult.updateMany({
+        class:name,
+        session:currentSession[0].session.year, 
+        term:currentSession[0].termNumber
+    }, {$set:{noOfCourse:0,total:0,average:0}})
+
+        //3
+    await SessionResult.updateMany({
+        class:name,
+        session:currentSession[0].session.year
+    },
+    {$set:{average:0,position:0}})
 
     res.json({success: true, message: `curriculum deleted`})
 }
 
 exports.deleteAllCurriculum = async (req,res,next) => {
-    await Curriculum.delete();
+    const currentSession = await termAndSession.find({},{session: 1, termNumber: 1})
+
+//1. delete all curriculum
+//2. delete all corresponding scores
+//3. reset average, total and noOfCourses in term and session result to 0
+
+        //1
+    await Curriculum.deleteMany({
+        session:currentSession[0].session.year, 
+        term:currentSession[0].termNumber
+    });
+
+        //2
+    await Score.deleteMany({
+        session:currentSession[0].session.year, 
+        term:currentSession[0].termNumber
+    })
+
+        //3
+    await termResult.updateMany({
+        session:currentSession[0].session.year, 
+        term:currentSession[0].termNumber
+    }, {$set:{noOfCourse:0,total:0,average:0}})
+
+        //3
+    await SessionResult.updateMany({session:currentSession[0].session.year},{$set:{average:0,position:0}})
 
     res.json({success: true, message: `All curriculum deleted`})
 }
@@ -150,27 +249,41 @@ exports.deleteSubject = async (req,res,next) => {
     // get corresponding student
     const students = await Student.find({
         currentClass: className, category: category, 
-        session: currentSession[0].session.year })
-
+        session: currentSession[0].session.year,status: 'Active' })
+        
+    console.log('===================',students)
+        
     const newCurricula = await Curriculum.find({name: className, category, category})
-    const numOfSubjects = newCurricula[0].subject.length    
+    const numOfSubjects = newCurricula[0].subject.length  
+    console.log('+++++++++++++++++',numOfSubjects)  
 
     students.map(async std=>{
+
+        // find corresponding subject score
+        const subjectScore = await Score.findOne({
+            class: className,
+            subject,
+            username: std.username,
+            term: currentSession[0].termNumber,
+            session: currentSession[0].session.year},{total:1})
 
         // remove corresponding scores    
         await Score.deleteMany({
         class: className,
         subject,
         username: std.username,
+        term: currentSession[0].termNumber,
         session: currentSession[0].session.year}) 
     
-        // update number of courses for the student at hand
+        // update number of courses for the student at hand and subtract the deleted score subject
+        console.log('-------------------------',subjectScore.total)
         await termResult.updateOne({
             session: currentSession[0].session.year,
             term: currentSession[0].termNumber,
             username: std.username
             }, {
-            noOfCourse: numOfSubjects
+            noOfCourse: numOfSubjects,
+            $inc: {total: -subjectScore.total}
             })
         })
 
