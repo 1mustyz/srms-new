@@ -124,8 +124,8 @@ exports.create = async (req,res,next) => {
                 currentClass: name, category: category, 
                 status: 'Active' })
 
-                // console.log(students)
-            if(student.length > 0){
+                console.log(students)
+            if(students.length > 0){
                 req.body.subject.map(subject=>{
                     // add score sheets to the students
                     students.map(async std=>{
