@@ -102,5 +102,6 @@ router.delete('/delete-class', classController.delete)
 router.delete('/remove-staff', staffController.removeStaff)
 router.delete('/delete-cognitive-item', cognitiveController.deleteAddNewCognitive)
 router.delete('/delete-subject', curriculumController.deleteSubject)
+router.delete('/delete-all-subject', subjectController.deleteAllSubject)
 
 module.exports = router;
