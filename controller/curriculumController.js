@@ -34,7 +34,7 @@ exports.create = async (req,res,next) => {
 
         const newCurricula = await Curriculum.find({name: name, category, category})
         const numOfSubjects = newCurricula[0].subject.length
-        console.log(newCurricula[0].subject)
+        console.log('sssssssssssssss',numOfSubjects)
 
 // if score exists update score and term results of students
         //1. update noOfCourse in term result
