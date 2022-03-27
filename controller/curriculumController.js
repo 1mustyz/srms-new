@@ -34,7 +34,7 @@ exports.create = async (req,res,next) => {
 
         const newCurricula = await Curriculum.find({name: name, category, category})
         const numOfSubjects = newCurricula[0].subject.length
-        console.log(newCurricula[0].subject)
+        console.log('sssssssssssssss',numOfSubjects)
 
 // if score exists update score and term results of students
         //1. update noOfCourse in term result
@@ -119,6 +119,32 @@ exports.create = async (req,res,next) => {
         
             // console.log(req.body)
             await Curriculum.insertMany(req.body);
+            // fetch the students in the class
+            const students = await Student.find({
+                currentClass: name, category: category, 
+                status: 'Active' })
+
+                console.log(students)
+            if(students.length > 0){
+                req.body.subject.map(subject=>{
+                    // add score sheets to the students
+                    students.map(async std=>{
+                        await Score.collection.insertOne({
+                            subject,
+                            username: std.username,
+                            studentId: std._id,
+                            class: std.currentClass,
+                            category: std.category,
+                            firstName: std.firstName,
+                            lastName: std.lastName,
+                            term: currentSession[0].termNumber,
+                            session: currentSession[0].session.year
+                        })
+                        
+                    })
+                })    
+            }    
+            
             res.json({success: true, message: `curriculum added successfully`});
         }
 }
@@ -201,10 +227,7 @@ exports.deleteAllCurriculum = async (req,res,next) => {
 //3. reset average, total and noOfCourses in term and session result to 0
 
         //1
-    await Curriculum.deleteMany({
-        session:currentSession[0].session.year, 
-        term:currentSession[0].termNumber
-    });
+    await Curriculum.deleteMany({});
 
         //2
     await Score.deleteMany({

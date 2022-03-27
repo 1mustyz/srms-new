@@ -6,7 +6,7 @@ const termResult = require('../models/TermResult')
 
 
 exports.create = async (req,res,next) => {
-    await Subject.collection.insertOne(req.body)
+    await Subject.insertMany(req.body)
     res.json({success: true, message: 'courses inserted successfullty'});
 }
 
@@ -75,4 +75,10 @@ exports.updateStdScoreFirstName = async (req,res,next) => {
     const result = await Score.updateMany({username}, {firstName})
     res.json({success: true, message: result})
     
+}
+
+exports.deleteAllSubject = async (req,res,next) => {
+    await Subject.deleteMany({})
+    res.json({success: true, message: 'All subject deleted'})
+
 }
