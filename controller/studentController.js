@@ -23,7 +23,7 @@ exports.registerStudent = async function (req, res, next) {
       const classNumber = req.body.currentClass.split('')
       req.body.classNumber = classNumber[classNumber.length -1]
     }
-    
+
     req.body.term = termAndSession[0].termNumber
     req.body.session = termAndSession[0].session.year
     // req.body.term = term[0].termNumber

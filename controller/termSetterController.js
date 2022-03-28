@@ -233,7 +233,6 @@ exports.setSession = async (req,res,next) => {
     })
 
     const newTermAndSession = await TermSetter.find()
-    console.log(newTermAndSession)
 
     // create new score sheets for all active students
     let subjects = await Curriculum.find({ })

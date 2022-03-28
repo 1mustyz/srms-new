@@ -7,11 +7,8 @@ const SessionResult = require('../models/SessionResult')
 
 exports.create = async (req,res,next) => {
     const {section,name,category} = req.body
-    console.log(req.body)
-
     let curricula
     const currentSession = await termAndSession.find({},{session: 1, termNumber: 1})
-    console.log(currentSession)
     
     // fetch curriculum based on SSS or others
     if(section !== 'SSS'){
@@ -20,7 +17,7 @@ exports.create = async (req,res,next) => {
     else{
        curricula = await Curriculum.find({name: name, category: category})
     } 
-    
+
     // if curriculum already exists
     if(curricula.length){
         // update the curriculum and end
@@ -31,28 +28,22 @@ exports.create = async (req,res,next) => {
             session: currentSession[0].session.year,
             term: currentSession[0].termNumber
         })
-
         const newCurricula = await Curriculum.find({name: name, category, category})
         const numOfSubjects = newCurricula[0].subject.length
-        console.log('sssssssssssssss',numOfSubjects)
 
-// if score exists update score and term results of students
+        // if score exists update score and term results of students
         //1. update noOfCourse in term result
-//else
+        //else
         //2. create scores and update noOfCourse in term result        
-        console.log(score.length)
-        if(score.length){
-            console.log('////////////////////////////////////')
 
+        if(score.length){
             // fetch the students in the class
             const students = await Student.find({
                 currentClass: name, category: category, 
                 status: 'Active' })
 
-                // console.log(students)
-
             req.body.subject.map(subject=>{
-                // add score sheets to the students
+                // add score sheets for the new subjects to the students
                 students.map(async std=>{
                     await Score.collection.insertOne({
                         subject,
@@ -75,61 +66,61 @@ exports.create = async (req,res,next) => {
                         })
                 })
             })
+            res.json({success: true, message: "curriculum for class with students that has score sheet updated successfully"})
         }else{
-            //2.
-
+             //2.
+             // no need for all these code since nno students in the class
              // fetch the students in the class
-             const students = await Student.find({
-                currentClass: name, category: category, 
-                status: 'Active' })
+            //  const students = await Student.find({
+            //     currentClass: name, category: category, 
+            //     status: 'Active' })
 
-                // console.log(students)
-
-            req.body.subject.map(subject=>{
-                // add score sheets to the students
-                students.map(async std=>{
-                    await Score.collection.insertOne({
-                        subject,
-                        username: std.username,
-                        studentId: std._id,
-                        class: std.currentClass,
-                        category: std.category,
-                        firstName: std.firstName,
-                        lastName: std.lastName,
-                        term: currentSession[0].termNumber,
-                        session: currentSession[0].session.year
-                    })
-                    //1. update number of courses for the student at hand
-                    await termResult.updateMany({
-                        session: currentSession[0].session.year,
-                        term: currentSession[0].termNumber,
-                        username: std.username
-                        }, {
-                        noOfCourse: numOfSubjects
-                        })
-                })
-            })
+            // req.body.subject.map(subject=>{
+            //     // add score sheets to the students
+            //     students.map(async std=>{
+            //         await Score.collection.insertOne({
+            //             subject,
+            //             username: std.username,
+            //             studentId: std._id,
+            //             class: std.currentClass,
+            //             category: std.category,
+            //             firstName: std.firstName,
+            //             lastName: std.lastName,
+            //             term: currentSession[0].termNumber,
+            //             session: currentSession[0].session.year
+            //         })
+            //         //1. update number of courses for the student at hand
+            //         await termResult.updateMany({
+            //             session: currentSession[0].session.year,
+            //             term: currentSession[0].termNumber,
+            //             username: std.username
+            //             }, {
+            //             noOfCourse: numOfSubjects
+            //             })
+            //     })
+            // })
+            res.json({success: true, message: `curriculum of class with no students updated successfully`});
         }
-        res.json({success: true, message: `curriculum without score`});
-    }else{
+        
+    }
+    else{
         // no existing curriculum and score sheetcreate new
             section !== 'SSS'
             ? req.body.category = "none"
-            : ''
-        
-            // console.log(req.body)
+            : ''   
             await Curriculum.insertMany(req.body);
             // fetch the students in the class
-            const students = await Student.find({
-                currentClass: name, category: category, 
-                status: 'Active' })
+            const students = await Student.find({ 
+                                status: 'Active',
+                                category: req.body.category,
+                                currentClass: req.body.name
+                            })
 
-                console.log(students)
             if(students.length > 0){
                 req.body.subject.map(subject=>{
                     // add score sheets to the students
                     students.map(async std=>{
-                        await Score.collection.insertOne({
+                      await Score.collection.insertOne({
                             subject,
                             username: std.username,
                             studentId: std._id,
@@ -140,12 +131,13 @@ exports.create = async (req,res,next) => {
                             term: currentSession[0].termNumber,
                             session: currentSession[0].session.year
                         })
-                        
                     })
-                })    
-            }    
-            
-            res.json({success: true, message: `curriculum added successfully`});
+                }) 
+            res.json({success: true, message: `new curriculum for class with already registered students added successfully`, students});   
+            }
+            else{
+                res.json({success: true, message: `new curriculum with no registered students in the class added successfully`});
+            }
         }
 }
 
