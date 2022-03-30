@@ -12,6 +12,7 @@ const assignmentController = require('../controller/assignmentController')
 const idGenerator = require('../middlewares/idGenerator')
 const teacherController = require('../controller/teacherController')
 const examOfficerController = require('../controller/examOfficeController')
+const setNewTerm = require('../controller/setNewTerm')
 
 router.post('/register-staff', idGenerator.staffIdGenerator, staffController.registerStaff)
 router.post('/register-student', idGenerator.studentIdGenerator, studentController.registerStudent)
@@ -103,5 +104,6 @@ router.delete('/remove-staff', staffController.removeStaff)
 router.delete('/delete-cognitive-item', cognitiveController.deleteAddNewCognitive)
 router.delete('/delete-subject', curriculumController.deleteSubject)
 router.delete('/delete-all-subject', subjectController.deleteAllSubject)
-
+router.post('/create-term-result', setNewTerm.createTermResult)
+router.delete('/delete-term-result', setNewTerm.deleteTermResult)
 module.exports = router;
