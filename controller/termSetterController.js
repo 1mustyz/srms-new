@@ -336,3 +336,19 @@ exports.getAddSession = async (req,res,next) => {
     res.json({success: true, result})
 
 }
+
+// ************************************************************
+// pls understand the code before using
+exports.deleteAllStudentPresentTermResult = async (req,res,next) => {
+    try {
+        const newTermAndSession = await TermSetter.find()
+
+        await TermResult.deleteMany({
+            term: newTermAndSession[0].termNumber,
+            session: newTermAndSession[0].session.year,
+        })
+        res.json({"success":true, message: "All present term result deleted"})
+    } catch (error) {
+        console.log(error)
+    }   
+}

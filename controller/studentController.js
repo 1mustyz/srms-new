@@ -338,14 +338,43 @@ exports.editStudent = async (req,res,next) => {
   res.json({success: true, message: `student with the id ${id} has been edited`})
 }
 
+
+// *****************************************************************************************************
 // The code below is very sensitive make sure you understand it before using it
 
 exports.promoteOrDemoteAstudent = async (req,res,next) => {
-  const {username,newClass} = req.body;
-  await Student.findOneAndUpdate({username},{currentClass:newClass})
-  res.json({success: true, message: `student with the id ${username} has been promoted`})
-}
+  const termAndSession = await TermSetter.find()
 
+  const {username,newClass} = req.query;
+  try {
+    const student = await Student.findOneAndUpdate({username},{$set:{currentClass:newClass}},{useFindAndModify: false})
+    const score = await Score.updateMany({
+      username:username,
+      session: termAndSession[0].session.year
+    },{$set:{class:newClass}})
+
+    await Cognitive.updateMany({
+      username:username,
+      session: termAndSession[0].session.year
+    },{$set:{class:newClass}})
+
+    await Payment.updateMany({
+      username:username,
+      session: termAndSession[0].session.year
+    },{$set:{className:newClass}})
+    
+    await TermResult.updateMany({
+      username:username,
+      session: termAndSession[0].session.year
+    },{class:newClass})
+    res.json({success: true, message: `student with the id ${username} has been promoted`})
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+// *****************************************************************************************************
+// The code below is very sensitive make sure you understand it before using it
 exports.promoteOrDemoteAclass = async (req,res,next) => {
   const {currentClass,newClass,session} = req.body;
   // await Student.updateMany({currentClass},{currentClass:newClass})

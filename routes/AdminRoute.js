@@ -50,7 +50,15 @@ router.put('/final-submission', teacherController.finalSubmision)
 router.put('/allow-submission-priviledge', examOfficerController.allowPriviledge)
 router.put('/suspend-a-student', studentController.suspendAstudent);
 router.put('/update-std-score-firstName', subjectController.updateStdScoreFirstName)
+
+
+
+// *****************************************************************************************************
+// The code below is very sensitive make sure you understand it before using it
 router.put('/promote-a-class', studentController.promoteOrDemoteAclass)
+
+// *****************************************************************************************************
+// The code below is very sensitive make sure you understand it before using it
 router.put('/promote-a-student', studentController.promoteOrDemoteAstudent)
 
 
@@ -103,5 +111,14 @@ router.delete('/remove-staff', staffController.removeStaff)
 router.delete('/delete-cognitive-item', cognitiveController.deleteAddNewCognitive)
 router.delete('/delete-subject', curriculumController.deleteSubject)
 router.delete('/delete-all-subject', subjectController.deleteAllSubject)
+
+// *****************************************************************************************************
+// The code below is very sensitive make sure you understand it before using it
+router.delete('/delete-student-duplicate-from-score', curriculumController.deleteStudentDuplicateFromScore)
+
+
+// *****************************************************************************************************
+// The code below is very sensitive make sure you understand it before using it
+router.delete('/delete-all-student-present-term-result', termSetterController.deleteAllStudentPresentTermResult)
 
 module.exports = router;

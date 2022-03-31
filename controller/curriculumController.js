@@ -304,3 +304,78 @@ exports.deleteSubject = async (req,res,next) => {
 
     res.json({success: true, result})
 }
+
+
+// *****************************************************************************************************
+// The code below is very sensitive make sure you understand it before using it
+exports.deleteStudentDuplicateFromScore = async (req,res,next) => {
+
+
+    const {
+        classNameGrade2,subjectGrade2, categoryGrade2,
+        classNameGrade4,subjectGrade4, categoryGrade4,
+        classNameGrade5,subjectGrade5, categoryGrade5
+    } = req.query
+    const currentSession = await termAndSession.find()
+
+    
+    
+    const deleteDuplicate = async (className,subject,category) => {
+        let frequentStd = {}
+
+        const getAllClassStudentFromAsubject = await Score.find({
+            class:className,
+            category: category,
+            subject:subject,
+            session: currentSession[0].session.year,
+            term: currentSession[0].termNumber,
+        })
+        console.log(getAllClassStudentFromAsubject.length)
+        const doSomeWork = () => {
+            if (getAllClassStudentFromAsubject.length > 0){
+
+                getAllClassStudentFromAsubject.forEach((std)=>{
+                
+                    if (frequentStd[std.username] == undefined ){
+                        frequentStd[std.username] = 1
+                    }else frequentStd[std.username] = frequentStd[std.username] +1
+                })
+            }
+        }
+        const promise = new Promise((resolve,reject)=>{
+            resolve(doSomeWork())
+        })
+
+        promise.then(async ()=>{
+            for (const [key, value] of Object.entries(frequentStd)) {
+                if(value == 2){
+                    console.log(`${key}: ${value}`);
+                    await Score.findOneAndDelete({
+                        username:key,
+                        class:className,
+                        category: category,
+                        subject:subject,
+                        session: currentSession[0].session.year,
+                        term: currentSession[0].termNumber,
+                    })
+
+                }
+            }
+        })
+    }
+ 
+    const allPromise = new Promise(async (resolve,reject)=>{
+        resolve(
+            await deleteDuplicate(classNameGrade2, subjectGrade2, categoryGrade2),
+            await deleteDuplicate(classNameGrade4, subjectGrade4, categoryGrade4),
+            await deleteDuplicate(classNameGrade5, subjectGrade5, categoryGrade5),
+
+        )
+    })
+    allPromise.then(()=>{
+        res.json({success:true, message:"Duplication deleted"})
+
+    })
+    
+
+}
