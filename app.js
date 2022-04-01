@@ -20,7 +20,6 @@ var usersRouter = require('./routes/users');
 var app = express();
 app.use(cors())
 
-// mongodb+srv://niaportal:nia@2020@niaportal.jk5s1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 app.use(expressSession({
   secret: '[credentials.secret]',
   store: MongoStore.create({

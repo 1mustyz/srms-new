@@ -12,6 +12,7 @@ const assignmentController = require('../controller/assignmentController')
 const idGenerator = require('../middlewares/idGenerator')
 const teacherController = require('../controller/teacherController')
 const examOfficerController = require('../controller/examOfficeController')
+const setNewTerm = require('../controller/setNewTerm')
 
 router.post('/register-staff', idGenerator.staffIdGenerator, staffController.registerStaff)
 router.post('/register-student', idGenerator.studentIdGenerator, studentController.registerStudent)
@@ -121,4 +122,10 @@ router.delete('/delete-student-duplicate-from-score', curriculumController.delet
 // The code below is very sensitive make sure you understand it before using it
 router.delete('/delete-all-student-present-term-result', termSetterController.deleteAllStudentPresentTermResult)
 
+
+// *****************************************************************************************************
+// The code below is very sensitive make sure you understand it before using it
+router.delete('/delete-score-subject', curriculumController.deleteSubjectFromScore) 
+router.post('/create-term-result', setNewTerm.createTermResult)
+router.delete('/delete-term-result', setNewTerm.deleteTermResult)
 module.exports = router;

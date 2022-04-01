@@ -379,3 +379,17 @@ exports.deleteStudentDuplicateFromScore = async (req,res,next) => {
     
 
 }
+
+// *****************************************************************************************************
+// The code below is very sensitive make sure you understand it before using it
+
+exports.deleteSubjectFromScore = async (req,res,next) => {
+    const {subjectName} = req.body
+
+    try {
+        await Score.deleteMany({class:["Grade2","Grade3","Grade4","Grade5"], subject:subjectName})
+        res.json({success:true, message:"scores deleted successfull"})
+    } catch (error) {
+        console.log(error)
+    }
+}
