@@ -16,8 +16,7 @@ exports.updatePaymentTypes = async (req,res,next) => {
 
 exports.verifyPayment = async (req,res,next) => {
     const termAndSession = await TermSetter.find()
-    const {purposeOfPayment,teller} = req.body.pays;
-    const {username} = req.query;
+    const {purposeOfPayment,username} = req.body;
     let paid = false
 
     const result = await Payment.findOne({
@@ -26,15 +25,16 @@ exports.verifyPayment = async (req,res,next) => {
         session:
         termAndSession[0].session.year
     })
-
-    const found = purposeOfPayment.find(payment => payment.purposeOfPayment == "Tution" || payment.purposeOfPayment == "All");
+    console.log(result)
+    const found = purposeOfPayment.find(payment => payment == "Tution" || payment == "All");
+    console.log(found)
 
     if (result.paid && found != undefined){
     res.json({success: true, message: 'you have paid for tuition fee'})
 
     }else{
         if(found != undefined) paid = true
-        console.log(paid)
+        // console.log(paid)
 
     await Payment.findOneAndUpdate({
         "username": username,
