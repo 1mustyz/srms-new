@@ -227,7 +227,7 @@ if(termAndSession[0].termNumber === 3) {
     
     // CALCULATE POSITION FOR STUDENTS IN THE CLASS
     // get the session results for the students in the class
-    const sessionRecords = await SessionResult.find(
+const sessionRecords = await SessionResult.find(
       { session: termAndSession[0].session.year, class: currentClass },
       { average: 1, username: 1 })
     
@@ -249,11 +249,13 @@ if(termAndSession[0].termNumber === 3) {
     await SessionResult.findByIdAndUpdate(students.id, { position: students.position })
 }) 
     res.json({ success: true, upScore3}) 
+}else{
+
+    res.json({ success: true, upScore3})   
 }
 /* END OF SESSION RESULT CALCULATION */
 
 
-    res.json({ success: true, upScore3})   
 }
 
 // update teacher priviledge on result

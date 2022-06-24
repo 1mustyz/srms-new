@@ -28,5 +28,12 @@
     "passport-local-mongoose": "^6.1.0",
     "save": "^2.4.0",
     "waait": "^1.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.2",
+    "eslint-plugin-promise": "^6.0.0"
   }
 }
