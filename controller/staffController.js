@@ -97,12 +97,18 @@ exports.findAllClassTeacher = async (req, res, next) => {
 }
 
 exports.singleStaff = async (req, res, next) => {
-  const { username } = req.query
+  const query = {
+    $or: [
+      { username: { $regex: req.query.keyword, $options: '$i' } },
+      { firstName: { $regex: req.query.keyword, $options: '$i' } },
+      { lastName: { $regex: req.query.keyword, $options: '$i' } }
+    ]
+  }
 
-  const result = await Staff.findOne({ username })
+  const result = await Staff.find(query)
   result.length > 0
     ? res.json({ success: true, message: result })
-    : res.json({ success: false, message: result })
+    : res.json({ success: false, message: 'Not Found' })
 }
 
 exports.setProfilePic = async (req, res, next) => {

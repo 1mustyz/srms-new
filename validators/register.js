@@ -26,6 +26,27 @@ const staffValidator = Joi.object({
 
 })
 
+const studentValidator = Joi.object({
+  username: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
+  kinName: Joi.string(),
+  kinNumber: Joi.string(),
+  kinRelation: Joi.string(),
+  kinAddress: Joi.string(),
+  dob: Joi.string(),
+  gender: Joi.string(),
+  address: Joi.string(),
+  country: Joi.string(),
+  state: Joi.string(),
+  lga: Joi.string(),
+  currentClass: Joi.string().required(),
+  classNumber: Joi.number().integer().required(),
+  section: Joi.string().required(),
+  category: Joi.string()
+})
+
 module.exports = {
-  staffValidator
+  staffValidator,
+  studentValidator
 }

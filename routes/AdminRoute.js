@@ -14,13 +14,18 @@ const teacherController = require('../controller/teacherController')
 const examOfficerController = require('../controller/examOfficeController')
 const setNewTerm = require('../controller/setNewTerm')
 const { Validator } = require('../validators')
-const { staffValidator } = require('../validators/register')
+const { staffValidator, studentValidator } = require('../validators/register')
+const { queryString } = require('../validators/query')
 
 router.post('/register-staff',
   idGenerator.staffIdGenerator,
   Validator(staffValidator, 'body'),
   staffController.registerStaff)
-router.post('/register-student', idGenerator.studentIdGenerator, studentController.registerStudent)
+
+router.post('/register-student',
+  idGenerator.studentIdGenerator,
+  Validator(studentValidator, 'body'),
+  studentController.registerStudent)
 
 router.post('/login', staffController.loginStaff)
 router.post('/change-password/:id', staffController.resetPassword)
@@ -98,7 +103,7 @@ router.get('/get-all-cognitive-item', cognitiveController.getAllAddNewCognitive)
 router.get('/get-all-student-cognitive', cognitiveController.getAllStudentCognitive)
 router.get('/get-all-teachers-assignment', assignmentController.getAllAssignmentAdmin)
 router.get('/get-add-session', termSetterController.getAddSession)
-router.get('/get-single-staff', staffController.singleStaff)
+router.get('/get-single-staff', Validator(queryString, 'query'), staffController.singleStaff)
 router.get('/get-class-curriculum', curriculumController.getClassCurriculum)
 
 router.get('/get-a-class-result', studentController.getAclassResult)
