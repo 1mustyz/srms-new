@@ -2,7 +2,8 @@ const Subject = require('../models/Subject');
 const Score = require('../models/Score')
 const Curriculum = require('../models/Curriculum')
 const termAndSession = require('../models/TermSetter')
-const termResult = require('../models/TermResult')
+const termResult = require('../models/TermResult');
+const TermResult = require('../models/TermResult');
 
 
 exports.create = async (req,res,next) => {
@@ -31,17 +32,7 @@ exports.delete = async (req,res,next) => {
     // for each of the subject score decrease term result total
     
     subjectScore.map(async score => {
-    console.log('-------------------',score.total)    
-        
-
-        await termResult.updateOne({
-            session: currentSession[0].session.year,
-            term: currentSession[0].termNumber,
-            username: score.username
-            }, {
-            
-            $inc: {total: -score.total ,noOfCourse: -1}
-            })
+    // console.log('-------------------',score.total)    
 
             // remove corresponding scores    
         await Score.deleteMany({
@@ -49,6 +40,29 @@ exports.delete = async (req,res,next) => {
             username: score.username,
             term: currentSession[0].termNumber,
             session: currentSession[0].session.year})
+
+            // recalculate the average of each student affected
+
+        let avg = await Score.aggregate([
+            {$match:{
+                username: score.username,
+                term: currentSession[0].termNumber,
+                session: currentSession[0].session.year
+            }},
+            {$group:{_id:"$username",
+             average:{$avg:"$total"},
+             noOfcourse: {$sum:1},
+             total: {$sum: "$total"}
+
+            }}
+        ])
+        console.log(avg)  
+        
+        // inserting the new average to term result
+        await TermResult.findOneAndUpdate({username: score.username},
+            {$set:
+            {average:avg[0].average, noOfcourse:avg[0].noOfcourse, total:avg[0].total}
+        },{useFindAndModify: false})
     })
 
     await Curriculum.updateMany({},{$pull: {subject:subject}})
@@ -57,8 +71,35 @@ exports.delete = async (req,res,next) => {
 }
 
 exports.update = async (req,res,next) => {
-    const {subject,id} = req.body;
-    await Subject.updateOne({_id: id},{$set:{subject: subject}})
+    const {subject,id,newSubject} = req.body;
+    const currentSession = await termAndSession.find()
+
+    //1. first goto the subject document and update the name
+    await Subject.updateOne({_id: id},{$set:{subject: newSubject}})
+
+    //2. find all curriculums which the subject appears in and update
+    await Curriculum.updateMany({subject:subject},{$set:{'subject.$':newSubject}})
+    
+    //3. find and update all scores document containing the subject and of the present term and session
+    await Score.updateMany(
+        {
+        subject,
+        term: currentSession[0].termNumber,
+        session: currentSession[0].session.year
+        },
+        {$set:{subject:newSubject}}
+    )
+        
+    // const subjectScore = await Score.find({
+    //     subject:newSubject,
+    //     term: currentSession[0].termNumber,
+    //     session: currentSession[0].session.year}
+    // )
+        // console.log(subjectScore)
+    
+
+
+
     res.json({success: true, message: `course with the ${id} updated successfullty`});
 }
 
