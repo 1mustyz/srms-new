@@ -11,6 +11,7 @@ const TermResult = require('../models/TermResult');
 const Payment = require('../models/Payment');
 const Assignment = require('../models/Assignment');
 const SessionResult = require('../models/SessionResult')
+const cloudinaryUplouder = require('./helper/uploadCloudinary')
 
 // student registration controller
 exports.registerStudent = async function (req, res, next) {
@@ -152,10 +153,24 @@ exports.setProfilePic = async (req,res, next) => {
       return res.json({"image": req.file, "msg":'Please select an image to upload'});
     }
     if(req.file){
-        console.log(req.query.id)
-        await Student.findOneAndUpdate({_id: req.query.id},{$set: {image: req.file.path}})
+        console.log(req.query.username)
+
+       // before uploading image check for previous image and delete from cloud
+       let studentImage = await Student.findOne({username: req.query.username})
+
+        
+       let isImageDeleted 
+       if (studentImage.image != '1.jpg' && studentImage.image != null) isImageDeleted = await cloudinaryUplouder.delete(studentImage.image)
+       else isImageDeleted = true 
+       // sending image to claudinary and saving the link to database
+       let mediaImage 
+       if(isImageDeleted) mediaImage = await cloudinaryUplouder.upload(req.file.path)
+       
+        await Student.findOneAndUpdate({username: req.query.username},{$set: {image: mediaImage}},{useFindAndModify:false})
+        let singleStudent = await Student.findOne({username: req.query.username})
+        
         return  res.json({success: true,
-        message: req.file.path,
+        message: singleStudent,
                    },
         
     );
@@ -248,12 +263,23 @@ exports.findOneStudent = async (req,res,next) => {
 
 exports.removeStudent = async (req,res,next) => {
   const {id,username} = req.query;
-  await Student.findOneAndDelete({_id: id})
-  await Score.deleteMany({username})
-  await Cognitive.deleteMany({username})
-  await Payment.deleteMany({username})
-  await TermResult.deleteMany({username})
-  await SessionResult.deleteMany({username})
+
+  // before uploading image check for previous image and delete from cloud
+  let studentImage = await Student.findOne({_id: id})
+  console.log(studentImage)
+  let isImageDeleted
+  if (studentImage != '1.jpg' && studentImage != null) isImageDeleted = await cloudinaryUplouder.delete(studentImage.image)
+  else isImageDeleted = true
+  
+  if(isImageDeleted){
+    await Student.findOneAndDelete({_id: id})
+    await Score.deleteMany({username})
+    await Cognitive.deleteMany({username})
+    await Payment.deleteMany({username})
+    await TermResult.deleteMany({username})
+    await SessionResult.deleteMany({username})
+  }
+
   res.json({success: true, message: `student with the id ${id} has been removed`})
 }
 
