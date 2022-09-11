@@ -5,6 +5,7 @@ const multer = require('multer');
 const {singleUpload} = require('../middlewares/filesMiddleware');
 const mongoose = require('mongoose')
 // const connectEnsureLogin = require('connect-ensure-login')
+const cloudinaryUplouder = require('./helper/uploadCloudinary')
 
 // staff registration controller
 exports.registerStaff = async (req, res, next) => {
@@ -129,10 +130,23 @@ exports.setProfilePic = async (req,res, next) => {
       return res.json({"image": req.file, "msg":'Please select an image to upload'});
     }
     if(req.file){
-        console.log(req.query.id)
-        await Staff.findOneAndUpdate({_id: req.query.id},{$set: {image: req.file.path}})
+        console.log(req.query.username)
+
+        // before uploading image check for previous image and delete from cloud
+        let staffImage = await Staff.findOne({username: req.query.username})
+        
+        let isImageDeleted 
+        if (staffImage.image != '1.jpg' && staffImage.image != null) isImageDeleted = await cloudinaryUplouder.delete(staffImage.image)
+        else isImageDeleted = true 
+
+        // sending image to claudinary and saving the link to database
+        let mediaImage 
+        if(isImageDeleted) mediaImage = await cloudinaryUplouder.upload(req.file.path)
+
+        await Staff.findOneAndUpdate({username: req.query.username},{$set: {image: mediaImage}},{useFindAndModify: false})
+        let singleStaff = await Staff.findOne({username: req.query.username})
         return  res.json({success: true,
-        message: req.file.path,
+        message: singleStaff,
                    },
         
     );
@@ -194,8 +208,20 @@ if (role == "None"){
 
 exports.removeStaff = async (req,res,next) => {
   const {id} = req.query;
-  await Staff.findOneAndDelete({_id: id})
-  res.json({success: true, message: `staff with the id ${id} has been removed`})
+  try {
+    
+    // before uploading image check for previous image and delete from cloud
+    let staffImage = await Staff.findOne({_id: id})
+    console.log(staffImage)
+    let isImageDeleted
+    if (staffImage != '1.jpg' && staffImage != null) isImageDeleted = await cloudinaryUplouder.delete(staffImage.image)
+    else isImageDeleted = true
+    
+    if(isImageDeleted) await Staff.findOneAndDelete({_id: id})
+    res.json({success: true, message: `staff with the id ${id} has been removed`})
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 exports.editStaff = async (req,res,next) => {
