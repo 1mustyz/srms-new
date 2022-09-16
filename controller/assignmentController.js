@@ -3,14 +3,7 @@ const TermSetter = require('../models/TermSetter')
 const multer = require('multer');
 const {singleFileUpload} = require('../middlewares/filesMiddleware');
 const Staff = require('../models/Staff');
-const cloudinary = require('cloudinary');
-
-// cloudinary configuration for saving files
-cloudinary.config({
-    cloud_name: 'mustyz',
-    api_key: '727865786596545',
-    api_secret: 'HpUmMxoW8BkmIRDWq_g2-5J2mD8'
-})
+const cloudinaryUplouder = require('./helper/uploadCloudinary')
 
 exports.createAssignmentText = async (req,res,next) => {
     const {username,staffId,firstName,lastName,className,category,head,text,subject} = req.body
@@ -46,23 +39,19 @@ exports.createAssignmentFile = async (req,res,next) => {
           return res.json(err);
         }
         else if (!req.file) {
-          return res.json({"file": req.file, "msg":'Please select file to upload'});
+          return res.json({success: false,"file": req.file, "msg":'Please select file to upload'});
+        }else if (req.file.size > 5000000) {
+          return res.json({success: false, "file": req.file, "msg":'File size too large, file should no be greater than 5mb '});
         }
         if(req.file){
-            console.log(req.file.path)
+            // console.log(req.file)
+            // upload file to claudinary
+            let mediaFile = await cloudinaryUplouder.upload(req.file.path)
 
-            cloudinary.v2.uploader.upload(req.file.path, 
-                { resource_type: "raw" }, 
-            async function(error, result) {
-                console.log(result, error); 
-
-                const upResult =  await Assignment.collection.insertOne({file: result.url})
-                return  res.json({success: true,
-                message: upResult },
-                
-                
-            );
-                });
+            // insert file links receive from claudinary to database
+            await Assignment.collection.insertOne({file: mediaFile})
+            const allAssignment = await Assignment.find();  
+            return  res.json({success: true,message: allAssignment },);
   
          
         }
@@ -70,9 +59,24 @@ exports.createAssignmentFile = async (req,res,next) => {
 } 
 
 exports.deleteAssignment = async (req,res,next) => {
-    const { assId } = req.body.assId
-    await Assignment.findByIdAndDelete(assId)
-    res.json({success: true, message: 'assignment deleted'})
+    const { assignmentId } = req.query
+    //1. get assignment collection from database
+    const assignment = await Assignment.findOne({_id: assignmentId},{file:1})
+    let isDeletedFile
+
+    //2. check if the assignment file is valid and delete
+    if(assignment.file != null || assignment.file != undefined ) isDeletedFile = await cloudinaryUplouder.delete(assignment.file)
+    else isDeletedFile = true
+
+    //3. check if the file is actually deleted then delete the collection from database
+    if (isDeletedFile){
+        await Assignment.findByIdAndDelete({_id: assignmentId})
+        const allAssignment = await Assignment.find()
+        res.json({success: true, message: 'assignment deleted', allAssignment})
+    }else {
+        res.json({success: false, message: 'something went wrong'})
+
+    }
 }
 
 exports.getAllAssignmentAdmin = async (req,res,next) => {
