@@ -142,17 +142,9 @@ exports.setProfilePic = async (req, res, next) => {
     } else if (err) {
       return res.json(err)
     } else if (!req.file) {
-      return res.json({ image: req.file, msg: 'Please select an image to upload' })
-    }
-    if (req.file) {
-      console.log(req.query.id)
-      await Student.findOneAndUpdate({ _id: req.query.id }, { $set: { image: req.file.path } })
-      return res.json({
-        success: true,
-        message: req.file.path
-      }
-
-      )
+      return res.json({success: false,"file": req.file, "msg":'Please select file to upload'});
+    }else if (req.file.size > 5000000) {
+      return res.json({success: false, "file": req.file, "msg":'File size too large, file should no be greater than 5mb '});
     }
     else if (!req.file) {
       return res.json({"image": req.file, "msg":'Please select an image to upload'});
