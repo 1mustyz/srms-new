@@ -109,6 +109,8 @@ router.get('/get-class-curriculum', curriculumController.getClassCurriculum)
 router.get('/get-a-class-result', studentController.getAclassResult)
 router.get('/get-single-student-result', studentController.getAsingleStudentResult)
 router.get('/get-all-teachers-priviledge', examOfficerController.getTeachersPriviledge)
+router.get('/get-student-broad-sheet', teacherController.getStudentBroadSheet)
+
 
 router.delete('/remove-student', studentController.removeStudent)
 router.delete('/delete-single-curriculum', curriculumController.deleteSingleCurriculum)
