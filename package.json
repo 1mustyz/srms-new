@@ -27,6 +27,7 @@
     "nodemon": "^2.0.7",
     "passport": "^0.6.0",
     "passport-local-mongoose": "^6.1.0",
+    "puppeteer": "^15.3.2",
     "save": "^2.4.0",
     "waait": "^1.0.5"
   },
