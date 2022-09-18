@@ -6,6 +6,7 @@ const { singleUpload } = require('../middlewares/filesMiddleware')
 const mongoose = require('mongoose')
 // const connectEnsureLogin = require('connect-ensure-login')
 const cloudinaryUplouder = require('./helper/uploadCloudinary')
+const createStaffPdf = require('../pdf_generator/view_all_staff')
 
 // staff registration controller
 exports.registerStaff = async (req, res, next) => {
@@ -75,6 +76,33 @@ exports.findAllStaff = async (req, res, next) => {
     ? res.json({ success: true, message: result })
     : res.json({ success: false, message: result })
 }
+
+/**
+ * This controller get all staff but without admin 
+ */
+ exports.getAllStaffToPrint = async (req, res, next) => {
+
+  try {
+    const result = await Staff.aggregate([
+      {$match: {role:{$nin:['Admin']}}},
+      {$project: {_id:0, createdAt:0, updatedAt:0, hash:0, salt:0}}
+    ])
+    const noOfStaff = result.length
+
+    
+    // generate pdf report
+  const data = { result, noOfStaff }
+  // console.log(result,noOfStaff)
+
+  const pdf = await createStaffPdf(data)
+  // then send to frontend to download
+  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+  res.send(pdf)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 exports.findAllTeachers = async (req, res, next) => {
   const result = await Staff.find({ role: 'subjectTeacher' })
