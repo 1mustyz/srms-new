@@ -3,6 +3,7 @@ const Score = require('../models/Score')
 const TermResult = require('../models/TermResult')
 const TermSetter = require('../models/TermSetter')
 const SessionResult = require('../models/SessionResult')
+const studentBroadSheetPdf = require('../pdf_generator/student_broad_sheet')
 
 
 exports.fetchTeacherSubjects = async (req, res) => {
@@ -252,3 +253,90 @@ exports.finalSubmision = async (req,res,next) => {
 
 } 
 
+/**
+ * Getting a particular class broad sheet report
+ * the result will only contain a comprehensive list result of student in a class
+ * @className: class parameter will be used to filter a specific class
+ * @category: will be used to filter class category such as science and art
+ * @term and @session: will be used to get result for that particular term and session  
+ */
+
+exports.getStudentBroadSheet = async (req,res,next) => {
+    const header = {className, category, term, session} = req.query
+    const intergerTerm =  Number(term)
+
+    // getting all student id from the class
+    const studentId = await Score.aggregate([
+        {$match: {"class":className, "category":category, "term":intergerTerm, session}},
+        {$group: {_id: {username:"$username", firstName:"$firstName", lastName:"$lastName"}}}
+    ])
+
+    // getting all courses from the class
+    const courses = await Score.aggregate([
+        {$match: {"class":className, "category":category, "term":intergerTerm, session}},
+        {$group: {_id:"$subject"}},
+        {$sort: {_id:1}}
+    ])
+
+    // get all student each subject result from Score collection
+    const studentResult = await Score.aggregate([
+        {$match: {"class":className, "category":category, "term":intergerTerm, session}},
+        {$project: {_id:0, isActive:0, subjectPosition:0, isfinalSubmitted:0, createdAt:0, updatedAt:0 }},
+        {$sort: {subject:1}}
+    ])
+
+     // get each student term result from Term collection
+    const studentTermResult = await TermResult.aggregate([
+        {$match: {"class":className, "term":intergerTerm, session}},
+        {$project: {_id:0, class:0, term:0, session:0, noOfCourse:0, position:0 }},
+        // {$sort: {subject:1}}
+    ])    
+
+    
+
+    const result = studentId.map(std=> {
+        let stdResult = []
+        let stdTermResult 
+
+        // asign all score belonging to a student to himself
+        studentResult.forEach((str)=>{
+            if (str.username === std._id.username) {
+             stdResult.push( {
+                        subject: str.subject,
+                        total: str.total === undefined ? 0 : str.total
+                })
+            }
+        })
+
+        // asign term result belonging to a student to himself
+        studentTermResult.forEach((str)=>{
+            if (str.username === std._id.username) {
+             stdTermResult =  {
+                        total: str.total === undefined ? 0 : str.total,
+                        average: str.average === undefined ? 0 : str.average
+                }
+            }
+        })
+        return {
+            user: std._id,
+            stdResult,
+            stdTermResult
+        }
+    })
+
+    // generate pdf report
+  const data = { result,courses,studentId,header }
+
+  const pdf = await studentBroadSheetPdf(data)
+  // then send to frontend to download
+  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+  res.send(pdf)
+
+//   console.log(result)
+//   console.log(studentTermResult)
+//   console.log(studentId,courses)
+
+
+    
+    
+}

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container{
+    display: grid;
+    margin: 0 auto;
+    width: 95%;
+    padding: 25px;
+    /* border: 2px solid rgb(32, 138, 5); */
+    /* min-height: 600px; */
+   Margin-bottom: 350px;
+   font-size: small;
+  
+}
+.header{
+    display: inline-block;
+}
+.header img{
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 0px;
+}
+.cover-img{
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    vertical-align: middle;
+    /* align-content: center; */
+    margin-left: 200px;
+    opacity: 0.1;
+}
+.school-name{
+    font-size: 30px;
+    font-weight: bolder;
+    /* color: rgb(31, 62, 202); */
+}
+h4{
+    /* color: rgb(31, 62, 202);  */
+}
+.information-container{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    padding: 1px;
+    border-bottom: 1px solid green;
+    border-top: 1px solid green;
+    padding: 25px;
+    /* font-size: 24px; */
+}
+
+.table1{
+    
+    width: 90%;
+    margin-left: 20px;
+    margin-top: 30px;
+    /* border: 1px solid #ddd; */
+    border-collapse: collapse;
+}
+.table2{
+    width: 80%;
+    margin-bottom: 10px;
+    /* margin-top: 30px; */
+    /* border: 1px solid #ddd; */
+    border-collapse: collapse;
+}
+.table3-container, .table2-container{
+    margin-top: 20px;
+    
+}
+.table3{
+    width: 100%;
+    margin-top: 0px;
+    /* border: 1px solid #ddd; */
+    border-collapse: collapse;
+}
+.table3 td{
+        text-align: left;
+}
+.table2 td{
+    text-align: left;
+}
+tr{
+    /* border: 1px solid black; */
+    /* border-collapse: collapse; */
+    /* border: 1px solid #ddd; */
+}
+th, tr, td{
+    border: 1px solid black;
+    padding: 4px;
+    text-align: center;
+    font-size: 14px;
+}
+.subject{
+    text-align: left;
+}
+.grade-cognitive-section{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* grid: gap -20px; */
+}
+.promotion-status{
+    font-weight: bolder;
+    color: green;
+}
+.content-title-post{
+   /* font-weight: bolder; */
+  
+}
+/* attendance sheet other css */
+.teacher-sign{
+    border-top: 2px solid black;
+    padding: 10px;
+    margin-top: 30px;
+}
+.teacher-sign-container{
+    margin-top: 80px;
+}
+/* receipt css */
+.table-fees{
+    
+        width: 100%;
+        margin-top: 30px;
+        /* border: 1px solid #ddd; */
+        /* position: relative; */
+        border-collapse: collapse;
+        background-attachment: no-repeat;
+        background-repeat: no-repeat;
+        /* background-image: url('logo1.png'); */
+        background-size: contain;
+        text-align: center;
+  
+      
+
+}
+.bursar-sign-container{
+    margin-top: 200px;
+
+}
+.bursar-sign{
+    font-weight: bolder;
+    padding-top: 10px;
+    border-top: 2px solid black;
+
+}
+.promotion-remark, .term-remark{
+    padding-left: 20px;
+    padding-top: 5px;
+    font-size: 14px;
+}
+.passport{
+    /* border: 1px solid rgb(243, 243, 246); */
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 40%;
+    height: 100px;
+    /* background-color: blue; */
+    border-radius: 9px;
+}
+.table-info tr td{
+    border: none;
+    text-align: left;
+    padding: 0px;
+    padding-left: 40px;
+    font-size: 11px;
+}
+.date{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: green;
+}
+.sign-img{
+    width: 100px;
+    height: 100px;
+}
+.student-passport{
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+thead{
+    /* transform-origin: 0 0;
+  transform: rotate(90deg);
+  position: relative; */
+
+}
+.rotate1{
+  transform-origin: 0 45;
+  transform: rotate(360deg);
+  /* position: relative; */
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+    </style>
+</head>
+<body>
+   
+    <div class="page">
+        <div id="container">
+       
+        <center> <div class="header">
+             <img src="https://portal.nobleintellectsacademy.sch.ng/logo.png" style="text-align: center;" alt="logo image"><br>
+             <span class="school-name">NOBLE INTELLECTS ACADEMY</span><br>
+            
+           
+            <span>No. 24 kofare zone 3,, Jimeta Yola North, Adamawa State </span><br><br>
+            <span><strong>Motto: </strong>Learning For Better Future. </span>
+            <h4>BROAD SHEET REPORT</h4>
+        </div> </center>
+       
+
+        <div class="information-container">
+            
+            <div>
+               
+                    <tr>
+                        <td>CLASS: </td>
+                        <td>{{header.className}}</td>
+                    </tr>
+                   
+                
+            </div>
+            <div>
+                  
+                    <tr>
+                        <td>Category: </td>
+                        <td>{{header.category}}</td>
+                    </tr>
+                    
+                
+            </div>
+            <div>
+               
+                    <tr>
+                        <td>Term: </td>
+                        <td>{{header.term}}</td>
+                    </tr>
+               
+            </div>
+            <div>
+               
+                <tr>
+                    <td>Session: </td>
+                    <td>{{header.session}}</td>
+                </tr>
+           
+        </div>
+           
+        </div>
+        <div>
+                <table class="table1">
+                    <thead>
+                        <th>ADMS NO.</th>
+                        <th>NAME </th>
+
+                        {{#each courses}}
+                        <th>{{subStr _id}}</th>
+                        {{/each}}
+
+                        <th>Total</th>
+                        <th>Average </th>
+                    </thead>
+                    <tbody>
+                    {{#each result}}
+                    
+                        <tr>
+                            <td class="subject">{{user.username}}</td>
+                            <td>{{user.firstName}} {{user.lastName}}</td>
+
+                            {{#each stdResult}}
+                            <td>{{total}}</td>
+                            {{/each}}
+                            
+                            <td>{{averageDecimal stdTermResult.total}}</td>
+                            <td>{{averageDecimal stdTermResult.average}}</td>
+                        </tr>
+
+                        
+            {{/each}}    
+                        
+                        
+                    
+                    
+                    </tbody>
+                </table>
+            
+            
+            
+        
+        
+        
+       
+        
+        
+    </div>
+    </div>
+  
+
+</body>
+</html>

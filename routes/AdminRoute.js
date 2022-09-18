@@ -106,10 +106,14 @@ router.get('/get-all-teachers-assignment', assignmentController.getAllAssignment
 router.get('/get-add-session', termSetterController.getAddSession)
 router.get('/get-single-staff', Validator(queryString, 'query'), staffController.singleStaff)
 router.get('/get-class-curriculum', curriculumController.getClassCurriculum)
+router.get('/get-all-staff-to-print', staffController.getAllStaffToPrint)
 
 router.get('/get-a-class-result', studentController.getAclassResult)
+router.get('/get-a-class-students', studentController.getAllStudentFromAspecificClass)
 router.get('/get-single-student-result', studentController.getAsingleStudentResult)
 router.get('/get-all-teachers-priviledge', examOfficerController.getTeachersPriviledge)
+router.get('/get-student-broad-sheet', teacherController.getStudentBroadSheet)
+
 
 router.delete('/remove-student', studentController.removeStudent)
 router.delete('/delete-single-curriculum', curriculumController.deleteSingleCurriculum)

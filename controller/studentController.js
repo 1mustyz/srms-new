@@ -12,6 +12,8 @@ const Payment = require('../models/Payment')
 const Assignment = require('../models/Assignment')
 const SessionResult = require('../models/SessionResult')
 const cloudinaryUplouder = require('./helper/uploadCloudinary')
+const createDosierPdf = require('../pdf_generator/dosier_generate')
+const createStudentPdf = require('../pdf_generator/view_student_class')
 
 // student registration controller
 exports.registerStudent = async function (req, res, next) {
@@ -143,17 +145,9 @@ exports.setProfilePic = async (req, res, next) => {
     } else if (err) {
       return res.json(err)
     } else if (!req.file) {
-      return res.json({ image: req.file, msg: 'Please select an image to upload' })
-    }
-    if (req.file) {
-      console.log(req.query.id)
-      await Student.findOneAndUpdate({ _id: req.query.id }, { $set: { image: req.file.path } })
-      return res.json({
-        success: true,
-        message: req.file.path
-      }
-
-      )
+      return res.json({success: false,"file": req.file, "msg":'Please select file to upload'});
+    }else if (req.file.size > 5000000) {
+      return res.json({success: false, "file": req.file, "msg":'File size too large, file should no be greater than 5mb '});
     }
     else if (!req.file) {
       return res.json({"image": req.file, "msg":'Please select an image to upload'});
@@ -285,6 +279,45 @@ exports.removeStudent = async (req,res,next) => {
   res.json({success: true, message: `student with the id ${id} has been removed`})
 }
 
+/**
+ * This controller get all student from a particular class 
+ * and make it ready for printing to the frontend
+ * @param {currentClass, category, } req 
+ * @param { send back a pdf} res 
+ * @param {*} next 
+ */
+exports.getAllStudentFromAspecificClass = async (req, res, next) => {
+  const { currentClass, category } = req.query
+  const termAndSession = await TermSetter.find()
+
+  try {
+    const result = await Student.aggregate([
+      {$match: {currentClass, category, suspend:false, status:'Active'}},
+      {$project: {_id:0, createdAt:0, updatedAt:0, suspend:0, hash:0, salt:0}}
+    ])
+    const noOfStudent = result.length
+
+    const classDetails = {
+      className: currentClass,
+      category: category,
+      term: termAndSession[0].termNumber,
+      session: termAndSession[0].session.year,
+      noOfStudent
+    }
+
+    
+    // generate pdf report
+  const data = { result, classDetails }
+
+  const pdf = await createStudentPdf(data)
+  // then send to frontend to download
+  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+  res.send(pdf)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 exports.getAclassResult = async (req, res, next) => {
   const { term, session, className, category } = req.query
 
@@ -320,7 +353,13 @@ exports.getAclassResult = async (req, res, next) => {
     ]
   })
 
-  res.json({ success: true, length: generalResult.length, message: generalResult })
+  // generate pdf report
+  const data = { generalResult }
+
+  const pdf = await createDosierPdf(data)
+  // then send to frontend to download
+  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+  res.send(pdf)
 }
 
 exports.getAsingleStudentResult = async (req, res, next) => {
