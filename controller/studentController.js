@@ -95,6 +95,7 @@ exports.registerStudent = async function (req, res, next) {
         studentId: user._id,
         username: user.username,
         class: user.currentClass,
+        category: user.category,
         noOfCourse: noOfCourse[0].subject.length,
         term: termAndSession[0].termNumber,
         session: termAndSession[0].session.year
@@ -321,23 +322,23 @@ exports.getAclassResult = async (req, res, next) => {
   const { term, session, className, category } = req.query
 
   // TODO add category to each of the criteria
-
   const eachSubjectResult = await Score.find({
     class: className,
+    category,
     term,
     session
   })
 
-  // console.log('-------------------',eachSubjectResult)
-
   const cognitiveResult = await Cognitive.find({
     class: className,
     term,
+    category,
     session
   })
 
   const termResult = await TermResult.find({
     class: className,
+    category,
     term,
     session
   })

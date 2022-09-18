@@ -2,7 +2,6 @@ const Subject = require('../models/Subject');
 const Score = require('../models/Score')
 const Curriculum = require('../models/Curriculum')
 const termAndSession = require('../models/TermSetter')
-const termResult = require('../models/TermResult');
 const TermResult = require('../models/TermResult');
 
 

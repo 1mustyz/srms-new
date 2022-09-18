@@ -16,6 +16,7 @@ const setNewTerm = require('../controller/setNewTerm')
 const { Validator } = require('../validators')
 const { staffValidator, studentValidator } = require('../validators/register')
 const { queryString } = require('../validators/query')
+const { paymentValidator } = require('../validators/payment')
 
 router.post('/register-staff',
   idGenerator.staffIdGenerator,
@@ -36,7 +37,7 @@ router.post('/add-payment', paymentController.addPaymentTypes)
 router.post('/add-curriculum', curriculumController.create)
 router.post('/create-subject', subjectController.create)
 router.post('/create-class', classController.create)
-router.post('/verify-payment', paymentController.verifyPayment)
+router.post('/verify-payment', Validator(paymentValidator, 'body'), paymentController.verifyPayment)
 router.post('/set-new-term', termSetterController.setNewTerm)
 router.post('/set-new-session', termSetterController.setSession)
 router.post('/add-new-cognitive-item', cognitiveController.addNewCognitive)

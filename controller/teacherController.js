@@ -39,7 +39,7 @@ exports.liveSaveResult = async (req, res) => {
         [field]: value
     }, {new: true, useFindAndModify: false})
     
-    // // get total by adding all ca and exam value if they exist
+    // get total by adding all ca and exam value if they exist
     const ca1 = score.ca1 === undefined ? 0 : score.ca1
     const ca2 = score.ca2 === undefined ? 0 : score.ca2
     const ca3 = score.ca3 === undefined ? 0 : score.ca3
@@ -47,7 +47,7 @@ exports.liveSaveResult = async (req, res) => {
     const exam = score.exam === undefined ? 0 : score.exam
     const total = ca1 + ca2 + ca3 + ca4 + exam
 
-    // // use if else to find grade based on score value 
+    // use if else to find grade based on score value 
     let grade
     if(total >= 91) {
         grade = 'A1'
@@ -70,17 +70,13 @@ exports.liveSaveResult = async (req, res) => {
         grade = 'F9'
     }
 
-    // // update grade and total field
-    const result = await Score.findByIdAndUpdate(score._id, {
+    // update grade and total field
+    await Score.findByIdAndUpdate(score._id, {
         total,
         grade
     }, {new: true, useFindAndModify: false})
-    // Souley's own end here 
 
-
-
-    //  calculate position for a specific subject
-
+    // calculate position for a specific subject
     const allStudentScoreInAClass = await Score.find(
         {
             class: currentClass, 
@@ -91,10 +87,10 @@ exports.liveSaveResult = async (req, res) => {
         },
         {total: 1, username: 1}
         )
-console.log('--------------', allStudentScoreInAClass)
-        allStudentScoreInAClass.sort((a,b) => {
-            return b.total - a.total 
-        })    
+
+    allStudentScoreInAClass.sort((a,b) => {
+        return b.total - a.total 
+    })    
 
     const currentSubjectPosition = allStudentScoreInAClass.map((students,ind)=>{
         return studentIdentity={
@@ -106,13 +102,9 @@ console.log('--------------', allStudentScoreInAClass)
     })    
 
     currentSubjectPosition.map( async (students,ind)=>{
-        console.log('hhhhhhhhhh',students.id, students.position)
         await Score.findByIdAndUpdate(students.id, {subjectPosition: students.position})
     })    
-    console.log('/////////////////////',currentSubjectPosition)
-
     // End of calculating subject position in a class
-
 
     // calculating student term position in class 
     const allStudentTotal = await Score.find({
@@ -120,15 +112,11 @@ console.log('--------------', allStudentScoreInAClass)
         term: termAndSession[0].termNumber,
         session: termAndSession[0].session.year
         },{total: 1})
-    
-    // console.log(termAndSession[0])    
-    console.log(allStudentTotal)
+  
     let sumTotal = allStudentTotal.reduce((a,b)=> (+a +  +b.total),0 )
     
-    // console.log('+++++++++++++++++', sumTotal)
     let noOfCourses = allStudentTotal.length;
     let average = sumTotal/noOfCourses
-    console.log(average,sumTotal,noOfCourses)
     
     await TermResult.findOneAndUpdate({
         username: req.body.username,
@@ -153,13 +141,9 @@ if(termAndSession[0].termNumber === 3) {
         username,
         session: termAndSession[0].session.year 
     })
-    
-    console.log('this is term averere',termAverages)
+    const lengthOfAverages = termAverages.length
 
     // calculate session average based on term averages
-
-    const lengthOfAverages = termAverages.length
-    console.log(lengthOfAverages)
     if (lengthOfAverages == 1){
         const termAverage1 = termAverages[0].average === undefined ? 0 : termAverages[0].average
         // calculate how many term results the student have
@@ -224,18 +208,16 @@ if(termAndSession[0].termNumber === 3) {
 
     }
     
-
-    
     // CALCULATE POSITION FOR STUDENTS IN THE CLASS
     // get the session results for the students in the class
-const sessionRecords = await SessionResult.find(
-      { session: termAndSession[0].session.year, class: currentClass },
-      { average: 1, username: 1 })
+    const sessionRecords = await SessionResult.find(
+        { session: termAndSession[0].session.year, class: currentClass, category },
+        { average: 1, username: 1 })
     
     // sort the results
     sessionRecords.sort((a,b) => {
     return b.average - a.average 
-}) 
+    }) 
 
     // giving positions to students by adding 1 to index
     const currentSessionPosition = sessionRecords.map((students,ind)=>{

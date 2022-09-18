@@ -114,6 +114,7 @@ exports.setNewTerm = async (req,res,next) => {
             username: std.username,
             studentId: std._id,
             class: std.currentClass,
+            category: std.category,
             noOfCourse: studentSubjects[0].subject.length,
             term: termAndSession[0].termNumber,
             session: termAndSession[0].session.year
@@ -308,6 +309,7 @@ exports.setSession = async (req,res,next) => {
             studentId: student._id,
             username: student.username,
             class: student.currentClass,
+            category: student.category,
             noOfCourse: noOfCourse[0].subject.length,
             term: newTermAndSession[0].termNumber,
             session: newTermAndSession[0].session.year,

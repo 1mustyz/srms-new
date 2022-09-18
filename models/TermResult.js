@@ -5,6 +5,7 @@ const TermResultSchema = new Schema({
     username: { type:String},
     studentId: { type:String},
     class: { type:String},
+    category: { type: String},
     average: { type: Number, default: 0},
     total: { type: Number, default: 0},
     noOfCourse: { type: Number, default: 0},
