@@ -9,46 +9,51 @@ exports.addPaymentTypes = async (req,res,next) => {
 }
 
 exports.updatePaymentTypes = async (req,res,next) => {
-    const {payType} = req.body;
-    await PaymentType.collection.updateOne({payType: payType}, {payType: payType});
+    const {paymentTypes, newPaymentTypes} = req.body;
+    await PaymentType.collection.updateOne(
+        { paymentTypes: paymentTypes }, 
+        { $set: { paymentTypes: newPaymentTypes } });
     res.json({success: true, message: 'payment type updated successfull'})
 }
 
 exports.verifyPayment = async (req,res,next) => {
     const termAndSession = await TermSetter.find()
-    const {purposeOfPayment} = req.body.pays;
-    const {username} = req.query
-    let paid = false
+    const { purposeOfPayment } = req.body.pays;
+    const { username } = req.query
+    let query = {}
 
-    const result = await Payment.findOne({
-        "username": username,
-        term: termAndSession[0].termNumber,
-        session:
-        termAndSession[0].session.year
-    })
-    console.log(result)
+    // find if purpose of payment has tuition fee or all to add paid for the student
     const found = purposeOfPayment.find(payment => payment.purposeOfPayment == "Tution" || payment.purposeOfPayment == "All");
-    console.log(found)
-
-    if (result.paid && found != undefined){
-    res.json({success: true, message: 'you have paid for tuition fee'})
-
-    }else{
-        if(found != undefined) paid = true
-        // console.log(paid)
-
-    await Payment.findOneAndUpdate({
-        "username": username,
+  
+   if (found)
+   {
+    query.data = [{
+        username,
         term: termAndSession[0].termNumber,
         session:
         termAndSession[0].session.year
-    },{"pays": req.body.pays, "paid": paid})
-    // await Payment.findOneAndUpdate({"username": username},{"paid": paid})
-
-    
-    res.json({success: true, message: 'payment made'})
+     },
+     {
+        $set: { paid: true }, $addToSet: { "pays": { $each: purposeOfPayment } }
+     }
+]
+   } 
+   else
+   {
+    query.data = [{
+        username,
+        term: termAndSession[0].termNumber,
+        session:
+        termAndSession[0].session.year
+     },
+    {
+        $addToSet: { "pays" : { $each: purposeOfPayment } }
     }
-    
+    ]
+   }
+
+   await Payment.collection.updateOne(query.data[0], query.data[1])
+   res.json({success: true, message: 'payment made'})
 
 }
 
@@ -60,13 +65,8 @@ exports.getSingleStudentPayment = async (req,res,next) => {
         username,
         term,
         session: termAndSession[0].session.year
-    },{
-        paid: 1,
-        pays: 1,
-        term: 1,
-        session: 1,
-        _id: 0
     })
+
 
     res.json({success: true, result})
 }
