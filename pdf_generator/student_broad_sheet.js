@@ -13,6 +13,11 @@ handlebars.registerHelper('scoreDecimal', (score) => {
   score = parseFloat(score).toFixed(1)
   return score
 })
+
+handlebars.registerHelper('subStr', (str) => {
+  str = str.substr(0,4)
+  return str
+})
 /* end of helpers for dealing with decimals */
 const createPDF = async (data) => {
   const templateHtml = fs.readFileSync('./views/broadSheet.html', { encoding: 'utf8', flag: 'r' })
@@ -34,7 +39,7 @@ const createPDF = async (data) => {
     margin: {
       top: '10px',
       bottom: '30px',
-      right: '30px'
+      right: '15px'
     },
     printBackground: true,
     format: 'A4'
