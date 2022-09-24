@@ -106,7 +106,7 @@ exports.liveSaveResult = async (req, res) => {
     })    
     // End of calculating subject position in a class
 
-    // calculating student term position in class 
+    // calculating student term result in class 
     const allStudentTotal = await Score.find({
         username: username,
         term: termAndSession[0].termNumber,
