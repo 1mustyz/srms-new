@@ -10,12 +10,12 @@ handlebars.registerHelper('averageDecimal', (average) => {
 })
 
 handlebars.registerHelper('scoreDecimal', (score) => {
-  score = parseFloat(score).toFixed(1)
+  score = parseFloat(score).toFixed(3)
   return score
 })
 /* end of helpers for dealing with decimals */
 const createPDF = async (data) => {
-  const templateHtml = fs.readFileSync('./views/dosier.html', { encoding: 'utf8', flag: 'r' })
+  const templateHtml = fs.readFileSync('./views/results.html', { encoding: 'utf8', flag: 'r' })
   const template = handlebars.compile(templateHtml)
   const html = template(data)
 
@@ -33,7 +33,7 @@ const createPDF = async (data) => {
     displayHeaderFooter: false,
     margin: {
       top: '10px',
-      bottom: '30px'
+      bottom: '10px'
     },
     printBackground: true,
     format: 'A4'

@@ -326,7 +326,7 @@ exports.getAclassResult = async (req, res, next) => {
     class: className,
     term,
     session
-  })
+  }).lean()
 
   // console.log('-------------------',eachSubjectResult)
 
@@ -334,26 +334,28 @@ exports.getAclassResult = async (req, res, next) => {
     class: className,
     term,
     session
-  })
+  }).lean()
 
   const termResult = await TermResult.find({
     class: className,
     term,
     session
-  })
+  }).lean()
 
   const generalResult = termResult.map((student) => {
     const studentCourses = eachSubjectResult.filter(std => std.username == student.username)
     const cognitive = cognitiveResult.filter(std => std.username == student.username)
-    return [
-      student,
-      studentCourses,
-      cognitive
-    ]
+    return {
+      termResult: student,
+      subjects: studentCourses,
+      cognitives: cognitive[0],
+    }
+      
   })
 
   // generate pdf report
   const data = { generalResult }
+  console.log(generalResult[0])
 
   const pdf = await createDosierPdf(data)
   // then send to frontend to download
