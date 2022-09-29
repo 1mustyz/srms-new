@@ -6,8 +6,12 @@ const TermResult = require('../models/TermResult');
 
 
 exports.create = async (req,res,next) => {
-    await Subject.insertMany(req.body)
-    res.json({success: true, message: 'courses inserted successfullty'});
+    try {
+        await Subject.insertMany(req.body)
+        res.json({success: true, message: 'courses inserted successfullty'});
+    } catch (error) {
+        return res.status(400).json({ message: error.errmsg })
+    }
 }
 
 // exports.delete = async (req,res,next) => {
