@@ -44,7 +44,9 @@ const teacherRouter = require('./routes/teacherRoute')
 mongoose.connect('mongodb+srv://1mustyz:z08135696959@exchange.xzo88tb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  autoIndex: true,
+  family: 4,
 })
 mongoose.Promise = global.Promise
 
