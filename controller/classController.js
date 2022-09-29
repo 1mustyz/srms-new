@@ -2,9 +2,12 @@ const Class = require('../models/Classes');
 
 exports.create = async (req,res,next) => {
     const {className} = req.body;
-
-    await Class.insertMany(req.body)
-    res.json({success: true, message: `${className} added`})
+    try {
+        await Class.insertMany(req.body)
+        res.json({success: true, message: `${className} added`})
+    } catch(error) {
+        return res.status(400).json({ message: error.errmsg })
+    }
 }
 
 exports.update = async (req,res,next) => {
