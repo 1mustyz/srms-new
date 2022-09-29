@@ -13,6 +13,26 @@ handlebars.registerHelper('scoreDecimal', (score) => {
   score = parseFloat(score).toFixed(3)
   return score
 })
+
+handlebars.registerHelper('ifIsNaN', (score) => {
+  if (isNaN(score)){
+    return '0.0'
+  }else{
+
+    return score
+  } 
+})
+
+handlebars.registerHelper('ifIsThirdTerm', (term) => {
+  if (term == 3){
+    return true
+  }else{
+
+    return false
+  } 
+})
+
+
 /* end of helpers for dealing with decimals */
 const createPDF = async (data) => {
   const templateHtml = fs.readFileSync('./views/results.html', { encoding: 'utf8', flag: 'r' })

@@ -8,7 +8,7 @@
         #container{
     display: grid;
     margin: 0 auto;
-    width: 95%;
+    width: 98%;
     padding: 25px;
     /* height: 100vh; */
     /* border: 2px solid rgb(32, 138, 5); */
@@ -188,10 +188,14 @@ th, tr, td{
 .session-result-container table{
     text-align: center;
 }
+.principal-remarks{
+    height: 20px;
+}
     </style>
 </head>
 <body>
     {{#each generalResult}}
+    {{#if subjects.length}}
     <div class="page">
         <div id="container">
        
@@ -218,10 +222,7 @@ th, tr, td{
                         <td>STUDENT ID:</td>
                         <td>{{termResult.username}}</td>
                     </tr>
-                    <tr>
-                        <td>CLASS:</td>
-                        <td>{{termResult.class}}</td>
-                    </tr>
+                   
                     <tr>
                         <td>CATEGORY:</td>
                         <td>{{cognitives.category}}</td>
@@ -250,8 +251,8 @@ th, tr, td{
             <div>
                 <table class="table-info">
                     <tr>
-                        <td>CLASS SIZE:</td>
-                        <td>{{termResult.classSize}}</td>
+                        <td>CLASS:</td>
+                        <td>{{termResult.class}}</td>
                     </tr>
                     <tr>
                         <td>SESSION:</td>
@@ -268,20 +269,17 @@ th, tr, td{
         <!-- this section will only be visible when their
          is cummulative result to be shown  -->
          <div class="session-result-container">
-           
-                <div>
-                    <td>Cummulative Total: </td>
-                    <td>1098</td>
-                </div>
+                {{#if (ifIsThirdTerm termResult.term)}}
+                
                 <div>
                     <td>Cummulative Average: </td>
-                    <td>88.99</td>
+                    <td>{{averageDecimal sessionResult.average}}</td>
                 </div>
                   <div>
                     <td>Final Position: </td>
-                    <td>3rd</td>
+                    <td>{{sessionResult.position}}</td>
                   </div>  
-                    
+                  {{/if}}  
                 
                 
           
@@ -301,27 +299,23 @@ th, tr, td{
                     <th>TOTAL<br>(100%)</th>
                     <th>GRD.</th>
                     <th>POS.</th>
-                    <!-- <th>HIGH. <br>IN CLASS</th>
-                    <th>LOW. <br>IN CLASS</th>
-                    <th>CLASS <br>AVG.</th> -->
-                    <th>REMARK</th>
+                    
                 </thead>
                 <tbody>
                     {{#each subjects}}
                     <tr>
                         <td class="subject">{{subject}}</td>
-                        <td>{{scoreDecimal ca1}}</td>
-                        <td>{{scoreDecimal ca2}}</td>
-                        <td>{{scoreDecimal ca3}}</td>
-                        <td>{{scoreDecimal ca4}}</td>
+                        <td>{{ifIsNaN (scoreDecimal ca1)}}</td>
+                        <td>{{ifIsNaN (scoreDecimal ca2)}}</td>
+                        <td>{{ifIsNaN (scoreDecimal ca3)}}</td>
+                        <td>{{ifIsNaN (scoreDecimal ca4)}}</td>
                        
                         
-                        <td>{{scoreDecimal exam}}</td>
-                        <td>{{scoreDecimal total}}</td>
+                        <td>{{ifIsNaN (scoreDecimal exam)}}</td>
+                        <td>{{ifIsNaN (scoreDecimal total)}}</td>
                         <td>{{grade}}</td>
-                        <td>{{subjectPosition}}</td>
+                        <td>{{ifIsNaN subjectPosition}}</td>
                         
-                        <td>    </td>
                     </tr>
                     {{/each}}
                     
@@ -334,28 +328,28 @@ th, tr, td{
             <table class="table1">
                 <tr>
                     <td>TEACHERS COMMENT</td>
-                    <td>"{{cognitives.remarks}}"</td>
+                </tr>
+                <tr>
+                    <td class="principal-remarks">                              </td>
                 </tr>
             </table>
         </div>
+        {{#if (ifIsThirdTerm termResult.term)}}
         <div class="promotion-remark">
             <Span>PROMOTION STATUS:</Span>
-            <Span class="promotion-status">PROMOTED</Span>
+            <Span class="promotion-status">{{sessionResult.status}}</Span>
         </div>
-        <!-- <div class="term-remark">
-            <span>NEXT TERM BEGINS: &nbsp;</span><span class="date">19th SEPTEMBER, 2022</span>
-        </div>
-        <div class="term-remark">
-            <span>NEXT TERM SCHOOL FEE: &nbsp;</span><span class="date">&#8358;{{categorySchoolFee}}</span>
-        </div> -->
+        {{/if}}
+       
         <div>
            
            
         </div>
         <center><img class="sign-img" src="{{ signature }}" alt="signature image"><br><br>
-        <span>Director Stamp & Sign</span></center>
+        <span>Principal Stamp & Sign</span></center>
     </div>
     </div>
+    {{/if}}
     {{/each}}
 
 </body>
