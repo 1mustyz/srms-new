@@ -11,7 +11,8 @@ const TermResultSchema = new Schema({
     noOfCourse: { type: Number, default: 0},
     position: { type:String, default: 0},
     term: { type:Number},
-    session: { type:String}
+    session: { type:String},
+    suspend: { type: Boolean, default: 'false' }
 })
 
 const TermResult = model('termResult',TermResultSchema)

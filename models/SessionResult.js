@@ -9,7 +9,8 @@ const SessionResultSchema = new Schema({
     class: { type: String},
     average: { type: Number, default: 0},
     position: { type: String, default: 0},
-    session: { type: String}
+    session: { type: String},
+    suspend: { type: Boolean, default: 'false' }
 })
 
 const SessionResult = model('sessionResult',SessionResultSchema)

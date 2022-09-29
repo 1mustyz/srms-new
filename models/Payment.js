@@ -11,7 +11,8 @@ const PaySchema = new Schema({
     session: {type:String},
     paid: {type:Boolean, default: false},
     className: {type:String},
-    pays: {type:Array}
+    pays: {type:Array},
+    suspend: { type: Boolean, default: 'false' }
 
 },{timestamps: true})
 

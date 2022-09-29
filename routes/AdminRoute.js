@@ -66,6 +66,7 @@ router.put('/update-std-score-firstName', subjectController.updateStdScoreFirstN
 // *****************************************************************************************************
 // The code below is very sensitive make sure you understand it before using it
 router.put('/promote-a-class', studentController.promoteOrDemoteAclass)
+router.put('/suspend-link-setup', studentController.makeSuspendField)
 
 // *****************************************************************************************************
 // The code below is very sensitive make sure you understand it before using it

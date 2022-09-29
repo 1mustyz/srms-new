@@ -338,14 +338,17 @@ exports.getAclassResult = async (req, res, next) => {
 
   const termResult = await TermResult.find({
     class: className,
-    category,
+    // category,
     term,
-    session
+    session,
+    suspend: false
   }).lean()
+
 
   const seesionResult = await SessionResult.find({
     session, 
-    class: className
+    class: className,
+    suspend: false
   }).lean()
 
   const generalResult = termResult.map((student) => {
@@ -363,7 +366,7 @@ exports.getAclassResult = async (req, res, next) => {
 
   // generate pdf report
   const data = { generalResult }
-  // console.log(generalResult[0])
+  // console.log(generalResult)
 
   const pdf = await createDosierPdf(data)
   // then send to frontend to download
@@ -470,7 +473,49 @@ exports.getAllStudentAssignment = async (req, res, next) => {
 
 exports.suspendAstudent = async (req, res, next) => {
   const { username, suspend } = req.query
+  const termAndSession = await TermSetter.find()
 
-  await Student.findOneAndUpdate({ username }, { $set: { suspend } })
+  try {
+    await Student.findOneAndUpdate({ username }, { $set: { suspend } })
+    await TermResult.findOneAndUpdate({
+      username,
+      term: termAndSession[0].termNumber,
+      session: termAndSession[0].session.year
+    }, { $set: { suspend } })
+
+    await SessionResult.findOneAndUpdate({
+      username,
+      session: termAndSession[0].session.year
+    }, { $set: { suspend } })
+
+    await Payment.findOneAndUpdate({
+      username,
+      term: termAndSession[0].termNumber,
+      session: termAndSession[0].session.year
+    }, { $set: { suspend } })
+
+  } catch (error) {
+    console.log(error)
+  }
+
+  
+
   res.json({ success: true, suspend })
+}
+
+exports.makeSuspendField = async(req,res,next) => {
+  try {
+    await TermResult.updateMany({}, { $set: { suspend: false } })
+
+    await SessionResult.updateMany({}, { $set: { suspend: false } })
+
+    await Payment.updateMany({}, { $set: { suspend: false } })
+
+  } catch (error) {
+    console.log(error)
+  }
+
+  
+
+  res.json({ success: true, message: "update all suspend" })
 }

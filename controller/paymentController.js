@@ -77,11 +77,9 @@ exports.getAllPaidStudent = async (req,res,next) => {
 
     const {studentId} = req.query;
 
-    const result = await Payment.find({paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber})
+    const result = await Payment.find({paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false})
 
-    result.length > 0
-     ? res.json({success: true, message: result})
-     : res.json({success: false, message: result})
+    res.json({success: true, message: result})
 }
 
 exports.getAllUnPaidStudent = async (req,res,next) => {
@@ -89,11 +87,15 @@ exports.getAllUnPaidStudent = async (req,res,next) => {
 
     const {studentId} = req.query;
 
-    const result = await Payment.find({paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber})
+    const result = await Payment.find({
+        paid: false,
+        suspend: false,
+        session: termAndSession[0].session.year, 
+        term: termAndSession[0].termNumber, 
+        })
 
-    result.length > 0
-     ? res.json({success: true, message: result})
-     : res.json({success: false, message: result})
+    res.json({success: true, message: result})
+     
 }
 
 exports.getPayment = async (req,res,next) => {
