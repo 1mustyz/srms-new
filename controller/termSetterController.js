@@ -117,7 +117,8 @@ exports.setNewTerm = async (req,res,next) => {
             category: std.category,
             noOfCourse: studentSubjects[0].subject.length,
             term: termAndSession[0].termNumber,
-            session: termAndSession[0].session.year
+            session: termAndSession[0].session.year,
+            suspend: false
         }
     })
     await TermResult.insertMany(newTermResult)
@@ -156,32 +157,39 @@ exports.setSession = async (req,res,next) => {
             { status: 'graduated' },
             { useFindAndModify: false })
         })
+    const promotedStudents = await Student.find({ status: 'Active' })
 
-    // // // promote some students 
-    const juniors = students.filter( student => 
-        student.currentClass !== 'JSS3' 
-        || student.currentClass !== 'SSS3' 
-        || student.currentClass !=='Grade5' 
-        || student.currentClass !=='Kindergarten3'
-        || student.currentClass !=='Playclass'
-        || student.currentClass !=='Daycare')
+    // // // // promote some students 
+    // students.filter( student => 
+    //     student.currentClass !== 'JSS3' 
+    //     || student.currentClass !== 'SSS3' 
+    //     || student.currentClass !=='Grade5' 
+    //     || student.currentClass !=='Kindergarten3'
+    //     || student.currentClass !=='Playclass'
+    //     || student.currentClass !=='Daycare')
 
         // incrementing promoted student className and classNumber
-    setTimeout(() => {
-        (async function(){
-            const promotedStudents = await SessionResult.find({
-                status: 'Promoted', session: termAndSession[0].session.year
-               })
-            console.log('///////////',promotedStudents)
-           promotedStudents.forEach(async (student) => {
+        await (async function(){
+           
+            const sessionResultPromotedStudent = await SessionResult.find({status: 'Promoted',session: termAndSession[0].session.year })
+
+            const newPromoted = promotedStudents.filter( async (std) => {
+                let student
+                await sessionResultPromotedStudent.forEach(sStd => {
+                   if(std.username == sStd.username) student =std
+                })
+                return student
+            })
+
+            console.log(newPromoted)
+
+            newPromoted.forEach(async (student) => {
                await Student.updateOne({ 
                    username: student.username }, 
                    { $inc: { classNumber: 1 }}, 
                    { new: true }) 
                
                const singleStudent = await Student.find({username: student.username })
-               console.log(singleStudent[0].section)
-        
                
                switch (singleStudent[0].section) {
                    case 'Grade':
@@ -217,14 +225,13 @@ exports.setSession = async (req,res,next) => {
            })
         
         })()
-    }, 2000);
-
+  
    
-    setTimeout(async () => {
-        // // create all the necessary records for the promoted student
-    
-    // // update session here 
+await (async () => {
+            // // create all the necessary records for the promoted student
+            
     const {session} = req.body
+    // // update session here 
     await TermSetter.updateOne({
         session: session,
         termNumber: 1,
@@ -237,9 +244,9 @@ exports.setSession = async (req,res,next) => {
 
     // create new score sheets for all active students
     let subjects = await Curriculum.find({ })
-    const newStudents1 = await Student.find({ status: 'Active' })
+    // const newStudents1 = await Student.find({ status: 'Active' })
 
-    newStudents1.forEach( async (student) => {
+    promotedStudents.forEach( async (student) => {
         // find student class and subjects
         const studentSubjects = subjects.filter( currentELement => {
            return currentELement.name === student.currentClass &&
@@ -247,7 +254,7 @@ exports.setSession = async (req,res,next) => {
         })
 
         // create score document for each student's subject
-        const scoreDocuments = studentSubjects[0].subject.map(subject => ({
+        const scoreDocuments = studentSubjects[0]?.subject?.map(subject => ({
             subject,
             username: student.username,
             studentId: student._id,
@@ -305,7 +312,7 @@ exports.setSession = async (req,res,next) => {
             { 'subject': 1}
           )
             // creating a new term result
-        await TermResult.collection.insertOne({
+        noOfCourse[0] && await TermResult.collection.insertOne({
             studentId: student._id,
             username: student.username,
             class: student.currentClass,
@@ -313,16 +320,17 @@ exports.setSession = async (req,res,next) => {
             noOfCourse: noOfCourse[0].subject.length,
             term: newTermAndSession[0].termNumber,
             session: newTermAndSession[0].session.year,
+            suspend: false
         })
     })
 
 
 
-    res.json({ success: true, message: 'session set successfully' })
     // Souley's code ends here
+    
+})();
 
-    }, 4000);
-
+res.json({ success: true, message: 'session set successfully' })
 
     
 }
