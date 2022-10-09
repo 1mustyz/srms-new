@@ -40,7 +40,7 @@ exports.create = async (req,res,next) => {
             // fetch the students in the class
             const students = await Student.find({
                 currentClass: name, category: category, 
-                status: 'Active' })
+                status: 'Active', suspend: false })
 
             req.body.subject.map(subject=>{
                 // add score sheets for the new subjects to the students

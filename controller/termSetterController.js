@@ -19,9 +19,8 @@ exports.setNewTerm = async (req,res,next) => {
      : ''
 
     if (result.length > 0){
-        const result = await TermSetter.findOne()
 
-        switch (result.termNumber) {
+        switch (result[0].termNumber) {
             case 1:
                 await TermSetter.updateOne({currentTerm: 'Second Term', termNumber: 2})
                 break;
@@ -39,7 +38,8 @@ exports.setNewTerm = async (req,res,next) => {
     }
     
     // find all students that have not graduate 
-    const students = await Student.find({ status: 'Active' })
+
+    const students = await Student.find({ status: 'Active', suspend: false })
     let subjects = await Curriculum.find({ })
     
     students.forEach( async (student) => {
@@ -53,7 +53,7 @@ exports.setNewTerm = async (req,res,next) => {
         const termAndSession = await TermSetter.find()
 
         // create score document for each student's subject
-        const scoreDocuments = studentSubjects[0].subject.map(async (subject) => {
+        const scoreDocuments = studentSubjects[0]?.subject?.map(async (subject) => {
            
                await Score.collection.insertOne({
                 subject, 
@@ -70,7 +70,7 @@ exports.setNewTerm = async (req,res,next) => {
            
         })
 
-        // console.log('----------------',scoreDocuments)
+    //     // console.log('----------------',scoreDocuments)
 
 
           // creating a new school payment
@@ -103,6 +103,7 @@ exports.setNewTerm = async (req,res,next) => {
     })
 
     // creating a term result
+
     const termAndSession = await TermSetter.find()
 
     const newTermResult = students.map(std => {
