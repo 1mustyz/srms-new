@@ -60,7 +60,8 @@ exports.create = async (req,res,next) => {
                     await termResult.updateMany({
                         session: currentSession[0].session.year,
                         term: currentSession[0].termNumber,
-                        username: std.username
+                        username: std.username,
+                        suspend: false
                         }, {
                         noOfCourse: numOfSubjects
                         })

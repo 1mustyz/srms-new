@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+        
         #container{
     display: grid;
     margin: 0 auto;
     width: 98%;
     padding: 25px;
+    page-break-after: always;
     /* height: 100vh; */
     /* border: 2px solid rgb(32, 138, 5); */
     /* min-height: 600px; */
@@ -191,6 +193,8 @@ th, tr, td{
 .principal-remarks{
     height: 20px;
 }
+
+    
     </style>
 </head>
 <body>
@@ -235,11 +239,11 @@ th, tr, td{
                    
                     <tr>
                         <td>TOTAL SCORE:</td>
-                        <td>{{scoreDecimal termResult.total}}</td>
+                        <td>{{ifIsNaN (scoreDecimal termResult.total)}}</td>
                     </tr>
                     <tr>
                         <td>FINAL AVERAGE:</td>
-                        <td>{{averageDecimal termResult.average}}</td>
+                        <td>{{ifIsNaN (averageDecimal termResult.average)}}</td>
                     </tr>
                     <tr>
                         <td>NO. OF SUBJECTS:</td>
@@ -349,6 +353,7 @@ th, tr, td{
         <span>Principal Stamp & Sign</span></center>
     </div>
     </div>
+    
     {{/if}}
     {{/each}}
 

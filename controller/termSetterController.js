@@ -12,7 +12,7 @@ exports.setNewTerm = async (req,res,next) => {
 
     const result = await TermSetter.find()
 
-    console.log(result.length)
+    console.log(result[0].termNumber)
 
     result.length == 0
      ? await TermSetter.collection.insertOne({currentTerm: 'First Term', termNumber: 1})
@@ -41,7 +41,6 @@ exports.setNewTerm = async (req,res,next) => {
 
     const students = await Student.find({ status: 'Active', suspend: false })
     let subjects = await Curriculum.find({ })
-    
     students.forEach( async (student) => {
 
         // get the student subject
@@ -85,7 +84,7 @@ exports.setNewTerm = async (req,res,next) => {
             className: student.currentClass
           })
 
-          // creating a new cognitive data
+        //   creating a new cognitive data
         await Cognitive.collection.insertOne({
             username: student.username,
             studentId: student._id,
@@ -106,21 +105,25 @@ exports.setNewTerm = async (req,res,next) => {
 
     const termAndSession = await TermSetter.find()
 
-    const newTermResult = students.map(std => {
+    const newTermResult = students.filter(std => {
         const studentSubjects = subjects.filter( currentELement => {
-            return currentELement.name === std.currentClass &&
-             currentELement.category === std.category
+            return (currentELement.name === std.currentClass) &&
+             (currentELement.category === std.category)
          })
-        return {
-            username: std.username,
-            studentId: std._id,
-            class: std.currentClass,
-            category: std.category,
-            noOfCourse: studentSubjects[0].subject.length,
-            term: termAndSession[0].termNumber,
-            session: termAndSession[0].session.year,
-            suspend: false
-        }
+
+         if(studentSubjects.length > 0){
+
+             return {
+                username: std.username,
+                studentId: std._id,
+                class: std.currentClass,
+                category: std.category,
+                noOfCourse: studentSubjects[0]?.subject?.length,
+                term: termAndSession[0].termNumber,
+                session: termAndSession[0].session.year,
+                suspend: false
+            }
+         }
     })
     await TermResult.insertMany(newTermResult)
 

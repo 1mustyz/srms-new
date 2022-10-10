@@ -329,7 +329,7 @@ exports.getAclassResult = async (req, res, next) => {
     session
   }).lean()
 
-  console.log("each result:", eachSubjectResult)
+  // console.log("each result:", eachSubjectResult)
 
   const cognitiveResult = await Cognitive.find({
     class: className,
@@ -349,7 +349,7 @@ exports.getAclassResult = async (req, res, next) => {
     suspend: false
   }).lean()
 
-  console.log("term result:", termResult)
+  // console.log("term result:", termResult)
 
   const seesionResult = await SessionResult.find({
     session, 
@@ -357,7 +357,7 @@ exports.getAclassResult = async (req, res, next) => {
     suspend: false
   }).lean()
 
-  console.log("session result:", seesionResult)
+  // console.log("session result:", seesionResult)
 
 
   const generalResult = termResult.map((student) => {
@@ -375,11 +375,12 @@ exports.getAclassResult = async (req, res, next) => {
 
   // generate pdf report
   const data = { generalResult }
-  console.log(generalResult)
+  // console.log(generalResult)
 
   const pdf = await createDosierPdf(data)
+  // console.log(pdf)
   // then send to frontend to download
-  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+  res.set({ 'Content-Type': 'application/pdf', })
   res.send(pdf)
 }
 
