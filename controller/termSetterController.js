@@ -141,7 +141,8 @@ exports.setSession = async (req,res,next) => {
     const termAndSession = await TermSetter.find()
 
     // adding a session value for the front end
-    await AddSession.collection.insertOne({session: termAndSession[0].session.year})
+
+    // await AddSession.collection.insertOne({session: termAndSession[0].session.year})
 
     // souley's code starts here
     // // graduate some students
@@ -161,7 +162,7 @@ exports.setSession = async (req,res,next) => {
             { status: 'graduated' },
             { useFindAndModify: false })
         })
-    const promotedStudents = await Student.find({ status: 'Active' })
+    const promotedStudents = await Student.find({ status: 'Active', suspend: false })
 
     // // // // promote some students 
     // students.filter( student => 
@@ -173,9 +174,10 @@ exports.setSession = async (req,res,next) => {
     //     || student.currentClass !=='Daycare')
 
         // incrementing promoted student className and classNumber
+        
         await (async function(){
            
-            const sessionResultPromotedStudent = await SessionResult.find({status: 'Promoted',session: termAndSession[0].session.year })
+            const sessionResultPromotedStudent = await SessionResult.find({status: 'Promoted',session: termAndSession[0].session.year, suspend:false })
 
             const newPromoted = promotedStudents.filter( async (std) => {
                 let student
@@ -185,38 +187,38 @@ exports.setSession = async (req,res,next) => {
                 return student
             })
 
-            console.log(newPromoted)
-
+            
             newPromoted.forEach(async (student) => {
-               await Student.updateOne({ 
+               
+                   await Student.updateOne({ 
                    username: student.username }, 
                    { $inc: { classNumber: 1 }}, 
                    { new: true }) 
                
-               const singleStudent = await Student.find({username: student.username })
+            //    const singleStudent = await Student.find({username: student.username })
                
-               switch (singleStudent[0].section) {
+               switch (student.section) {
                    case 'Grade':
-                       className = `Grade${singleStudent[0].classNumber}`
-                       await Student.updateOne({ username: singleStudent[0].username }, 
+                       className = `Grade${student.classNumber + 1}`
+                       await Student.updateOne({ username: student.username }, 
                            { $set: {currentClass: className } }, { new: true })  
                        break;
                
                    case 'JSS':
-                       className = `JSS${singleStudent[0].classNumber}`
-                       await Student.updateOne({ username: singleStudent[0].username }, 
+                       className = `JSS${student.classNumber + 1}`
+                       await Student.updateOne({ username: student.username }, 
                            { $set: {currentClass: className } }, { new: true })  
                        break;
                
                    case 'SSS':    
-                       className = `SSS${singleStudent[0].classNumber}`
-                       await Student.updateOne({ username: singleStudent[0].username }, 
+                       className = `SSS${student.classNumber + 1}`
+                       await Student.updateOne({ username: student.username }, 
                            { $set: {currentClass: className } }, { new: true })  
                        break;
                               
                    case 'Kindergartens':    
-                       className = `Kindergarten${singleStudent[0].classNumber}`
-                       await Student.updateOne({ username: singleStudent[0].username }, 
+                       className = `Kindergarten${student.classNumber + 1}`
+                       await Student.updateOne({ username: student.username }, 
                            { $set: {currentClass: className } }, { new: true })  
                        break;    
                              
@@ -247,12 +249,14 @@ await (async () => {
     const newTermAndSession = await TermSetter.find()
 
     // create new score sheets for all active students
-    let subjects = await Curriculum.find({ })
-    // const newStudents1 = await Student.find({ status: 'Active' })
-
-    promotedStudents.forEach( async (student) => {
+    const subjects = await Curriculum.find({ })
+    const newStudents1 = await Student.find({ status: 'Active', suspend: false  })
+    
+    newStudents1.forEach( async (student) => {
+        console.log(student)
         // find student class and subjects
         const studentSubjects = subjects.filter( currentELement => {
+           
            return currentELement.name === student.currentClass &&
             currentELement.category === student.category
         })
