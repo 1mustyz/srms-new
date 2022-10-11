@@ -121,7 +121,7 @@ exports.liveSaveResult = async (req, res) => {
     await TermResult.findOneAndUpdate({
         username: req.body.username,
         term: termAndSession[0].termNumber,
-        session: termAndSession[0].session.year
+        session: termAndSession[0].session.year,
 
     },{
         total: sumTotal, average: average
@@ -160,7 +160,9 @@ if(termAndSession[0].termNumber === 3) {
             status,
             username,
             session: termAndSession[0].session.year,
-            class: currentClass },
+            class: currentClass,
+            suspend: false
+         },
             { upsert: true }) 
 
     }else if (lengthOfAverages == 2){
@@ -181,7 +183,9 @@ if(termAndSession[0].termNumber === 3) {
             status,
             username,
             session: termAndSession[0].session.year,
-            class: currentClass },
+            class: currentClass,
+            suspend: false
+         },
             { upsert: true }) 
 
     }else {
@@ -203,7 +207,9 @@ if(termAndSession[0].termNumber === 3) {
             status,
             username,
             session: termAndSession[0].session.year,
-            class: currentClass },
+            class: currentClass,
+            suspend: false
+         },
             { upsert: true }) 
 
     }
@@ -287,7 +293,7 @@ exports.getStudentBroadSheet = async (req,res,next) => {
 
      // get each student term result from Term collection
     const studentTermResult = await TermResult.aggregate([
-        {$match: {"class":className, "term":intergerTerm, session}},
+        {$match: {"class":className, "term":intergerTerm, session, suspend: false}},
         {$project: {_id:0, class:0, term:0, session:0, noOfCourse:0, position:0 }},
         // {$sort: {subject:1}}
     ])    

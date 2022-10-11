@@ -98,7 +98,8 @@ exports.registerStudent = async function (req, res, next) {
         category: user.category,
         noOfCourse: noOfCourse[0].subject.length,
         term: termAndSession[0].termNumber,
-        session: termAndSession[0].session.year
+        session: termAndSession[0].session.year,
+        suspend: false
       })
 
       await Payment.collection.insertOne({
@@ -354,13 +355,14 @@ exports.getAclassResult = async (req, res, next) => {
   const seesionResult = await SessionResult.find({
     session, 
     class: className,
-    suspend: false
+    suspend: false,
+    // category
   }).lean()
 
   // console.log("session result:", seesionResult)
 
 
-  const generalResult = termResult.map((student) => {
+  const generalResult = await termResult.map((student) => {
     const studentCourses = eachSubjectResult.filter(std => std.username == student.username)
     const cognitive = cognitiveResult.filter(std => std.username == student.username)
     const sessionResult = seesionResult.filter(std => std.username == student.username)
@@ -373,15 +375,21 @@ exports.getAclassResult = async (req, res, next) => {
       
   })
 
-  // generate pdf report
-  const data = { generalResult }
-  // console.log(generalResult)
+  try {
+    // generate pdf report
+    const data = await { generalResult }
+    // console.log(generalResult)
 
-  const pdf = await createDosierPdf(data)
-  // console.log(pdf)
-  // then send to frontend to download
-  res.set({ 'Content-Type': 'application/pdf', })
-  res.send(pdf)
+    const pdf = await createDosierPdf(data)
+    // console.log(pdf)
+    // then send to frontend to download
+    res.set({ 'Content-Type': 'text/html', })
+    res.send(pdf)
+  } catch (error) {
+    console.log(error)
+  }
+
+  
 }
 
 exports.getAsingleStudentResult = async (req, res, next) => {
@@ -405,7 +413,9 @@ exports.getAsingleStudentResult = async (req, res, next) => {
   const termResult = await TermResult.find({
     term,
     session: termAndSession[0].session.year,
-    username
+    username,
+    category,
+    suspend: false
   })
   const generalSingleResult = [
     ...termResult,
@@ -528,4 +538,33 @@ exports.makeSuspendField = async(req,res,next) => {
   
 
   res.json({ success: true, message: "update all suspend" })
+}
+
+
+/**
+ * this code add category field to term and session result
+ * make sure you understand it before using it
+ * */ 
+
+exports.reflectStudentCategoryFieldOnTermAndSessionResult = async (req, res) => {
+  const termAndSession = await TermSetter.find()
+  const students = await Student.find({suspend: false})
+  try {
+    await students.forEach(async (std) => {
+      console.log(std.username, std.category)
+      await TermResult.updateMany({
+        username: std.username,
+        session: termAndSession[0].session.year},{$set:{category:std.category}})
+
+      await SessionResult.updateMany({
+        username: std.username,
+        session: termAndSession[0].session.year},{$set:{category:std.category}})
+
+    })
+
+    res.json({success:true, message: 'category field has been added'})
+    
+  } catch (error) {
+    console.log(error)
+  }
 }
