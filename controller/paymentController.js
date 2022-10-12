@@ -109,8 +109,8 @@ exports.getPayment = async (req,res,next) => {
 exports.getAllPaidAndUnPaidStudent = async (req,res,next) => {
     const termAndSession = await TermSetter.find()
 
-    const unPaid = await Payment.find({paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber})
-    const paid = await Payment.find({paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber})
+    const unPaid = await Payment.find({paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false})
+    const paid = await Payment.find({paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false})
 
     unPaid.length > 0 && paid.length > 0
      ? res.json({success: true, message: [...unPaid,...paid]})
