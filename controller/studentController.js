@@ -375,15 +375,16 @@ exports.getAclassResult = async (req, res, next) => {
       termResult: student,
       subjects: studentCourses,
       cognitives: cognitive[0],
-      sessionResult:sessionResult[0]
+      sessionResult:sessionResult[0],
+      classSize: termResult.length
     }
       
   })
 
   try {
     // generate pdf report
-    const data = await { generalResult }
-    // console.log(generalResult)
+    const data = await { generalResult}
+    console.log(generalResult)
 
     const pdf = await createDosierPdf(data)
     // console.log(pdf)
