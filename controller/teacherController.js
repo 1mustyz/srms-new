@@ -33,7 +33,7 @@ exports.fetchStudentsInClass = async (req, res) => {
         })
         return sc
      })
-    res.json({ success: true, student: filteredScore })
+    res.json({ success: true, students: filteredScore })
 }
 
 exports.liveSaveResult = async (req, res) => {
