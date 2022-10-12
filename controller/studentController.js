@@ -213,7 +213,7 @@ exports.findAllStudent = async (req, res, next) => {
 exports.findAllStudentAccordinToSection = async (req, res, next) => {
   const { section } = req.query
 
-  const students = await Student.find({ section })
+  const students = await Student.find({ section, status:'active', suspend: false })
 
   res.json({ success: true, students })
 }
@@ -221,7 +221,7 @@ exports.findAllStudentAccordinToSection = async (req, res, next) => {
 exports.findAllStudentAccordinToClassAndCategory = async (req, res, next) => {
   const { currentClass, category } = req.query
 
-  const students = await Student.find({ currentClass, category })
+  const students = await Student.find({ currentClass, category, status:'active', suspend: false })
 
   res.json({ success: true, students })
 }
