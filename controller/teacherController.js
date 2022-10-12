@@ -4,6 +4,7 @@ const TermResult = require('../models/TermResult')
 const TermSetter = require('../models/TermSetter')
 const SessionResult = require('../models/SessionResult')
 const studentBroadSheetPdf = require('../pdf_generator/student_broad_sheet')
+const Student = require('../models/Student')
 
 
 exports.fetchTeacherSubjects = async (req, res) => {
@@ -13,7 +14,8 @@ exports.fetchTeacherSubjects = async (req, res) => {
 
 exports.fetchStudentsInClass = async (req, res) => {
     const termAndSession = await TermSetter.find()
-    const students = 
+    const student = await Student.find({currentClass: req.body.class, category: req.body.category,status:"Active", suspend: false})
+    const score = 
        await Score.find({ 
         class: req.body.class,
         subject: req.body.subject,
@@ -22,7 +24,16 @@ exports.fetchStudentsInClass = async (req, res) => {
         term: termAndSession[0].termNumber
 
      })
-    res.json({ success: true, students })
+     const filteredScore = score.filter(scr => {
+        let sc
+        student.map(std => {
+            if(scr.username == std.username){
+                sc = scr
+            }
+        })
+        return sc
+     })
+    res.json({ success: true, student: filteredScore })
 }
 
 exports.liveSaveResult = async (req, res) => {
