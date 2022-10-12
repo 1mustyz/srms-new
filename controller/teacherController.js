@@ -14,25 +14,16 @@ exports.fetchTeacherSubjects = async (req, res) => {
 
 exports.fetchStudentsInClass = async (req, res) => {
     const termAndSession = await TermSetter.find()
-    // const student = await Student.find({currentClass: req.body.class, category: req.body.category,status:"Active", suspend: false})
     const score = 
        await Score.find({ 
         class: req.body.class,
         subject: req.body.subject,
         category: req.body.category,
         session: termAndSession[0].session.year,
-        term: termAndSession[0].termNumber
-
+        term: termAndSession[0].termNumber,
+        suspend: false
      })
-    //  const filteredScore = score.filter(scr => {
-    //     let sc
-    //     student.map(std => {
-    //         if(scr.username == std.username){
-    //             sc = scr
-    //         }
-    //     })
-    //     return sc
-    //  })
+    
     res.json({ success: true, students: score })
 }
 
@@ -94,7 +85,8 @@ exports.liveSaveResult = async (req, res) => {
             subject: subject, 
             category: category, 
             term: termAndSession[0].termNumber,
-            session: termAndSession[0].session.year
+            session: termAndSession[0].session.year,
+            suspend: false
         },
         {total: 1, username: 1}
         )
@@ -121,7 +113,8 @@ exports.liveSaveResult = async (req, res) => {
     const allStudentTotal = await Score.find({
         username: username,
         term: termAndSession[0].termNumber,
-        session: termAndSession[0].session.year
+        session: termAndSession[0].session.year,
+        suspend: false
         },{total: 1})
   
     let sumTotal = allStudentTotal.reduce((a,b)=> (+a +  +b.total),0 )
@@ -290,14 +283,14 @@ exports.getStudentBroadSheet = async (req,res,next) => {
 
     // getting all courses from the class
     const courses = await Score.aggregate([
-        {$match: {"class":className, "category":category, "term":intergerTerm, session}},
+        {$match: {"class":className, "category":category, "term":intergerTerm, session, }},
         {$group: {_id:"$subject"}},
         {$sort: {_id:1}}
     ])
 
     // get all student each subject result from Score collection
     const studentResult = await Score.aggregate([
-        {$match: {"class":className, "category":category, "term":intergerTerm, session}},
+        {$match: {"class":className, "category":category, "term":intergerTerm, session, suspend: false}},
         {$project: {_id:0, isActive:0, subjectPosition:0, isfinalSubmitted:0, createdAt:0, updatedAt:0 }},
         {$sort: {subject:1}}
     ])
