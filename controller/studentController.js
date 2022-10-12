@@ -336,13 +336,24 @@ exports.getAclassResult = async (req, res, next) => {
 
   // console.log("each result:", eachSubjectResult)
 
-  const cognitiveResult = await Cognitive.find({
+  let cognitiveResult = await Cognitive.find({
     class: className,
     term,
     category,
     session,
-    suspend: false
+    suspend: false 
   }).lean()
+
+  const cognitiveResultPrev = await Cognitive.find({
+    class: className,
+    term,
+    category,
+    session,
+    // suspend: false 
+  }).lean()
+
+  if  (session < "2022/2023") cognitiveResult = cognitiveResultPrev 
+
 
   // console.log("cognitive result:", cognitiveResult)
 
@@ -357,13 +368,23 @@ exports.getAclassResult = async (req, res, next) => {
 
   // console.log("term result:", termResult)
 
-  const seesionResult = await SessionResult.find({
+  let seesionResult = await SessionResult.find({
     session, 
     class: className,
-    // suspend: false,
+    suspend: false,
     category
   }).lean()
 
+  const seesionResultPrev = await SessionResult.find({
+    session, 
+    class: className,
+    // suspend: false,
+    // category
+  }).lean()
+
+  if  (session < "2022/2023") seesionResult = seesionResultPrev 
+  
+  
   // console.log("session result:", seesionResult)
 
 
@@ -374,7 +395,7 @@ exports.getAclassResult = async (req, res, next) => {
     return {
       termResult: student,
       subjects: studentCourses,
-      cognitives: cognitive[0],
+      cognitives:cognitive[0],
       sessionResult:sessionResult[0],
       classSize: termResult.length
     }
@@ -384,7 +405,7 @@ exports.getAclassResult = async (req, res, next) => {
   try {
     // generate pdf report
     const data = await { generalResult}
-    console.log(generalResult)
+    // console.log(generalResult)
 
     const pdf = await createDosierPdf(data)
     // console.log(pdf)
