@@ -119,55 +119,55 @@ exports.getAllPaidAndUnPaidStudent = async (req,res,next) => {
 exports.getPaidAndUnPaidStudent = async (req,res,next) => {
     const termAndSession = await TermSetter.find()
 
-    const allDaycarePaidStudent = await Payment.find({className: 'Daycare', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allDaycareUnpaidStudent = await Payment.find({className: 'Daycare', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allDaycarePaidStudent = await Payment.find({className: 'Daycare', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allDaycareUnpaidStudent = await Payment.find({className: 'Daycare', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allPlayclassPaidStudent = await Payment.find({className: 'Playclass', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allPlayclassUnpaidStudent = await Payment.find({className: 'Playclass', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allPlayclassPaidStudent = await Payment.find({className: 'Playclass', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allPlayclassUnpaidStudent = await Payment.find({className: 'Playclass', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allKindergartens1PaidStudent = await Payment.find({className: 'Kindergarten1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allKindergartens1UnpaidStudent = await Payment.find({className: 'Kindergarten1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allKindergartens1PaidStudent = await Payment.find({className: 'Kindergarten1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allKindergartens1UnpaidStudent = await Payment.find({className: 'Kindergarten1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allKindergartens2PaidStudent = await Payment.find({className: 'Kindergarten2', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allKindergartens2UnpaidStudent = await Payment.find({className: 'Kindergarten2', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allKindergartens2PaidStudent = await Payment.find({className: 'Kindergarten2', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allKindergartens2UnpaidStudent = await Payment.find({className: 'Kindergarten2', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allKindergartens3PaidStudent = await Payment.find({className: 'Kindergarten3', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allKindergartens3UnpaidStudent = await Payment.find({className: 'Kindergarten3', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allKindergartens3PaidStudent = await Payment.find({className: 'Kindergarten3', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allKindergartens3UnpaidStudent = await Payment.find({className: 'Kindergarten3', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
 
 
-    const allGrade1PaidStudent = await Payment.find({className: 'Grade1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allGrade1UnpaidStudent = await Payment.find({className: 'Grade1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allGrade1PaidStudent = await Payment.find({className: 'Grade1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allGrade1UnpaidStudent = await Payment.find({className: 'Grade1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allGrade2PaidStudent = await Payment.find({className: 'Grade2', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allGrade2UnpaidStudent = await Payment.find({className: 'Grade2', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allGrade2PaidStudent = await Payment.find({className: 'Grade2', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allGrade2UnpaidStudent = await Payment.find({className: 'Grade2', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allGrade3PaidStudent = await Payment.find({className: 'Grade3', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allGrade3UnpaidStudent =  await Payment.find({className: 'Grade3', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allGrade3PaidStudent = await Payment.find({className: 'Grade3', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allGrade3UnpaidStudent =  await Payment.find({className: 'Grade3', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allGrade4PaidStudent = await Payment.find({className: 'Grade4', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allGrade4UnpaidStudent = await Payment.find({className: 'Grade4', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allGrade4PaidStudent = await Payment.find({className: 'Grade4', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allGrade4UnpaidStudent = await Payment.find({className: 'Grade4', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allGrade5PaidStudent = await Payment.find({className: 'Grade5', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allGrade5UnpaidStudent = await Payment.find({className: 'Grade5', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();;
+    const allGrade5PaidStudent = await Payment.find({className: 'Grade5', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allGrade5UnpaidStudent = await Payment.find({className: 'Grade5', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();;
 
-    const allJSS1PaidStudent = await Payment.find({className: 'JSS1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allJSS1UnpaidStudent = await Payment.find({className: 'JSS1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allJSS1PaidStudent = await Payment.find({className: 'JSS1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allJSS1UnpaidStudent = await Payment.find({className: 'JSS1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allJSS2PaidStudent = await Payment.find({className: 'JSS2', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allJSS2UnpaidStudent = await Payment.find({className: 'JSS2', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allJSS2PaidStudent = await Payment.find({className: 'JSS2', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allJSS2UnpaidStudent = await Payment.find({className: 'JSS2', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allJSS3PaidStudent = await Payment.find({className: 'JSS3', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allJSS3UnpaidStudent = await Payment.find({className: 'JSS3', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allJSS3PaidStudent = await Payment.find({className: 'JSS3', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allJSS3UnpaidStudent = await Payment.find({className: 'JSS3', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allSSS1PaidStudent = await Payment.find({className: 'SSS1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allSSS1UnpaidStudent = await Payment.find({className: 'SSS1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allSSS1PaidStudent = await Payment.find({className: 'SSS1', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allSSS1UnpaidStudent = await Payment.find({className: 'SSS1', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allSSS2PaidStudent = await Payment.find({className: 'SSS2', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allSSS2UnpaidStudent = await Payment.find({className: 'SSS2', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allSSS2PaidStudent = await Payment.find({className: 'SSS2', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allSSS2UnpaidStudent = await Payment.find({className: 'SSS2', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
-    const allSSS3PaidStudent = await Payment.find({className: 'SSS3', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
-    const allSSS3UnpaidStudent =  await Payment.find({className: 'SSS3', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber}).countDocuments();
+    const allSSS3PaidStudent = await Payment.find({className: 'SSS3', paid: true, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
+    const allSSS3UnpaidStudent =  await Payment.find({className: 'SSS3', paid: false, session: termAndSession[0].session.year, term: termAndSession[0].termNumber, suspend: false}).countDocuments();
 
 
 

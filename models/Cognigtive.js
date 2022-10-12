@@ -25,8 +25,8 @@ const CognitiveSchema = new Schema({
     Participation: {type:String},
     remarks: {type:String, default: 'none'},
     term: {type:Number},
-    session: {type:String}
-
+    session: {type:String},
+    suspend: { type: Boolean, default: 'false' }
 })
 
 const Cognitive = model('cognitive', CognitiveSchema)

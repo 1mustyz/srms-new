@@ -64,7 +64,8 @@ exports.setNewTerm = async (req,res,next) => {
                 lastName: student.lastName,
                 username: student.username,
                 term: termAndSession[0].termNumber,
-                session: termAndSession[0].session.year
+                session: termAndSession[0].session.year,
+                suspend: false
             })
            
         })
@@ -81,7 +82,8 @@ exports.setNewTerm = async (req,res,next) => {
             paid: false,
             term: termAndSession[0].termNumber,
             session: termAndSession[0].session.year,
-            className: student.currentClass
+            className: student.currentClass,
+            suspend: false
           })
 
         //   creating a new cognitive data
@@ -92,6 +94,7 @@ exports.setNewTerm = async (req,res,next) => {
             lastName: student.lastName,
             class: student.currentClass,
             category: student.category,
+            suspend: false,
             neatness: '',
             punctuality: '',
             hardWorking: '',
@@ -272,7 +275,8 @@ await (async () => {
             lastName: student.lastName,
             username: student.username,
             term: newTermAndSession[0].termNumber,
-            session: newTermAndSession[0].session.year
+            session: newTermAndSession[0].session.year,
+            suspend: false
         }))
         await Score.insertMany(scoreDocuments)
 
@@ -285,7 +289,8 @@ await (async () => {
             paid: false,
             term: newTermAndSession[0].termNumber,
             session: newTermAndSession[0].session.year,
-            className: student.currentClass
+            className: student.currentClass,
+            suspend: false
           })
 
         // creating a new cognitive data
@@ -313,6 +318,7 @@ await (async () => {
             remarks: '',
             term: newTermAndSession[0].termNumber,
             session: newTermAndSession[0].session.year,
+            suspend: false
         })  
 
         const noOfCourse = await Curriculum.find(

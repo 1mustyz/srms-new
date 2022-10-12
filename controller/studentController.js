@@ -51,7 +51,8 @@ exports.registerStudent = async function (req, res, next) {
         lastName: user.lastName,
         username: user.username,
         term: termAndSession[0].termNumber,
-        session: termAndSession[0].session.year
+        session: termAndSession[0].session.year,
+        suspend: false
       }))
 
       console.log(user.currentClass, user.category)
@@ -85,7 +86,8 @@ exports.registerStudent = async function (req, res, next) {
         Participation: '',
         remarks: '',
         term: termAndSession[0].termNumber,
-        session: termAndSession[0].session.year
+        session: termAndSession[0].session.year,
+        suspend: false
       }
 
       await Score.collection.insertMany(studentSubjects)
@@ -110,7 +112,8 @@ exports.registerStudent = async function (req, res, next) {
         paid: false,
         term: termAndSession[0].termNumber,
         session: termAndSession[0].session.year,
-        className: user.currentClass
+        className: user.currentClass,
+        suspend: false
       })
 
       res.json({ success: true, user })
@@ -327,7 +330,8 @@ exports.getAclassResult = async (req, res, next) => {
     class: className,
     category,
     term,
-    session
+    session,
+    suspend: false
   }).lean()
 
   // console.log("each result:", eachSubjectResult)
@@ -336,7 +340,8 @@ exports.getAclassResult = async (req, res, next) => {
     class: className,
     term,
     category,
-    session
+    session,
+    suspend: false
   }).lean()
 
   // console.log("cognitive result:", cognitiveResult)
@@ -401,13 +406,16 @@ exports.getAsingleStudentResult = async (req, res, next) => {
   const subjectResult = await Score.find({
     term,
     session: termAndSession[0].session.year,
-    username
+    username,
+    suspend: false
   })
 
   const studentCognitive = await Cognitive.findOne({
     term,
     session: termAndSession[0].session.year,
-    username
+    username,
+    suspend: false
+
   })
 
   const termResult = await TermResult.find({
@@ -514,6 +522,12 @@ exports.suspendAstudent = async (req, res, next) => {
       session: termAndSession[0].session.year
     }, { $set: { suspend } })
 
+    await Score.updateMany({
+      username,
+      term: termAndSession[0].termNumber,
+      session: termAndSession[0].session.year
+    }, { $set: { suspend } })
+
   } catch (error) {
     console.log(error)
   }
@@ -530,6 +544,8 @@ exports.makeSuspendField = async(req,res,next) => {
     await SessionResult.updateMany({}, { $set: { suspend: false } })
 
     await Payment.updateMany({}, { $set: { suspend: false } })
+
+    await Score.updateMany({}, { $set: { suspend: false } })
 
   } catch (error) {
     console.log(error)

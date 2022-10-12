@@ -14,7 +14,7 @@ exports.fetchTeacherSubjects = async (req, res) => {
 
 exports.fetchStudentsInClass = async (req, res) => {
     const termAndSession = await TermSetter.find()
-    const student = await Student.find({currentClass: req.body.class, category: req.body.category,status:"Active", suspend: false})
+    // const student = await Student.find({currentClass: req.body.class, category: req.body.category,status:"Active", suspend: false})
     const score = 
        await Score.find({ 
         class: req.body.class,
@@ -24,16 +24,16 @@ exports.fetchStudentsInClass = async (req, res) => {
         term: termAndSession[0].termNumber
 
      })
-     const filteredScore = score.filter(scr => {
-        let sc
-        student.map(std => {
-            if(scr.username == std.username){
-                sc = scr
-            }
-        })
-        return sc
-     })
-    res.json({ success: true, students: filteredScore })
+    //  const filteredScore = score.filter(scr => {
+    //     let sc
+    //     student.map(std => {
+    //         if(scr.username == std.username){
+    //             sc = scr
+    //         }
+    //     })
+    //     return sc
+    //  })
+    res.json({ success: true, students: score })
 }
 
 exports.liveSaveResult = async (req, res) => {

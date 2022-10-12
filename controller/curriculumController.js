@@ -54,7 +54,9 @@ exports.create = async (req,res,next) => {
                         firstName: std.firstName,
                         lastName: std.lastName,
                         term: currentSession[0].termNumber,
-                        session: currentSession[0].session.year
+                        session: currentSession[0].session.year,
+                        suspend: false
+
                     })
                     //1. update number of courses for the student at hand
                     await termResult.updateMany({

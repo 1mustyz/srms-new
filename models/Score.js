@@ -21,7 +21,8 @@ const ScoreSchema = new Schema({
     grade: String,
     total: { type: Number, default: 0},
     subjectPosition: { type: Number, default: 0},
-    isfinalSubmitted: { type: Boolean, default: false }
+    isfinalSubmitted: { type: Boolean, default: false },
+    suspend: { type: Boolean, default: 'false' }
 }, { timestamps: true })
 
 const Score = mongoose.model('score', ScoreSchema)
