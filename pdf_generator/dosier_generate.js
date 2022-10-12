@@ -41,13 +41,6 @@ const createPDF = async (data) => {
   const template = handlebars.compile(templateHtml)
   const html = template(data)
 
-  // generate miliseconds to conctatenate to the pdf name to make it unique
-  // let milis = new Date()
-  // milis = milis.getTime()
-
-  // const pdfPath = path.join('public/results', `results-${milis}.pdf`)
-  // IF YOU UNCOMMENT THIS DONT FORGET TO CREATE RESULTS FOLDER IN PUBLIC FOLDER
-
   // const options = {
   //   width: '1230px',
   //   headerTemplate: '<p></p>',
@@ -59,8 +52,7 @@ const createPDF = async (data) => {
   //     right: '15px'
   //   },
   //   printBackground: true,
-  //   format: 'A4',
-  //   // timeout: 0
+  //   format: 'A4'
   //   // path: pdfPath
   // }
 

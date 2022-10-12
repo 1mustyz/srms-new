@@ -360,8 +360,8 @@ exports.getAclassResult = async (req, res, next) => {
   const seesionResult = await SessionResult.find({
     session, 
     class: className,
-    suspend: false,
-    // category
+    // suspend: false,
+    category
   }).lean()
 
   // console.log("session result:", seesionResult)
@@ -388,7 +388,7 @@ exports.getAclassResult = async (req, res, next) => {
     const pdf = await createDosierPdf(data)
     // console.log(pdf)
     // then send to frontend to download
-    res.set({ 'Content-Type': 'text/html', })
+    res.set({ 'Content-Type': 'application/html', 'Content-Length': pdf.length })
     res.send(pdf)
   } catch (error) {
     console.log(error)

@@ -251,13 +251,13 @@ exports.statistics = async (req, res) => {
   // fetch
   // number of all students
   const allStudents = await Student.find({suspend: false, status: "Active" }).countDocuments()
-  const dayCare = await Student.find({ section: 'Daycare',suspend: false }).countDocuments()
-  const playClass = await Student.find({ section: 'Playclass',suspend: false }).countDocuments()
-  const kindergarten = await Student.find({ section: 'Kindergartens',suspend: false }).countDocuments()
-  const grades = await Student.find({ section: 'Grade',suspend: false }).countDocuments()
+  const dayCare = await Student.find({ section: 'Daycare',suspend: false, status: "Active"  }).countDocuments()
+  const playClass = await Student.find({ section: 'Playclass',suspend: false, status: "Active"  }).countDocuments()
+  const kindergarten = await Student.find({ section: 'Kindergartens',suspend: false, status: "Active"  }).countDocuments()
+  const grades = await Student.find({ section: 'Grade',suspend: false, status: "Active"  }).countDocuments()
   const secondary = await Student.find({ $or: [{ section: 'JSS' }, { section: 'SSS' }] }).countDocuments()
-  const junior = await Student.find({ section: 'JSS',suspend: false }).countDocuments()
-  const senior = await Student.find({ section: 'SSS',suspend: false }).countDocuments()
+  const junior = await Student.find({ section: 'JSS',suspend: false, status: "Active"  }).countDocuments()
+  const senior = await Student.find({ section: 'SSS',suspend: false, status: "Active" }).countDocuments()
   const staffs = await Staff.find({ }).countDocuments()
 
   // count each class paid and unpaid

@@ -277,7 +277,7 @@ exports.getStudentBroadSheet = async (req,res,next) => {
 
     // getting all student id from the class
     const studentId = await Score.aggregate([
-        {$match: {"class":className, "category":category, "term":intergerTerm, session}},
+        {$match: {"class":className, "category":category, "term":intergerTerm, session, suspend: false}},
         {$group: {_id: {username:"$username", firstName:"$firstName", lastName:"$lastName"}}}
     ])
 
