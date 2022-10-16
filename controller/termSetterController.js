@@ -151,14 +151,10 @@ exports.setSession = async (req,res,next) => {
     // // graduate some students
     const students = await Student.find({ status: 'Active' })
     const seniors = students.filter( student => 
-           student.currentClass === 'JSS3' 
-        || student.currentClass === 'SSS3' 
-        || student.currentClass ==='Grade5' 
-        || student.currentClass ==='Kindergarten3'
-        || student.currentClass ==='Playclass')
-        || student.currentClass ==='Daycare'
+         student.currentClass === 'SSS3' 
+        || student.currentClass ==='Daycare')
 
-        
+                
     seniors.forEach( async (senior) => {
         await Student.findOneAndUpdate(
             { username: senior.username }, 
@@ -202,15 +198,30 @@ exports.setSession = async (req,res,next) => {
                
                switch (student.section) {
                    case 'Grade':
-                       className = `Grade${student.classNumber + 1}`
-                       await Student.updateOne({ username: student.username }, 
-                           { $set: {currentClass: className } }, { new: true })  
+                        if (student.currentClass == "Grade5"){
+                            className = `JSS1`
+                            section = 'JSS'
+                            await Student.updateOne({ username: student.username }, 
+                                { $set: {currentClass: className, section:section, classNumber: 1 } }, { new: true })
+                        }else{
+                            className = `Grade${student.classNumber + 1}`
+                            await Student.updateOne({ username: student.username }, 
+                                { $set: {currentClass: className } }, { new: true })  
+
+                        }
                        break;
                
                    case 'JSS':
-                       className = `JSS${student.classNumber + 1}`
-                       await Student.updateOne({ username: student.username }, 
-                           { $set: {currentClass: className } }, { new: true })  
+                        if (student.currentClass == "JSS3"){
+                            className = `SSS1`
+                            section = 'SSS'
+                            await Student.updateOne({ username: student.username }, 
+                                { $set: {currentClass: className, section:section, classNumber: 1 } }, { new: true })
+                        }else{
+                            className = `JSS${student.classNumber + 1}`
+                            await Student.updateOne({ username: student.username }, 
+                                { $set: {currentClass: className } }, { new: true })  
+                        }
                        break;
                
                    case 'SSS':    
@@ -219,10 +230,24 @@ exports.setSession = async (req,res,next) => {
                            { $set: {currentClass: className } }, { new: true })  
                        break;
                               
-                   case 'Kindergartens':    
-                       className = `Kindergarten${student.classNumber + 1}`
-                       await Student.updateOne({ username: student.username }, 
-                           { $set: {currentClass: className } }, { new: true })  
+                   case 'Kindergartens':
+                        if (student.currentClass == "Kindergarten3"){
+                            className = `Grade1`
+                            section = 'Grade'
+                            await Student.updateOne({ username: student.username }, 
+                                { $set: {currentClass: className, section:section, classNumber: 1 } }, { new: true })
+                        }else {
+                            className = `Kindergarten${student.classNumber + 1}`
+                            await Student.updateOne({ username: student.username }, 
+                                { $set: {currentClass: className } }, { new: true })  
+                        }    
+                       break;    
+
+                       case 'Playclass':
+                            className = `Kindergarten1`
+                            section = 'Kindergarten'
+                            await Student.updateOne({ username: student.username }, 
+                                { $set: {currentClass: className, section:section, classNumber: 1 } }, { new: true })
                        break;    
                              
                
@@ -256,7 +281,7 @@ await (async () => {
     const newStudents1 = await Student.find({ status: 'Active', suspend: false  })
     
     newStudents1.forEach( async (student) => {
-        console.log(student)
+        // console.log(student)
         // find student class and subjects
         const studentSubjects = subjects.filter( currentELement => {
            
