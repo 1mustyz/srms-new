@@ -41,7 +41,7 @@ const studentValidator = Joi.object({
   state: Joi.string(),
   lga: Joi.string(),
   currentClass: Joi.string().required(),
-  classNumber: Joi.number().integer().required(),
+  // classNumber: Joi.number().integer().required(),
   section: Joi.string().required(),
   category: Joi.string()
 })
