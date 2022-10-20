@@ -145,7 +145,7 @@ exports.setSession = async (req,res,next) => {
 
     // adding a session value for the front end
 
-    // await AddSession.collection.insertOne({session: termAndSession[0].session.year})
+    await AddSession.collection.insertOne({session: termAndSession[0].session.year})
 
     // souley's code starts here
     // // graduate some students
