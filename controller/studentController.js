@@ -55,7 +55,7 @@ exports.registerStudent = async function (req, res, next) {
         suspend: false
       }))
 
-      console.log(user.currentClass, user.category)
+      // console.log(user.currentClass, user.category)
 
       const noOfCourse = await Curriculum.find(
         { name: user.currentClass, category: user.category },
@@ -206,7 +206,7 @@ exports.adminResetStudentPassword = async (req, res, next) => {
 }
 
 exports.findAllStudent = async (req, res, next) => {
-  const students = await Student.find()
+  const students = await Student.find().sort({suspend: false})
 
   students
     ? res.json({ success: true, students })
@@ -605,4 +605,157 @@ exports.reflectStudentCategoryFieldOnTermAndSessionResult = async (req, res) => 
   } catch (error) {
     console.log(error)
   }
+}
+
+/**
+ * This function promote a student from one class to another
+ * its delete all its present information and create a new for the present class
+ * @studentId :
+ * @newClass :
+ * @category : 
+ * 
+*/
+
+exports.changeStudentClass = async (req, res, next) => {
+  const {studentId, newClass, category} = req.body
+  const student = await Student.findOne({username: studentId})
+  const termAndSession = await TermSetter.find()
+  let classNumber = ""
+  let section = ""
+  if (newClass !== "Playclass" && newClass !== "Daycare"){
+    classNumber = newClass.split('')
+    section = newClass.substr(0,classNumber.length - 1)  
+    classNumber = classNumber[classNumber.length - 1]
+
+  }
+
+  const subjects = await Curriculum.find(
+    { name: newClass, category: category },
+    { subject: 1, _id: 0 })
+
+  // console.log('-------------------', subjects)
+
+  const studentSubjects = subjects[0]?.subject?.map(subject => ({
+    subject,
+    username: student.username,
+    studentId: student._id,
+    class: newClass,
+    category: category,
+    firstName: student.firstName,
+    lastName: student.lastName,
+    username: student.username,
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year,
+    suspend: false
+  }))
+
+  // console.log("student score: ", studentSubjects)
+
+  const noOfCourse = await Curriculum.find(
+    { name: newClass, category: category },
+    { subject: 1 }
+  )
+
+  // console.log('-----------------', termAndSession)
+  const cognitiveData = {
+    username: student.username,
+    studentId: student._id,
+    firstName: student.firstName,
+    lastName: student.lastName,
+    class: newClass,
+    category: category,
+    Neatness: '',
+    Punctuality: '',
+    Attentiveness: '',
+    Attitude: '',
+    Emotion: '',
+    Initiative: '',
+    TeamWork: '',
+    Perseverance: '',
+    Speaking: '',
+    Leadership: '',
+    Acceptance: '',
+    Honesty: '',
+    Follows: '',
+    Participation: '',
+    remarks: '',
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year,
+    suspend: false
+  }
+  // console.log("student cognitive: ", cognitiveData)
+
+  if (studentSubjects) await Score.collection.insertMany(studentSubjects)
+  await Cognitive.collection.insertOne(cognitiveData)
+
+  await TermResult.collection.insertOne({
+    studentId: student._id,
+    username: student.username,
+    class: student.currentClass,
+    category: student.category,
+    noOfCourse: noOfCourse[0] == undefined ? 0 : noOfCourse[0].subject.length,
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year,
+    suspend: false
+  })
+
+
+
+  await Payment.collection.insertOne({
+    studentId: student._id,
+    username: student.username,
+    firstname: student.firstName,
+    lastName: student.lastName,
+    paid: false,
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year,
+    className: student.currentClass,
+    suspend: false
+  })
+
+
+  // deleting prev class document
+  const deleteScore = await Score.deleteMany({
+    username: studentId, 
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year,
+    class: student.currentClass,
+   }) 
+
+  const deleteCoginitive = await Cognitive.deleteMany({
+    username: studentId, 
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year,
+    class: student.currentClass,
+
+  })  
+
+  const deleteTermResult = await TermResult.deleteMany({
+    username: studentId, 
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year,
+    class: student.currentClass,
+
+  }) 
+
+  const deletePayment = await Payment.deleteMany({
+    username: studentId, 
+    term: termAndSession[0].termNumber,
+    session: termAndSession[0].session.year,
+    className: student.currentClass,
+
+  }) 
+
+  // console.log({
+  //   "deleteScore": deleteScore, 
+  //   "deleteCognitive": deleteCoginitive, 
+  //   "deleteTermResult": deleteTermResult,
+  //   "deletePayment": deletePayment
+  // })
+
+  await Student.findOneAndUpdate(
+    {username: studentId},
+    {$set: {currentClass: newClass, classNumber: classNumber, category: category, section:section}})
+
+  res.json({ success: true, })
 }

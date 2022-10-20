@@ -41,6 +41,7 @@ router.post('/verify-payment', Validator(paymentValidator, 'body'), paymentContr
 router.post('/set-new-term', termSetterController.setNewTerm)
 router.post('/set-new-session', termSetterController.setSession)
 router.post('/add-new-cognitive-item', cognitiveController.addNewCognitive)
+router.post('/change-student-class', studentController.changeStudentClass)
 
 // admin set his profile
 router.put('/set-profile-pic', staffController.setProfilePic)
