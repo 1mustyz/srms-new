@@ -216,7 +216,7 @@ exports.setSession = async (req,res,next) => {
                             className = `SSS1`
                             section = 'SSS'
                             await Student.updateOne({ username: student.username }, 
-                                { $set: {currentClass: className, section:section, classNumber: 1 } }, { new: true })
+                                { $set: {currentClass: className, section:section, classNumber: 1, category: "Science" } }, { new: true })
                         }else{
                             className = `JSS${student.classNumber + 1}`
                             await Student.updateOne({ username: student.username }, 
