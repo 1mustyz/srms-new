@@ -339,7 +339,7 @@ exports.getStudentBroadSheet = async (req,res,next) => {
 
   const pdf = await studentBroadSheetPdf(data)
   // then send to frontend to download
-  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+  res.set({ 'Content-Type': 'application/html', 'Content-Length': pdf.length })
   res.send(pdf)
 
 //   console.log(result)

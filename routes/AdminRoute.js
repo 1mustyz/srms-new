@@ -141,4 +141,6 @@ router.delete('/delete-all-student-present-term-result', termSetterController.de
 router.delete('/delete-score-subject', curriculumController.deleteSubjectFromScore)
 router.post('/create-term-result', setNewTerm.createTermResult)
 router.delete('/delete-term-result', setNewTerm.deleteTermResult)
+
+router.put('/update-student-score-document',studentController.uspdateStudentScore)
 module.exports = router

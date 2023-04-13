@@ -315,7 +315,7 @@ exports.getAllStudentFromAspecificClass = async (req, res, next) => {
 
   const pdf = await createStudentPdf(data)
   // then send to frontend to download
-  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+  res.set({ 'Content-Type': 'application/html', 'Content-Length': pdf.length })
   res.send(pdf)
   } catch (error) {
     console.log(error)
@@ -646,7 +646,8 @@ exports.changeStudentClass = async (req, res, next) => {
     username: student.username,
     term: termAndSession[0].termNumber,
     session: termAndSession[0].session.year,
-    suspend: false
+    suspend: false,
+    isActive: true
   }))
 
   // console.log("student score: ", studentSubjects)
@@ -758,4 +759,12 @@ exports.changeStudentClass = async (req, res, next) => {
     {$set: {currentClass: newClass, classNumber: classNumber, category: category, section:section}})
 
   res.json({ success: true, })
+}
+
+exports.uspdateStudentScore = async (req,res) => {
+ 
+  await Score.updateMany({class: "SSS3"},{$set:{suspend:false}})
+  console.log("update done")
+
+
 }

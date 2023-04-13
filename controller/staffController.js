@@ -96,7 +96,7 @@ exports.findAllStaff = async (req, res, next) => {
 
   const pdf = await createStaffPdf(data)
   // then send to frontend to download
-  res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+  res.set({ 'Content-Type': 'application/html', 'Content-Length': pdf.length })
   res.send(pdf)
   } catch (error) {
     console.log(error)
@@ -126,18 +126,22 @@ exports.findAllClassTeacher = async (req, res, next) => {
 }
 
 exports.singleStaff = async (req, res, next) => {
-  const query = {
-    $or: [
-      { username: { $regex: req.query.keyword, $options: '$i' } },
-      { firstName: { $regex: req.query.keyword, $options: '$i' } },
-      { lastName: { $regex: req.query.keyword, $options: '$i' } }
-    ]
+  // const query = {
+  //   $or: [
+  //     { username: { $regex: req.query.keyword, $options: '$i' } },
+  //     { firstName: { $regex: req.query.keyword, $options: '$i' } },
+  //     { lastName: { $regex: req.query.keyword, $options: '$i' } }
+  //   ]
+  // }
+  try {
+    
+    const result = await Staff.find({username: req.query.keyword})
+    result.length > 0
+      ? res.json({ success: true, message: result })
+      : res.json({ success: false, message: 'Not Found' })
+  } catch (error) {
+    console.log(error)
   }
-
-  const result = await Staff.find(query)
-  result.length > 0
-    ? res.json({ success: true, message: result })
-    : res.json({ success: false, message: 'Not Found' })
 }
 
 exports.setProfilePic = async (req, res, next) => {

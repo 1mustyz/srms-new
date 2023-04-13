@@ -65,7 +65,8 @@ exports.setNewTerm = async (req,res,next) => {
                 username: student.username,
                 term: termAndSession[0].termNumber,
                 session: termAndSession[0].session.year,
-                suspend: false
+                suspend: false,
+                isActive: true
             })
            
         })
@@ -301,7 +302,8 @@ await (async () => {
             username: student.username,
             term: newTermAndSession[0].termNumber,
             session: newTermAndSession[0].session.year,
-            suspend: false
+            suspend: false,
+            isActive: true
         }))
         await Score.insertMany(scoreDocuments)
 

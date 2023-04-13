@@ -6,7 +6,7 @@ const Curriculum = require('../models/Curriculum')
 exports.createTermResult = async (req,res,next) => {
     
     // find all students that have not graduate 
-    const students = await Student.find({ status: 'Active' })
+    const students = await Student.find({ status: 'Active',suspend: false})
     let subjects = await Curriculum.find({ })
     const termAndSession = await TermSetter.find()
 
@@ -24,9 +24,13 @@ exports.createTermResult = async (req,res,next) => {
             class: std.currentClass,
             noOfCourse: subjectLength,
             term: termAndSession[0].termNumber,
-            session: termAndSession[0].session.year
+            session: termAndSession[0].session.year,
+            suspend: false,
+            category: std.category
         }
     })
+    console.log(newTermResult)
+
     await TermResult.insertMany(newTermResult)
 
     // create payment and cognitive
@@ -67,8 +71,8 @@ exports.createTermResult = async (req,res,next) => {
 exports.deleteTermResult = async(req, res, next)=>{
 
     // specify term and session to avoid big error
-    const result = await TermResult.deleteMany({ term: 2, session: '2021/2022' });
+    // const result = await TermResult.deleteMany({ term: 2, session: '2021/2022' });
 
-    res.json({ success: true, result })
+    // res.json({ success: true, result })
 
 }
